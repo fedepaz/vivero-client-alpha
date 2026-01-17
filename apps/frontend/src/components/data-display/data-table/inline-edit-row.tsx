@@ -4,7 +4,6 @@ import type * as React from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { useTranslations } from "next-intl";
 
 interface InlineEditRowProps {
   isExpanded: boolean;
@@ -21,7 +20,6 @@ export function InlineEditRow({
   children,
   colSpan,
 }: InlineEditRowProps) {
-  const t = useTranslations("InlineEditRow");
   return (
     <>
       {isExpanded && (
@@ -47,7 +45,9 @@ export function InlineEditRow({
                   {t("moreDetailsButton")}
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
-                <Button className="min-h-[48px] min-w-[100px]">{t("saveButton")}</Button>
+                <Button className="min-h-[48px] min-w-[100px]">
+                  {t("saveButton")}
+                </Button>
               </div>
             </div>
           </TableCell>

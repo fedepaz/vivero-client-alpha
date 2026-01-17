@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -29,7 +28,7 @@ interface ClientFormProps {
 }
 
 export function ClientForm({ initialData, onSubmit }: ClientFormProps) {
-  const t = useTranslations("ClientForm");
+  const t = "ClientForm";
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
     defaultValues: initialData

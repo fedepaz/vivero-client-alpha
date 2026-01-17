@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTranslations } from "next-intl";
 
 interface ExportDropdownProps {
   onExport: (format: "csv" | "excel" | "json" | "pdf") => void;
@@ -25,7 +24,6 @@ export function ExportDropdown({
   totalCount = 0,
   disabled = false,
 }: ExportDropdownProps) {
-  const t = useTranslations("ExportDropdown");
   const exportLabel =
     selectedCount > 0
       ? t("exportSelected", { count: selectedCount })

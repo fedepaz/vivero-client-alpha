@@ -8,7 +8,7 @@ import {
   useUpdateUser,
   useUsers,
 } from "../hooks/hooks";
-import { useTranslations } from "next-intl";
+
 import {
   DataTable,
   FloatingActionButton,
@@ -21,7 +21,7 @@ import { User } from "../types";
 
 export function UsersDataTable() {
   const { data: users = [] } = useUsers();
-  const t = useTranslations("UsersDataTable");
+  const t = "UsersDataTable";
 
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -59,7 +59,7 @@ export function UsersDataTable() {
 
   const handleExport = (
     format: "csv" | "excel" | "json" | "pdf",
-    selectedRows: User[]
+    selectedRows: User[],
   ) => {
     console.log("Export Users:", selectedRows);
   };
@@ -93,7 +93,11 @@ export function UsersDataTable() {
       <SlideOverForm
         open={slideOverOpen}
         onOpenChange={setSlideOverOpen}
-        title={selectedUser ? t("editTitle", { name: selectedUser.name }) : t("createTitle")}
+        title={
+          selectedUser
+            ? t("editTitle", { name: selectedUser.name })
+            : t("createTitle")
+        }
         description={
           selectedUser
             ? t("editDescription", { name: selectedUser.name })

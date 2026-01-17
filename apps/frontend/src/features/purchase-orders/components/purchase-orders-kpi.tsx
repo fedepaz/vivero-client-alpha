@@ -4,21 +4,20 @@
 import { KPICard } from "@/components/data-display/kpi-card";
 import { usePurchaseOrders } from "../hooks/hooks";
 import { ShoppingCart, Package, Clock, CheckCircle2 } from "lucide-react";
-import { useTranslations } from "next-intl";
 
 function PurchaseOrderKPIs() {
-  const t = useTranslations("PurchaseOrderKPIs");
+  const t = "PurchaseOrderKPIs";
   const { data: purchaseOrders = [] } = usePurchaseOrders();
   const totalOrders = purchaseOrders.length;
   const totalSpend = purchaseOrders.reduce(
     (sum, po) => sum + po.totalAmount,
-    0
+    0,
   );
   const pendingOrders = purchaseOrders.filter(
-    (po) => po.status === "pending"
+    (po) => po.status === "pending",
   ).length;
   const receivedOrders = purchaseOrders.filter(
-    (po) => po.status === "received"
+    (po) => po.status === "received",
   ).length;
 
   return (

@@ -1,7 +1,7 @@
 //src/hooks/useDataTable.ts
 
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+
 import { useState } from "react";
 
 interface UseDataTableActionsOptions<T> {
@@ -15,7 +15,7 @@ export function useDataTableActions<T extends { id: string }>({
   onDelete,
   onExport,
 }: UseDataTableActionsOptions<T>) {
-  const t = useTranslations("common");
+  const t = "common";
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState<T | null>(null);

@@ -7,7 +7,7 @@ import {
 
 import { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { Invoice } from "../types";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import { Checkbox } from "@/components/ui/checkbox";
 
 interface CellProps {
@@ -16,7 +16,7 @@ interface CellProps {
 }
 
 function CellComponent({ row, table }: CellProps) {
-  const t = useTranslations("InvoiceColumns");
+  const t = "InvoiceColumns";
 
   if (table) {
     return (
@@ -46,12 +46,12 @@ interface HeaderProps {
 }
 
 function HeaderComponent({ column, translationKey }: HeaderProps) {
-  const t = useTranslations("InvoiceColumns");
+  const t = "InvoiceColumns";
   return <SortableHeader column={column}>{t(translationKey)}</SortableHeader>;
 }
 
 function CellBadgeComponent({ row }: CellProps) {
-  const t = useTranslations("InvoiceColumns");
+  const t = "InvoiceColumns";
   if (!row) return null;
   const status = row.getValue("status") as string;
   const statusMap = {

@@ -3,10 +3,9 @@
 import { KPICard } from "@/components/data-display/kpi-card";
 import { useDashboardKPIs } from "../hooks/hooks";
 import { ShoppingCart, Sprout, TrendingUp, Users } from "lucide-react";
-import { useTranslations } from "next-intl";
 
 function DashboardKPI() {
-  const t = useTranslations("DashboardKPIs");
+  const t = "DashboardKPIs";
   const { data: kpi } = useDashboardKPIs();
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

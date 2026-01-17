@@ -14,13 +14,13 @@ import {
   useUpdatePurchaseOrder,
 } from "../hooks/hooks";
 import { PurchaseOrder } from "../types";
-import { useTranslations } from "next-intl";
+
 import { useDataTableActions } from "@/hooks/useDataTable";
 import { PurchaseOrderForm } from "./purchase-order-form";
 import { useState } from "react";
 
 export function PurchaseOrdersDataTable() {
-  const t = useTranslations("PurchaseOrdersDataTable");
+  const t = "PurchaseOrdersDataTable";
   const { data: purchaseOrders = [] } = usePurchaseOrders();
 
   const [slideOverOpen, setSlideOverOpen] = useState(false);
@@ -62,7 +62,7 @@ export function PurchaseOrdersDataTable() {
 
   const handleExport = (
     format: "csv" | "excel" | "json" | "pdf",
-    selectedRows: PurchaseOrder[]
+    selectedRows: PurchaseOrder[],
   ) => {
     console.log("Export Purchase Orders:", selectedRows);
   };
@@ -106,12 +106,16 @@ export function PurchaseOrdersDataTable() {
         }
         description={
           selectedPurchaseOrder
-            ? t("editDescription", { orderNumber: selectedPurchaseOrder.orderNumber })
+            ? t("editDescription", {
+                orderNumber: selectedPurchaseOrder.orderNumber,
+              })
             : t("createDescription")
         }
         onSave={handleSave}
         onCancel={() => setSlideOverOpen(false)}
-        saveLabel={selectedPurchaseOrder ? t("updateButton") : t("createButton")}
+        saveLabel={
+          selectedPurchaseOrder ? t("updateButton") : t("createButton")
+        }
       >
         <div className="space-y-2">
           <PurchaseOrderForm

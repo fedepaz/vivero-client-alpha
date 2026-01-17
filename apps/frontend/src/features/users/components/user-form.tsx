@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { User, UserFormData, userSchema } from "../types";
-import { useTranslations } from "next-intl";
+
 import {
   Select,
   SelectContent,
@@ -29,7 +29,7 @@ interface UserFormProps {
 }
 
 export function UserForm({ initialData, onSubmit }: UserFormProps) {
-  const t = useTranslations("UserForm");
+  const t = "UserForm";
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: initialData

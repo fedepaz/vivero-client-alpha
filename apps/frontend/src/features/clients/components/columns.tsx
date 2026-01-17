@@ -3,7 +3,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { SortableHeader } from "@/components/data-display/data-table";
 import { Client } from "../types";
 import { Badge } from "@/components/ui/badge";
-import { useTranslations } from "next-intl";
 
 interface CellProps {
   row?: Row<Client>;
@@ -11,7 +10,7 @@ interface CellProps {
 }
 
 function CellComponent({ row, table }: CellProps) {
-  const t = useTranslations("ClientColumns");
+  const t = "ClientColumns";
   if (row) {
     return (
       <Checkbox
@@ -39,12 +38,12 @@ interface HeaderProps {
 }
 
 function HeaderComponent({ column, translationKey }: HeaderProps) {
-  const t = useTranslations("ClientColumns");
+  const t = "ClientColumns";
   return <SortableHeader column={column}>{t(translationKey)}</SortableHeader>;
 }
 
 function CellBadgeComponent({ row }: CellProps) {
-  const t = useTranslations("ClientColumns");
+  const t = "ClientColumns";
   if (!row) return null;
   const status = row.getValue("status") as string;
   const variants: Record<string, "default" | "destructive" | "outline"> = {

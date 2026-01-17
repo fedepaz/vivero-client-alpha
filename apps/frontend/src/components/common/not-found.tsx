@@ -1,16 +1,10 @@
 // src/components/common/not-found.tsx
 "use client";
 
-import { Link, useRouter } from "@/i18n/navigation";
 import { FlagIcon } from "lucide-react";
-
-import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 export function NotFoundPage() {
-  const t = useTranslations("NotFoundPage");
-
-  const router = useRouter();
-
   return (
     <div className="grid min-h-full place-items-center px-6 py-24 sm:py-32 lg:px-8">
       <div className="text-center">
@@ -27,10 +21,7 @@ export function NotFoundPage() {
         </p>
 
         <div className="mt-10 flex items-center justify-center gap-x-6">
-          <button
-            onClick={() => router.back()}
-            className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90"
-          >
+          <button className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90">
             {t("goBack")}
           </button>
           <Link

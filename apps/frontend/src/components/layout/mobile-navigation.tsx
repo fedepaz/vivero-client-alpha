@@ -1,6 +1,5 @@
 "use client";
 
-import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import {
   Home,
@@ -18,7 +17,7 @@ import {
   Building,
   ChevronDown,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +28,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import Link from "next/link";
 
 interface NavigationItem {
   title: string;
@@ -48,12 +48,8 @@ interface NavigationGroup {
 
 export function MobileNavigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
-  const t = useTranslations("navigation");
-  const tCommon = useTranslations("common");
-  const tAlerts = useTranslations("alerts");
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
-    new Set(["operations"])
+    new Set(["operations"]),
   );
 
   const toggleGroup = (groupId: string) => {
@@ -191,7 +187,7 @@ export function MobileNavigation() {
                     <ChevronDown
                       className={cn(
                         "h-4 w-4 transition-transform",
-                        isExpanded && "rotate-180"
+                        isExpanded && "rotate-180",
                       )}
                     />
                   </Button>
@@ -213,7 +209,7 @@ export function MobileNavigation() {
                                 "flex items-center space-x-3 p-3 rounded-lg transition-colors agricultural-touch-target",
                                 isActive
                                   ? "bg-green-100 text-green-700 border border-green-200"
-                                  : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                                  : "hover:bg-muted text-muted-foreground hover:text-foreground",
                               )}
                             >
                               <Icon className="h-5 w-5" />

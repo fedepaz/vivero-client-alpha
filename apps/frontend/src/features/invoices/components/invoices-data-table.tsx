@@ -15,13 +15,13 @@ import {
 } from "../hooks/hooks";
 import { Invoice } from "../types";
 import { useDataTableActions } from "@/hooks/useDataTable";
-import { useTranslations } from "next-intl";
+
 import { InvoiceForm } from "./invoice-form";
 import { useState } from "react";
 
 export function InvoicesDataTable() {
   const { data: invoices = [] } = useInvoices();
-  const t = useTranslations("InvoicesDataTable");
+  const t = "InvoicesDataTable";
 
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
@@ -60,7 +60,7 @@ export function InvoicesDataTable() {
 
   const handleExport = (
     format: "csv" | "excel" | "json" | "pdf",
-    selectedRows: Invoice[]
+    selectedRows: Invoice[],
   ) => {
     console.log("Export Invoices:", selectedRows);
   };
@@ -99,12 +99,16 @@ export function InvoicesDataTable() {
         onOpenChange={setSlideOverOpen}
         title={
           selectedInvoice
-            ? t("editInvoiceTitle", { invoiceNumber: selectedInvoice.invoiceNumber })
+            ? t("editInvoiceTitle", {
+                invoiceNumber: selectedInvoice.invoiceNumber,
+              })
             : t("createInvoiceTitle")
         }
         description={
           selectedInvoice
-            ? t("editInvoiceDescription", { invoiceNumber: selectedInvoice.invoiceNumber })
+            ? t("editInvoiceDescription", {
+                invoiceNumber: selectedInvoice.invoiceNumber,
+              })
             : t("createInvoiceDescription")
         }
         onSave={handleSave}

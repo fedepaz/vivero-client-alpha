@@ -14,14 +14,14 @@ import {
   useUpdatePlant,
 } from "../hooks/hooks";
 import { Plant } from "../types";
-import { useTranslations } from "next-intl";
+
 import { useDataTableActions } from "@/hooks/useDataTable";
 import { PlantForm } from "./plants-form";
 import { useState } from "react";
 
 export function PlantsDataTable() {
   const { data: plants = [] } = usePlants();
-  const t = useTranslations("PlantsDataTable");
+  const t = "PlantsDataTable";
 
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
@@ -61,7 +61,7 @@ export function PlantsDataTable() {
 
   const handleExport = (
     format: "csv" | "excel" | "json" | "pdf",
-    selectedRows: Plant[]
+    selectedRows: Plant[],
   ) => {
     console.log("Export Plants:", selectedRows);
   };
@@ -94,7 +94,11 @@ export function PlantsDataTable() {
       <SlideOverForm
         open={slideOverOpen}
         onOpenChange={setSlideOverOpen}
-        title={selectedPlant ? t("editTitle", { name: selectedPlant.name }) : t("createTitle")}
+        title={
+          selectedPlant
+            ? t("editTitle", { name: selectedPlant.name })
+            : t("createTitle")
+        }
         description={
           selectedPlant
             ? t("editDescription", { name: selectedPlant.name })

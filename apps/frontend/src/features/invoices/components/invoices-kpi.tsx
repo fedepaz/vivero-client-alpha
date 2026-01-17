@@ -4,18 +4,17 @@
 import { KPICard } from "@/components/data-display/kpi-card";
 import { FileText, DollarSign, CheckCircle2, Clock } from "lucide-react";
 import { useInvoices } from "../hooks/hooks";
-import { useTranslations } from "next-intl";
 
 function InvoiceKPIs() {
   const { data: mockInvoices = [] } = useInvoices();
-  const t = useTranslations("InvoiceKPIs");
+  const t = "InvoiceKPIs";
   const totalInvoices = mockInvoices.length;
   const totalRevenue = mockInvoices.reduce((sum, inv) => sum + inv.amount, 0);
   const paidInvoices = mockInvoices.filter(
-    (inv) => inv.status === "paid"
+    (inv) => inv.status === "paid",
   ).length;
   const overdueInvoices = mockInvoices.filter(
-    (inv) => inv.status === "overdue"
+    (inv) => inv.status === "overdue",
   ).length;
 
   return (

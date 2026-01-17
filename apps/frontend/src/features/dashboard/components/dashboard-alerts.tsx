@@ -10,10 +10,9 @@ import {
 import { useDashboardAlerts } from "../hooks/hooks";
 import { AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useTranslations } from "next-intl";
 
 function DashboardAlerts() {
-  const t = useTranslations("DashboardAlerts");
+  const t = "DashboardAlerts";
   const { data: alerts } = useDashboardAlerts();
 
   return (

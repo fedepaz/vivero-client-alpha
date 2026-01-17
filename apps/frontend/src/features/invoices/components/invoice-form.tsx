@@ -14,7 +14,6 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Invoice, InvoiceFormData, invoiceSchema } from "../types";
-import { useTranslations } from "next-intl";
 
 interface InvoiceFormProps {
   initialData?: Invoice;
@@ -24,7 +23,7 @@ interface InvoiceFormProps {
 }
 
 export function InvoiceForm({ initialData, onSubmit }: InvoiceFormProps) {
-  const t = useTranslations("InvoiceForm");
+  const t = "InvoiceForm";
   const form = useForm<InvoiceFormData>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: initialData

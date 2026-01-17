@@ -5,7 +5,6 @@ import {
   StatusBadge,
 } from "@/components/data-display/data-table";
 import { User } from "../types";
-import { useTranslations } from "next-intl";
 
 interface CellProps {
   row?: Row<User>;
@@ -13,7 +12,7 @@ interface CellProps {
 }
 
 function CellComponent({ row, table }: CellProps) {
-  const t = useTranslations("UserColumns");
+  const t = "UserColumns";
   if (row) {
     return (
       <Checkbox
@@ -41,12 +40,12 @@ interface HeaderProps {
 }
 
 function HeaderComponent({ column, translationKey }: HeaderProps) {
-  const t = useTranslations("UserColumns");
+  const t = "UserColumns";
   return <SortableHeader column={column}>{t(translationKey)}</SortableHeader>;
 }
 
 function CellBadgeRoleComponent({ row }: CellProps) {
-  const t = useTranslations("UserColumns");
+  const t = "UserColumns";
   if (!row) return null;
   const role = row.getValue("role") as string;
   return (
@@ -57,7 +56,7 @@ function CellBadgeRoleComponent({ row }: CellProps) {
 }
 
 function CellBadgeStatusComponent({ row }: CellProps) {
-  const t = useTranslations("UserColumns");
+  const t = "UserColumns";
   if (!row) return null;
   const status = row.getValue("status") as string;
   return (

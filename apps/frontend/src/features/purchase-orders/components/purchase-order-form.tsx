@@ -15,7 +15,7 @@ import {
   PurchaseOrderFormData,
   purchaseOrderSchema,
 } from "../types";
-import { useTranslations } from "next-intl";
+
 import {
   Select,
   SelectContent,
@@ -35,7 +35,7 @@ export function PurchaseOrderForm({
   initialData,
   onSubmit,
 }: PurchaseOrderFormProps) {
-  const t = useTranslations("PurchaseOrderForm");
+  const t = "PurchaseOrderForm";
   const form = useForm<PurchaseOrderFormData>({
     resolver: zodResolver(purchaseOrderSchema),
     defaultValues: initialData

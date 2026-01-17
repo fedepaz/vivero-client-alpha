@@ -14,7 +14,7 @@ import {
   useUpdateClient,
 } from "../hooks/hooks";
 import { Client } from "../types";
-import { useTranslations } from "next-intl";
+
 import { useDataTableActions } from "@/hooks/useDataTable";
 
 import { ClientForm } from "./client-form";
@@ -22,7 +22,7 @@ import { useState } from "react";
 import { RenderInlineEdit } from "./render-inline-edit";
 
 export function ClientsDataTable() {
-  const t = useTranslations("ClientsDataTable");
+  const t = "ClientsDataTable";
   const { data: clients = [] } = useClients();
   //const {toast} = useToast()
 
@@ -65,7 +65,7 @@ export function ClientsDataTable() {
 
   const handleExport = (
     format: "csv" | "excel" | "json" | "pdf",
-    selectedRows: Client[]
+    selectedRows: Client[],
   ) => {
     console.log("Export Clients:", selectedRows);
   };
@@ -102,7 +102,11 @@ export function ClientsDataTable() {
       <SlideOverForm
         open={slideOverOpen}
         onOpenChange={setSlideOverOpen}
-        title={selectedClient ? t("editClientTitle", { name: selectedClient.name }) : t("createClientTitle")}
+        title={
+          selectedClient
+            ? t("editClientTitle", { name: selectedClient.name })
+            : t("createClientTitle")
+        }
         description={
           selectedClient
             ? t("editClientDescription", { name: selectedClient.name })

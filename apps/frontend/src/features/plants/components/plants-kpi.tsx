@@ -4,18 +4,17 @@
 import { KPICard } from "@/components/data-display/kpi-card";
 import { usePlants } from "../hooks/hooks";
 import { Sprout, Leaf, AlertTriangle, Droplets } from "lucide-react";
-import { useTranslations } from "next-intl";
 
 function PlantKPIs() {
-  const t = useTranslations("PlantKPIs");
+  const t = "PlantKPIs";
   const { data: mockPlants = [] } = usePlants();
   const totalPlants = mockPlants.length;
   const healthyPlants = mockPlants.filter((p) => p.status === "healthy").length;
   const criticalPlants = mockPlants.filter(
-    (p) => p.status === "critical"
+    (p) => p.status === "critical",
   ).length;
   const readyForHarvest = mockPlants.filter(
-    (p) => p.growthStage === "Fruiting" || p.growthStage === "Mature"
+    (p) => p.growthStage === "Fruiting" || p.growthStage === "Mature",
   ).length;
 
   return (

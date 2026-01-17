@@ -12,7 +12,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useTranslations } from "next-intl";
 
 interface SlideOverFormProps {
   open: boolean;
@@ -36,7 +35,6 @@ export function SlideOverForm({
   onCancel,
   saveLabel,
 }: SlideOverFormProps) {
-  const t = useTranslations("SlideOverForm");
   const handleCancel = () => {
     if (onCancel) {
       onCancel();

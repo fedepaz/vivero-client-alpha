@@ -1,6 +1,5 @@
 // app/components/data-display/feature-card/feature-card.tsx
 
-import { Link } from "@/i18n/navigation";
 import {
   Card,
   CardContent,
@@ -10,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { type LucideIcon, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface FeatureCardProps {
   title: string;
@@ -36,7 +36,7 @@ export function FeatureCard({
       <Card
         className={cn(
           "group transition-all hover:shadow-md hover:border-primary/50",
-          className
+          className,
         )}
       >
         <CardHeader>

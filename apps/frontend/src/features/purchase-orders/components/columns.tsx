@@ -5,7 +5,7 @@ import {
   StatusBadge,
 } from "@/components/data-display/data-table";
 import { PurchaseOrder } from "../types";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 interface CellProps {
   row?: Row<PurchaseOrder>;
@@ -13,7 +13,7 @@ interface CellProps {
 }
 
 function CellComponent({ row, table }: CellProps) {
-  const t = useTranslations("PurchaseOrderColumns");
+  const t = "PurchaseOrderColumns";
   if (table) {
     return (
       <Checkbox
@@ -43,7 +43,7 @@ interface HeaderProps {
 }
 
 function HeaderComponent({ column, translationKey }: HeaderProps) {
-  const t = useTranslations("PurchaseOrderColumns");
+  const t = "PurchaseOrderColumns";
   return <SortableHeader column={column}>{t(translationKey)}</SortableHeader>;
 }
 
@@ -59,7 +59,7 @@ function CellTotalAmountComponent({ row }: CellProps) {
 }
 
 function CellBadgeComponent({ row }: CellProps) {
-  const t = useTranslations("PurchaseOrderColumns");
+  const t = "PurchaseOrderColumns";
   if (!row) return null;
   const status = row.getValue("status") as string;
   const statusMap = {

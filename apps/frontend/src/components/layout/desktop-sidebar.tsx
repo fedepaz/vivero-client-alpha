@@ -21,8 +21,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { useTranslations } from "next-intl"; // Import useTranslations
-import { Link, usePathname } from "@/i18n/navigation";
+import Link from "next/link";
 
 interface NavigationItem {
   title: string;
@@ -44,9 +43,6 @@ interface NavigationGroup {
 
 export function DesktopSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const pathname = usePathname();
-  const t = useTranslations("navigation"); // Use 'navigation' namespace for menu items
-  const tCommon = useTranslations("common"); // Use 'common' namespace for general terms
 
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     new Set(["operations"]),

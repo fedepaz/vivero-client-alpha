@@ -11,16 +11,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { MobileNavigation } from "./mobile-navigation";
-import { LanguageSwitcher } from "@/components/common/language-switcher";
+
 import { ThemeToggle } from "@/components/common/theme-toggle";
-import { useTranslations } from "next-intl";
+
 import { SignedIn, UserButton, SignedOut } from "@clerk/nextjs";
 import { Skeleton } from "../ui/skeleton";
 import { shadcn } from "@clerk/themes";
 
 export function DashboardHeader() {
-  const t = useTranslations("DashboardHeader");
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
@@ -38,7 +36,6 @@ export function DashboardHeader() {
           {/* Actions */}
           <div className="flex items-center space-x-2">
             {/* Language Switcher */}
-            <LanguageSwitcher />
 
             {/* Theme Toggle */}
             <ThemeToggle />

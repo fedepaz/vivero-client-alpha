@@ -5,14 +5,11 @@ import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { useTranslations } from "next-intl";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   const mounted = useIsMounted();
-
-  const t = useTranslations("ThemeToggle");
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");

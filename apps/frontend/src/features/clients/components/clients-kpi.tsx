@@ -3,23 +3,22 @@
 
 import { KPICard } from "@/components/data-display/kpi-card";
 import { Building2, TrendingUp, UserCheck, Users } from "lucide-react";
-import { useTranslations } from "next-intl";
 
 import { useClients } from "../hooks/hooks";
 
 function ClientsKPI() {
-  const t = useTranslations("ClientKPIs");
+  const t = "ClientKPIs";
   const { data: clients = [] } = useClients();
   const totalClients = clients.length;
   const activeClients = clients.filter(
-    (client) => client.status === "active"
+    (client) => client.status === "active",
   ).length;
   const totalRevenue = clients.reduce(
     (acc, client) => acc + client.totalRevenue,
-    0
+    0,
   );
   const prospects = clients.filter(
-    (client) => client.status === "prospect"
+    (client) => client.status === "prospect",
   ).length;
 
   return (

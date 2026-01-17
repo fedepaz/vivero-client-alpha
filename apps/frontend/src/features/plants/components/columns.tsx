@@ -7,7 +7,6 @@ import {
   StatusBadge,
 } from "@/components/data-display/data-table";
 import { Plant } from "../types";
-import { useTranslations } from "next-intl";
 
 interface CellProps {
   row?: Row<Plant>;
@@ -15,7 +14,7 @@ interface CellProps {
 }
 
 function CellComponent({ row, table }: CellProps) {
-  const t = useTranslations("PlantsColumns");
+  const t = "PlantsColumns";
   if (row) {
     return (
       <Checkbox
@@ -43,12 +42,12 @@ interface HeaderProps {
 }
 
 function HeaderComponent({ column, translationKey }: HeaderProps) {
-  const t = useTranslations("PlantsColumns");
+  const t = "PlantsColumns";
   return <SortableHeader column={column}>{t(translationKey)}</SortableHeader>;
 }
 
 function CellBadgeComponent({ row }: CellProps) {
-  const t = useTranslations("PlantsColumns");
+  const t = "PlantsColumns";
   if (!row) return null;
   const status = row.getValue("status") as string;
   return (

@@ -1,12 +1,9 @@
 // src/components/common/coming-soon.tsx
 "use client";
 
-import { useTranslations } from "next-intl";
 import { Sprout, BarChart, Smartphone, Cloud } from "lucide-react";
 
 export default function ComingSoonPage() {
-  const t = useTranslations("ComingSoonPage");
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4 sm:p-6 md:p-8">
       <div className="max-w-2xl w-full text-center space-y-6 md:space-y-8">

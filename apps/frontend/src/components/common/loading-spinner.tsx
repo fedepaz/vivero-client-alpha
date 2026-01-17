@@ -2,26 +2,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
 
 export function LoadingSpinner() {
-  const t = useTranslations("LoadingSpinner");
-
-  const funnyMessages = [
-    t("message1"),
-    t("message2"),
-    t("message3"),
-    t("message4"),
-    t("message5"),
-    t("message6"),
-    t("message7"),
-    t("message8"),
-    t("message9"),
-    t("message10"),
-    t("message11"),
-    t("message12"),
-  ];
-
   const randomMessage =
     funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
 

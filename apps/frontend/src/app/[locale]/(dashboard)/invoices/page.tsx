@@ -5,22 +5,9 @@ import {
   InvoicesDashboardSkeleton,
 } from "@/features/invoices";
 
-import { generateLocaleStaticParams } from "@/i18n/routing";
-import { setRequestLocale } from "next-intl/server";
-import { Suspense, use } from "react";
+import { Suspense } from "react";
 
-export function generateStaticParams() {
-  return generateLocaleStaticParams();
-}
-
-interface InvoicesPageProps {
-  params: Promise<{ locale: string }>;
-}
-
-export default function InvoicesPage({ params }: InvoicesPageProps) {
-  const { locale } = use(params);
-  setRequestLocale(locale);
-
+export default function InvoicesPage() {
   return (
     <Suspense fallback={<InvoicesDashboardSkeleton />}>
       <InvoicesDashboard />

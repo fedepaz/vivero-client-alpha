@@ -8,10 +8,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useDashboardRecentActivity } from "../hooks/hooks";
-import { useTranslations } from "next-intl";
 
 function RecentActivity() {
-  const t = useTranslations("RecentActivity");
+  const t = "RecentActivity";
   const { data: recentActivity } = useDashboardRecentActivity();
 
   return (

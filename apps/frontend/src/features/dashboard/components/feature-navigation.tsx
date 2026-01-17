@@ -9,10 +9,9 @@ import {
   UserCircle,
 } from "lucide-react";
 import { useDashboardKPIs } from "../hooks/hooks";
-import { useTranslations } from "next-intl";
 
 function FeatureNavigation() {
-  const t = useTranslations("FeatureNavigation");
+  const t = "FeatureNavigation";
   const { data: kpis } = useDashboardKPIs();
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

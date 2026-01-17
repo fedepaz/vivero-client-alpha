@@ -1,5 +1,4 @@
 // src/features/clients/components/render-inline-edit.tsx
-import { useTranslations } from "next-intl";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,9 +14,9 @@ import { Client } from "../types";
 export const RenderInlineEdit = (
   client: Client,
   onSave: () => void,
-  onCancel: () => void
+  onCancel: () => void,
 ) => {
-  const t = useTranslations("CellComponent");
+  const t = "CellComponent";
 
   return (
     <>

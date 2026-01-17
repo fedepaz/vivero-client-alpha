@@ -14,7 +14,6 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Plant, PlantFormData, plantSchema } from "../types";
-import { useTranslations } from "next-intl";
 
 interface PlantFormProps {
   initialData?: Plant;
@@ -24,7 +23,7 @@ interface PlantFormProps {
 }
 
 export function PlantForm({ initialData, onSubmit }: PlantFormProps) {
-  const t = useTranslations("PlantForm");
+  const t = "PlantForm";
   const form = useForm<PlantFormData>({
     resolver: zodResolver(plantSchema),
     defaultValues: initialData

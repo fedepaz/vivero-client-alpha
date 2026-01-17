@@ -11,7 +11,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useTranslations } from "next-intl";
 
 interface DeleteDialogProps {
   open: boolean;
@@ -32,7 +31,6 @@ export function DeleteDialog({
   itemCount = 1,
   isLoading = false,
 }: DeleteDialogProps) {
-  const t = useTranslations("common");
   const dialogTitle = title || t("areYouSure");
 
   return (

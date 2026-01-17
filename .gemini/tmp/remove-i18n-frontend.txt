@@ -1,0 +1,13 @@
+refactor(frontend): remove next-intl and simplify language support
+
+This commit removes the `next-intl` library and all related internationalization (i18n) setup from the frontend application to streamline the project for Spanish-only language support.
+
+Key changes include:
+- Deleted `i18n.ts`, `middleware.ts`, and all files in `src/i18n/`.
+- Removed `next-intl` plugin configuration from `next.config.ts`.
+- Eliminated `NextIntlClientProvider` from layouts and `useTranslations` hooks from various components.
+- Deleted `language-switcher.tsx` component.
+- Updated `frontend-agent-guide.md` to reflect the new language strategy (Spanish-only).
+- Removed `next-intl` mocking from `vitest.setup.ts`.
+
+These changes reduce complexity and align with the project's focus on a single language.

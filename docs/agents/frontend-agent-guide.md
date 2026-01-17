@@ -130,7 +130,7 @@ src/
 
 **Note on Authentication Structure:** The `(auth)` route group contains pages for login, registration, etc. These routes have a separate layout from the main application dashboard.
 
-### Internationalization (i18n) Implementation
+### Language Support
 
 This project is intended to be Spanish-only. All user-facing strings in the UI should be written directly in Spanish. No internationalization library is required.
 
@@ -141,12 +141,13 @@ For managing form state, especially in the context of the `DataTable` and `Slide
 1.  **Local State Management:** The state for the `SlideOverForm` (e.g., its visibility, the entity being edited) should be managed within the parent component that renders the `DataTable` (e.g., `ClientsDataTable`). Use the `useState` hook for this.
 
 2.  **Data Flow:**
-    *   When the user clicks the "Add" or "Edit" button, the parent component updates its state to open the `SlideOverForm` and passes the relevant data (or an empty object for creation) to it.
-    *   The `SlideOverForm` contains the actual form logic, which is encapsulated in a dedicated form component (e.g., `ClientForm`).
-    *   When the user submits the form, the `SlideOverForm` calls an `onSubmit` function passed down from the parent component.
-    *   The parent component is responsible for making the API call (via TanStack Query mutations) and handling the success/error states.
+    - When the user clicks the "Add" or "Edit" button, the parent component updates its state to open the `SlideOverForm` and passes the relevant data (or an empty object for creation) to it.
+    - The `SlideOverForm` contains the actual form logic, which is encapsulated in a dedicated form component (e.g., `ClientForm`).
+    - When the user submits the form, the `SlideOverForm` calls an `onSubmit` function passed down from the parent component.
+    - The parent component is responsible for making the API call (via TanStack Query mutations) and handling the success/error states.
 
-*Example in `ClientsDataTable.tsx`:*
+_Example in `ClientsDataTable.tsx`:_
+
 ```typescript
 export function ClientsDataTable() {
   const [slideOverOpen, setSlideOverOpen] = useState(false);
@@ -218,10 +219,10 @@ A robust authentication and authorization layer is critical for the enterprise-g
 
 The `DashboardProtectedLayout` must handle the following states to provide a resilient user experience:
 
--   **`isLoading`**: A unified loading state that covers the initial session check and the subsequent backend profile fetch. A full-page spinner (`LoadingSpinner`) should be displayed.
--   **`isDatabaseUnavailable`**: Triggered if the backend API call fails. This indicates a potential problem with the backend service or database connection. A dedicated error page (`DatabaseUnavailablePage`) is shown.
--   **`isPendingPermissions`**: Occurs when a user is successfully authenticated, but the backend returns no user profile. This signifies that the user's account is awaiting approval or setup. A specific page (`PendingPermissionsPage`) is displayed to inform the user.
--   **Authenticated & Authorized**: If a `userProfile` is present, the main application `children` are rendered.
+- **`isLoading`**: A unified loading state that covers the initial session check and the subsequent backend profile fetch. A full-page spinner (`LoadingSpinner`) should be displayed.
+- **`isDatabaseUnavailable`**: Triggered if the backend API call fails. This indicates a potential problem with the backend service or database connection. A dedicated error page (`DatabaseUnavailablePage`) is shown.
+- **`isPendingPermissions`**: Occurs when a user is successfully authenticated, but the backend returns no user profile. This signifies that the user's account is awaiting approval or setup. A specific page (`PendingPermissionsPage`) is displayed to inform the user.
+- **Authenticated & Authorized**: If a `userProfile` is present, the main application `children` are rendered.
 
 This pattern ensures that the UI gracefully handles common edge cases in a distributed architecture. All new authenticated routes should be wrapped in this protective layout.
 
@@ -284,6 +285,7 @@ export default function FeaturePage() {
 **Step 3: Implement Components, Data Logic, and Tests**
 
 With the structure in place, build the feature's internals, ensuring to:
+
 - Import shared data contracts from `@plant-mgmt/shared`.
 - Place API-calling functions in the `api/` folder.
 - Create TanStack Query hooks in the `hooks/` folder.
@@ -310,17 +312,17 @@ To provide the best possible user experience and perceived performance, we will 
 
 This is the first and most important loading UI the user sees.
 
--   **Convention**: For any route segment (e.g., `app/clients/`), create a corresponding `loading.tsx` file.
--   **Behavior**: Next.js will automatically render this file's component *instantly* while the server prepares the actual `page.tsx`. It provides an immediate, static shell of the page.
--   **Rule of Thumb**: Wherever you create a `page.tsx`, you should create a `loading.tsx` alongside it.
+- **Convention**: For any route segment (e.g., `app/clients/`), create a corresponding `loading.tsx` file.
+- **Behavior**: Next.js will automatically render this file's component _instantly_ while the server prepares the actual `page.tsx`. It provides an immediate, static shell of the page.
+- **Rule of Thumb**: Wherever you create a `page.tsx`, you should create a `loading.tsx` alongside it.
 
 **Level 2: Granular Content Streaming (In-Page `<Suspense>`)**
 
-This is for handling dynamic content *within* a page that has already rendered its initial skeleton.
+This is for handling dynamic content _within_ a page that has already rendered its initial skeleton.
 
--   **Convention**: Inside your page or its child components, wrap any component that fetches its own data in a `<Suspense>` boundary.
--   **Behavior**: This allows the page to render its static layout while the data-heavy components are streamed in as they become ready, replacing their individual skeleton fallbacks.
--   **Synergy**: This works in concert with `loading.tsx`. The user first sees the route skeleton from `loading.tsx`, and then sees the individual component skeletons from the in-page `<Suspense>` boundaries as the main page component loads.
+- **Convention**: Inside your page or its child components, wrap any component that fetches its own data in a `<Suspense>` boundary.
+- **Behavior**: This allows the page to render its static layout while the data-heavy components are streamed in as they become ready, replacing their individual skeleton fallbacks.
+- **Synergy**: This works in concert with `loading.tsx`. The user first sees the route skeleton from `loading.tsx`, and then sees the individual component skeletons from the in-page `<Suspense>` boundaries as the main page component loads.
 
 #### Implementation Rules
 
@@ -329,9 +331,9 @@ This is for handling dynamic content *within* a page that has already rendered i
 - **Exporting**: The skeleton component must be exported via the feature’s `index.ts` file.
 - **Structure Mirroring**: Skeletons must visually mirror the structure of the real component they are a placeholder for (e.g., `PlantCard` -> `PlantCardSkeleton`).
 - **Component Coverage**:
-    - **Required**: For all data-fetching components (e.g., cards, tables, widgets).
-    - **Not Required**: For UI primitives that do not fetch data (e.g., `Button`, `Dialog`).
-    - **Reusable**: Common skeletons (e.g., `TableSkeleton`, `ChartSkeleton`) can be placed in `src/components/data-display/` for reuse across features.
+  - **Required**: For all data-fetching components (e.g., cards, tables, widgets).
+  - **Not Required**: For UI primitives that do not fetch data (e.g., `Button`, `Dialog`).
+  - **Reusable**: Common skeletons (e.g., `TableSkeleton`, `ChartSkeleton`) can be placed in `src/components/data-display/` for reuse across features.
 - **Rendering**: Skeletons should be rendered within the feature container using a React `<Suspense>` boundary, as shown in the page route boilerplate.
 
 #### Design and Accessibility Constraints
@@ -339,8 +341,8 @@ This is for handling dynamic content *within* a page that has already rendered i
 - **Styling**: Skeletons must be built using only `shadcn/ui` and `Tailwind CSS`.
 - **Theming**: They must use the existing OKLCH nature theme colors and variables (e.g., muted/skeleton variants).
 - **Accessibility**:
-    - Animations must be subtle and must respect the `prefers-reduced-motion` media query.
-    - Use appropriate ARIA attributes (`aria-busy="true"`) to inform screen readers that the content is loading.
+  - Animations must be subtle and must respect the `prefers-reduced-motion` media query.
+  - Use appropriate ARIA attributes (`aria-busy="true"`) to inform screen readers that the content is loading.
 
 #### QA Checklist
 
@@ -350,7 +352,6 @@ This is for handling dynamic content *within* a page that has already rendered i
 - [ ] Is the Skeleton correctly rendered using a `<Suspense>` boundary?
 - [ ] Does the Skeleton respect the project's design system (colors, spacing, typography)?
 - [ ] Does the Skeleton follow accessibility best practices?
-
 
 ## Agricultural Component Specifications
 
@@ -899,32 +900,32 @@ All frontend unit and component tests are written using **Vitest** as the test r
 
 #### 1. Testing Next.js App Router Components
 
-*   **Server Components (`page.tsx`, `layout.tsx`):**
-    *   Next.js App Router `page.tsx` and `layout.tsx` files are often Server Components.
-    *   **Rule:** Do **NOT** directly unit test Server Components in a client-side test environment (like JSDOM).
-    *   **Strategy:** Focus unit/component tests on the **Client Components** that these Server Components render. For example, if `page.tsx` renders `<RootDashboard />`, write the test for `<RootDashboard />`.
+- **Server Components (`page.tsx`, `layout.tsx`):**
+  - Next.js App Router `page.tsx` and `layout.tsx` files are often Server Components.
+  - **Rule:** Do **NOT** directly unit test Server Components in a client-side test environment (like JSDOM).
+  - **Strategy:** Focus unit/component tests on the **Client Components** that these Server Components render. For example, if `page.tsx` renders `<RootDashboard />`, write the test for `<RootDashboard />`.
 
 #### 2. Vitest Configuration (`apps/frontend/vitest.config.mts`)
 
 This file configures Vitest for the frontend application.
 
-*   **File Extension:** Use `.mts` (Module TypeScript) for the configuration file (`vitest.config.mts`) to ensure proper ESM (ECMAScript Module) resolution.
-*   **Plugins:**
-    ```typescript
-    import react from "@vitejs/plugin-react";
-    // ...
-    plugins: [react()],
-    ```
-    The `@vitejs/plugin-react` is essential for correctly transforming JSX syntax in your tests.
-*   **Test-Specific PostCSS Configuration (`css.postcss`):**
-    ```typescript
-    css: {
-      postcss: {
-        config: "./postcss.config.test.mjs",
-      },
+- **File Extension:** Use `.mts` (Module TypeScript) for the configuration file (`vitest.config.mts`) to ensure proper ESM (ECMAScript Module) resolution.
+- **Plugins:**
+  ```typescript
+  import react from "@vitejs/plugin-react";
+  // ...
+  plugins: [react()],
+  ```
+  The `@vitejs/plugin-react` is essential for correctly transforming JSX syntax in your tests.
+- **Test-Specific PostCSS Configuration (`css.postcss`):**
+  ```typescript
+  css: {
+    postcss: {
+      config: "./postcss.config.test.mjs",
     },
-    ```
-    This explicitly tells Vitest to use the `postcss.config.test.mjs` file for PostCSS processing during tests.
+  },
+  ```
+  This explicitly tells Vitest to use the `postcss.config.test.mjs` file for PostCSS processing during tests.
 
 #### 3. Global Test Setup (`apps/frontend/vitest.setup.ts`)
 
@@ -941,27 +942,27 @@ import "@testing-library/jest-dom";
 
 This file provides the PostCSS configuration specifically for the Vitest test environment.
 
-*   **Content:**
-    ```typescript
-    import tailwindcss from "@tailwindcss/postcss";
+- **Content:**
 
-    const config = {
-      plugins: [
-        tailwindcss(),
-      ],
-    };
+  ```typescript
+  import tailwindcss from "@tailwindcss/postcss";
 
-    export default config;
-    ```
-    This ensures that Tailwind CSS is correctly processed during tests in a format compatible with Vitest.
+  const config = {
+    plugins: [tailwindcss()],
+  };
+
+  export default config;
+  ```
+
+  This ensures that Tailwind CSS is correctly processed during tests in a format compatible with Vitest.
 
 #### 5. Component Testing Best Practices
 
-*   **Colocation:** Place test files in a `__tests__/` subdirectory within the feature's component directory (e.g., `src/features/dashboard/components/__tests__/RootDashboard.test.tsx`).
-*   **`data-testid` for Skeletons:** When testing components that render skeletons, use `data-testid` attributes to reliably select them in your tests.
-    *   Example: `<Card data-testid="kpi-card-skeleton">`
-    *   Test assertion: `await screen.findAllByTestId("kpi-card-skeleton");`
-*   **Provider Wrapping:** Ensure your tests wrap the component under test with any necessary React Context Providers (e.g., `QueryClientProvider` for TanStack Query).
+- **Colocation:** Place test files in a `__tests__/` subdirectory within the feature's component directory (e.g., `src/features/dashboard/components/__tests__/RootDashboard.test.tsx`).
+- **`data-testid` for Skeletons:** When testing components that render skeletons, use `data-testid` attributes to reliably select them in your tests.
+  - Example: `<Card data-testid="kpi-card-skeleton">`
+  - Test assertion: `await screen.findAllByTestId("kpi-card-skeleton");`
+- **Provider Wrapping:** Ensure your tests wrap the component under test with any necessary React Context Providers (e.g., `QueryClientProvider` for TanStack Query).
 
 ```typescript
 // Example: RootDashboard.test.tsx
@@ -1002,7 +1003,7 @@ test("complete plant creation and monitoring workflow", async ({ page }) => {
 
   // Verify creation
   await expect(page.locator('[data-testid="plant-card"]')).toContainText(
-    "Test Tulip Batch"
+    "Test Tulip Batch",
   );
 
   // Update environmental data
@@ -1014,7 +1015,7 @@ test("complete plant creation and monitoring workflow", async ({ page }) => {
   // Verify dashboard update
   await page.goto("/dashboard");
   await expect(page.locator('[data-testid="avg-temperature"]')).toContainText(
-    "23°C"
+    "23°C",
   );
 });
 ```
@@ -1161,6 +1162,7 @@ When requesting component implementations, provide:
     - Specify the Feature: Always state which feature/ folder the new component/hook belongs to (e.g., "This belongs in features/plant-management/")
     - Colocation is Key: New hooks, stores, or API clients for a feature must be created within that features's directory.
     - **Testing Colocation:** All unit and component tests for a feature should be placed in a `__tests__` subdirectory within the feature's directory (e.g., `src/features/plant-management/components/__tests__/PlantCard.test.tsx`).
+
 ### Expected Outputs
 
 The agent will deliver:

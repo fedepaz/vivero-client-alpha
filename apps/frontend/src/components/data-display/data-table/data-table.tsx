@@ -38,7 +38,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useTranslations } from "next-intl";
+
 import { ExportDropdown } from "@/components/data-display/data-table/export-dropdown";
 import { DeleteDialog } from "@/components/data-display/data-table/delete-dialog-button";
 import { InlineEditRow } from "./inline-edit-row";
@@ -53,14 +53,14 @@ interface DataTableProps<TData, TValue> {
   onDelete?: (rows: TData[]) => void;
   onExport?: (
     format: "csv" | "excel" | "json" | "pdf",
-    selectedRows: TData[]
+    selectedRows: TData[],
   ) => void;
   loading?: boolean;
   totalCount?: number;
   renderInlineEdit?: (
     row: TData,
     onSave: () => void,
-    onCancel: () => void
+    onCancel: () => void,
   ) => React.ReactNode;
   onQuickEdit?: (row: TData) => void;
 }
@@ -70,7 +70,6 @@ interface HeaderProps {
 }
 
 function HeaderComponent({ translationKey }: HeaderProps) {
-  const t = useTranslations("DataTable");
   console.log(t(translationKey));
   return (
     <div className="items-center justify-between">
@@ -91,10 +90,10 @@ export function DataTable<TData, TValue>({
   renderInlineEdit,
   onQuickEdit,
 }: DataTableProps<TData, TValue>) {
-  const t = useTranslations("DataTable");
+  const t = "DataTable";
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -309,7 +308,7 @@ export function DataTable<TData, TValue>({
                             ? null
                             : flexRender(
                                 header.column.columnDef.header,
-                                header.getContext()
+                                header.getContext(),
                               )}
                         </TableHead>
                       );
@@ -338,7 +337,7 @@ export function DataTable<TData, TValue>({
                           <TableCell key={cell.id}>
                             {flexRender(
                               cell.column.columnDef.cell,
-                              cell.getContext()
+                              cell.getContext(),
                             )}
                           </TableCell>
                         ))}
@@ -353,7 +352,7 @@ export function DataTable<TData, TValue>({
                           {renderInlineEdit(
                             row.original,
                             () => setExpandedRow(null),
-                            () => setExpandedRow(null)
+                            () => setExpandedRow(null),
                           )}
                         </InlineEditRow>
                       )}

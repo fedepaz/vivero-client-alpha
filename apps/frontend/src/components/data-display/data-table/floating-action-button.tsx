@@ -3,7 +3,6 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
 
 interface FloatingActionButtonProps {
   onClick: () => void;
@@ -16,7 +15,6 @@ export function FloatingActionButton({
   label,
   className,
 }: FloatingActionButtonProps) {
-  const t = useTranslations("FloatingActionButton");
   return (
     <Button
       onClick={onClick}
@@ -24,7 +22,7 @@ export function FloatingActionButton({
       className={cn(
         "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all z-50",
         "md:h-auto md:w-auto md:rounded-md md:px-6",
-        className
+        className,
       )}
       aria-label={label || t("addNew")}
     >
