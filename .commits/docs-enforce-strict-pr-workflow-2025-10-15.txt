@@ -1,6 +1,0 @@
-docs: enforce strict pull request workflow in GEMINI.md
-
-Updated the GEMINI.md file to explicitly enforce that pull requests must target
-`frontendDev` or `backendDev` branches, and never `main`. This change
-replaces "should" with "must" for clarity and strict adherence to the
-project's Git workflow.

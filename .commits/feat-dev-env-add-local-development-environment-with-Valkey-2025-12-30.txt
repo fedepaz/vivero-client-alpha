@@ -1,7 +1,0 @@
-feat(dev-env): add local development environment with Valkey
-
-This commit introduces a Docker-based local development environment to ensure consistency for all developers.
-
-- A `docker-compose.yml` file has been added to the project root to manage MariaDB and Valkey services.
-- Valkey was chosen over Redis as the caching and queueing backend due to its permissive open-source license and drop-in compatibility.
-- All relevant agent documentation in `docs/agents/` has been updated to reflect this architectural change, replacing "Redis" with "Valkey".

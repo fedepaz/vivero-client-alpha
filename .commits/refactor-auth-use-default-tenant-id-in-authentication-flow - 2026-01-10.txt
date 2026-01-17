@@ -1,9 +1,0 @@
-refactor(auth): use default tenant ID in authentication flow
-
-This commit refactors the authentication strategy to use a default
-tenant ID from the configuration instead of extracting it from the
-Clerk JWT payload.
-
-This simplifies the development setup by removing the dependency on the
-tenant ID being present in the Clerk token. The application now falls
-back to a `DEFAULT_TENANT_ID` environment variable.

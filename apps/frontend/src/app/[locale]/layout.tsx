@@ -48,17 +48,22 @@ export default async function DashboardLayout({
         ) : (
           <ReactClientProvider>
             <Suspense fallback={<LoadingSpinner />}>
+              {/* Protected routes (Dashboard Layout) 
+            commented out for now, but can be enabled later
               <DashboardProtectedLayout>
-                <div className="flex h-screen overflow-hidden">
-                  <DesktopSidebar />
-                  <div className="flex flex-1 flex-col overflow-hidden">
-                    <DashboardHeader />
-                    <main className="flex-1 overflow-auto pb-16 md:pb-0">
-                      {children}
-                    </main>
-                  </div>
+                */}
+              <div className="flex h-screen overflow-hidden">
+                <DesktopSidebar />
+                <div className="flex flex-1 flex-col overflow-hidden">
+                  <DashboardHeader />
+                  <main className="flex-1 overflow-auto pb-16 md:pb-0">
+                    {children}
+                  </main>
                 </div>
+              </div>
+              {/* </DashboardProtectedLayout> 
               </DashboardProtectedLayout>
+                */}
             </Suspense>
           </ReactClientProvider>
         )}

@@ -1,7 +1,0 @@
-fix(ci): update PR checks to use pnpm run commands
-
-Updates the `.github/workflows/pr-checks.yml` file to use `pnpm run lint` and
-`pnpm run test` instead of direct `turbo run` commands.
-
-This resolves the "turbo: command not found" error in the GitHub Actions
-environment, ensuring that CI checks for pull requests execute correctly.

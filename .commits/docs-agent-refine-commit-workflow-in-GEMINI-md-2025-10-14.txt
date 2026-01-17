@@ -1,7 +1,0 @@
-docs(agent): refine commit workflow in GEMINI.md
-
-Updates the "Workflow for Committing and Pushing New Work" in GEMINI.md.
-
-This change adds an explicit step for generating and internally validating
-commit messages against the project's commitlint rules. This ensures
-all proposed commits are compliant before the pre-commit hooks run.

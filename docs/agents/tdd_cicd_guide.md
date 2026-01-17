@@ -1,4 +1,4 @@
-Enterprise Plant Management System
+vivero-client-alpha
 TDD & CI/CD Guide for "Chill Mode" Development 😎
 Philosophy: Write tests so good that you sleep peacefully knowing your 3-4 enterprise clients are happy and your app won't wake you up at 3 AM.
 

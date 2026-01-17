@@ -95,16 +95,14 @@ Critical Decision Points:
 
 ```
 Application Structure:
-messages/               # Internationalization messages
 src/
 ├── app/                     # Next.js 14 App Router
-│   ├── [locale]/            # Internationalization Route Segment
-│   │   ├── (dashboard)/     # Protected routes (Dashboard Layout)
-│   │   │   ├── plants/      # Routes for Plant Management Feature
-│   │   │   ├── clients/     # Routes for Client Management Feature
-│   │   │   ├── operations/  # Routes for Operations Feature
-│   │   │   └── analytics/   # Routes for Analytics Feature
-│   │   └── page.tsx         # Locale-specific root page
+│   ├── (dashboard)/     # Protected routes (Dashboard Layout)
+│   │   ├── plants/      # Routes for Plant Management Feature
+│   │   ├── clients/     # Routes for Client Management Feature
+│   │   ├── operations/  # Routes for Operations Feature
+│   │   └── analytics/   # Routes for Analytics Feature
+│   └── (auth)/              # Authentication routes (login, register)
 │   └── api/                 # API routes
 ├── features/                # 🚀 CORE: Domain-specific features (Colocated)
 │   ├── plant-management/    # Encapsulates all plant-related logic & UI
@@ -121,7 +119,6 @@ src/
 │           ├── data-table.tsx
 │           ├── slide-over-form.tsx
 │           └── floating-action-button.tsx
-├── i18n/                   # Internationalization config
 ├── lib/                    # Utilities and configurations
 │   ├── api/                # ONLY shared API clients/utils (e.g., `createClient`)
 │   └── utils/              # Generic utilities (e.g., `formatDate`, `slugify`)
@@ -131,101 +128,11 @@ src/
 └── types/                  # ONLY global or shared types (e.g., `ApiResponse<T>`)
 ```
 
-**Note on Authentication Structure:** The `(auth)` route group is intentionally placed outside the `[locale]` segment. This is the recommended practice when using an authentication provider like Clerk, which manages its own UI localization. This separation simplifies middleware and routing by decoupling the application's localization from the authentication flow.
-
+**Note on Authentication Structure:** The `(auth)` route group contains pages for login, registration, etc. These routes have a separate layout from the main application dashboard.
 
 ### Internationalization (i18n) Implementation
 
-To ensure a consistent, scalable, and performant multi-language experience, all frontend pages must use the following standards.
-
-**1. Centralized Routing Logic (`src/i18n/routing.ts`):**
-
-All logic for defining supported locales and generating static paths is centralized in this file.
-
-```typescript
-// src/i18n/routing.ts
-import { defineRouting } from "next-intl/routing";
-
-// Defines supported locales and the default
-export const routing = defineRouting({
-  locales: ["en", "es", "it"],
-  defaultLocale: "en",
-  localePrefix: "always",
-  localeDetection: true,
-});
-
-// Helper to generate static paths for all locales
-export function generateLocaleStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
-```
-
-**2. Standard for Page Components (`page.tsx`):**
-
-Every page component under the `[locale]` segment **must** handle the locale context directly. Child components can then use `useTranslations()` without any extra work.
-
-```typescript
-// Example: apps/frontend/src/app/[locale]/new-feature/page.tsx
-import { useTranslations } from "next-intl";
-import { generateLocaleStaticParams } from "@/i18n/routing";
-import { use } from "react";
-import { setRequestLocale } from "next-intl/server";
-import { FeatureDashboard } from "@/features/new-feature";
-
-// 1. Statically generate routes using the helper
-export function generateStaticParams() {
-  return generateLocaleStaticParams();
-}
-
-// 2. Define the props interface for the page
-interface NewFeaturePageProps {
-  params: Promise<{ locale: string }>;
-}
-
-// 3. Implement the page component
-export default function NewFeaturePage({ params }: NewFeaturePageProps) {
-  // 4. The page component sets the locale for the request
-  const { locale } = use(params);
-  setRequestLocale(locale);
-
-  const t = useTranslations("NewFeaturePage");
-
-  return (
-    <div>
-      <h1>{t("title")}</h1>
-      {/* The actual feature UI is in a child component */}
-      <FeatureDashboard />
-    </div>
-  );
-}
-```
-
-**3. Component-Scoped Translation Files**
-
-Instead of a single, large translation file, each feature or component that requires translations manages its own message files. This improves modularity and aligns with the project's "feature-sliced" architecture.
-
-*Example Structure:*
-```
-/src/features/plants/components/
-└── PlantCard/
-    ├── index.tsx
-    └── messages/
-        ├── en.json
-        ├── es.json
-        └── it.json
-```
-
-The JSON files within this folder must be namespaced to the component to prevent key collisions.
-
-*Example for `.../messages/en.json`:*
-```json
-{
-  "PlantCard": {
-    "status": "Status",
-    "plantedOn": "Planted on"
-  }
-}
-```
+This project is intended to be Spanish-only. All user-facing strings in the UI should be written directly in Spanish. No internationalization library is required.
 
 ### State Management for Forms
 
@@ -282,102 +189,6 @@ export function ClientsDataTable() {
 }
 ```
 
-**4. Centralized Merging of Messages (`src/i18n/request.ts`)**
-
-The `src/i18n/request.ts` file is the main `next-intl` configuration file responsible for dynamically importing and merging all individual message files into a single `messages` object at runtime. This `messages` object is then passed to the `NextIntlClientProvider` in `apps/frontend/src/app/[locale]/layout.tsx` to make translations available to client components.
-
-*Example `getRequestConfig` in `src/i18n/request.ts`:*
-```typescript
-import {getRequestConfig} from 'next-intl/server';
-import { hasLocale } from "next-intl";
-import { routing } from "./routing";
-
-export default getRequestConfig(async ({ requestLocale }) => {
-  const requested = await requestLocale;
-  const locale = hasLocale(routing.locales, requested)
-    ? requested
-    : routing.defaultLocale;
-
-  return {
-    locale,
-    messages: {
-      // Load common/global messages
-      ...(await import(`../../messages/${locale}/common.json`)).default,
-      ...(await import(`../../messages/${locale}/main.json`)).default,
-      ...(await import(`../../messages/${locale}/alerts.json`)).default,
-      ...(await import(`../../messages/${locale}/navigation.json`)).default,
-      ...(await import(
-        `../components/layout/dashboard-header/messages/${locale}.json`
-      )).default,
-      ...(await import(
-        `../components/common/language-switcher/messages/${locale}.json`
-      )).default,
-      ...(await import(
-        `../components/common/theme-toggle/messages/${locale}.json`
-      )).default,
-      ...(await import(
-        `../components/data-display/data-table/column-filters/messages/${locale}.json`
-      )).default,
-      ...(await import(
-        `../components/data-display/data-table/data-table/messages/${locale}.json`
-      )).default,
-
-      // Clients Feature
-      ...(await import(`../features/clients/components/ClientsDashboard/messages/${locale}.json`)).default,
-      ...(await import(`../features/clients/components/ClientsDashboardSkeleton/messages/${locale}.json`)).default,
-      ...(await import(`../features/clients/components/ClientsDataTable/messages/${locale}.json`)).default,
-      ...(await import(`../features/clients/components/ClientsKpi/messages/${locale}.json`)).default,
-      ...(await import(`../features/clients/components/Columns/messages/${locale}.json`)).default,
-
-      // Dashboard Feature
-      ...(await import(`../features/dashboard/components/RootDashboard/messages/${locale}.json`)).default,
-      ...(await import(`../features/dashboard/components/DashboardAlerts/messages/${locale}.json`)).default,
-      ...(await import(`../features/dashboard/components/DashboardKpi/messages/${locale}.json`)).default,
-      ...(await import(`../features/dashboard/components/FeatureNavigation/messages/${locale}.json`)).default,
-      ...(await import(`../features/dashboard/components/RecentActivity/messages/${locale}.json`)).default,
-      ...(await import(`../features/dashboard/components/RootDashboardSkeleton/messages/${locale}.json`)).default,
-
-      // Invoices Feature
-      ...(await import(`../features/invoices/components/InvoicesDashboard/messages/${locale}.json`)).default,
-      ...(await import(`../features/invoices/components/InvoicesDashboardSkeleton/messages/${locale}.json`)).default,
-      ...(await import(`../features/invoices/components/Columns/messages/${locale}.json`)).default,
-      ...(await import(`../features/invoices/components/InvoiceForm/messages/${locale}.json`)).default,
-      ...(await import(`../features/invoices/components/InvoicesDataTable/messages/${locale}.json`)).default,
-      ...(await import(`../features/invoices/components/InvoicesKpi/messages/${locale}.json`)).default,
-
-      // Plants Feature
-      ...(await import(`../features/plants/components/PlantsDashboard/messages/${locale}.json`)).default,
-      ...(await import(`../features/plants/components/PlantDashboardSkeleton/messages/${locale}.json`)).default,
-      ...(await import(`../features/plants/components/PlantsDataTable/messages/${locale}.json`)).default,
-      ...(await import(`../features/plants/components/PlantsKpi/messages/${locale}.json`)).default,
-      ...(await import(`../features/plants/components/Columns/messages/${locale}.json`)).default,
-
-      // Purchase Orders Feature
-      ...(await import(`../features/purchase-orders/components/PurchaseOrdersDashboard/messages/${locale}.json`)).default,
-      ...(await import(`../features/purchase-orders/components/PurchaseOrderSkeleton/messages/${locale}.json`)).default,
-      ...(await import(`../features/purchase-orders/components/PurchaseOrderDataTable/messages/${locale}.json`)).default,
-      ...(await import(`../features/purchase-orders/components/PurchaseOrdersKpi/messages/${locale}.json`)).default,
-      ...(await import(`../features/purchase-orders/components/PurchaseOrdersColumns/messages/${locale}.json`)).default,
-
-      // Users Feature
-      ...(await import(`../features/users/components/UsersDashboard/messages/${locale}.json`)).default,
-      ...(await import(`../features/users/components/UserDashboardSkeleton/messages/${locale}.json`)).default,
-      ...(await import(`../features/users/components/UsersUsersDataTable/messages/${locale}.json`)).default,
-      ...(await import(`../features/users/components/UserKpi/messages/${locale}.json`)).default,
-      ...(await import(`../features/users/components/Columns/messages/${locale}.json`)).default,
-    }
-  };
-});
-```
-
-**Key Requirements:**
-
-1.  **Page-Level Locale Handling**: The page component itself (e.g., `apps/frontend/src/app/[locale]/layout.tsx`) must be an `async` function, use `use(params)` to get the `locale`, call `setRequestLocale(locale)`, and pass the `messages` object (obtained from `getRequestConfig`) to the `NextIntlClientProvider`.
-2.  **Child Component Translations**: Any child components can then simply use the `useTranslations()` hook to get the correct text.
-3.  **Static Generation**: Pages must export `generateStaticParams` that calls the `generateLocaleStaticParams` helper from `routing.ts`.
-4.  **Component-Scoped Messages**: All translation strings must be colocated with their respective components in a `messages` subfolder and namespaced correctly.
-5.  **Central Merging**: All component message files must be imported and merged in the `getRequestConfig` function located in `src/i18n/request.ts`.
-
 ### Core Technology Implementation
 
 ```typescript
@@ -389,8 +200,7 @@ Tech Stack Configuration:
 ├── Tables: TanStack Table + AG Grid Enterprise
 ├── Charts: Recharts + Tremor for agricultural metrics
 ├── Icons: Lucide React (agricultural-themed icons)
-├── Authentication: Clerk integration
-├── Internationalization: next-intl (NL, DE, EN, IT)
+├── Authentication: Custom username/password
 └── Testing: Vitest + Playwright
 ```
 
@@ -400,29 +210,29 @@ A robust authentication and authorization layer is critical for the enterprise-g
 
 **Core Components & Hooks:**
 
-1.  **`AuthUserProfileProvider`**: A React context provider that wraps the application and makes the user's authentication status and profile data available globally. It is sourced from the `useAuthUserProfile` hook.
-2.  **`useAuthUserProfile` Hook**: This is the central hook for fetching the authenticated user's profile from the backend (`/api/users/me`). It uses TanStack Query for caching and state management. Crucially, it interprets various states from the API response.
-3.  **`DashboardProtectedLayout`**: A client-side layout component that acts as a state machine. It consumes the `useAuthUserProfile` context and renders the appropriate UI for the user's current state.
+1.  **`AuthProfileProvider`**: A React context provider that wraps the application and makes the user's authentication status and profile data available globally.
+2.  **`useAuth` Hook**: This is the central hook for interacting with the authentication state (e.g., `login`, `logout`, `user`, `isAuthenticated`). It will also be responsible for fetching the authenticated user's profile from the backend (`/api/users/me`) using TanStack Query for caching.
+3.  **`DashboardProtectedLayout`**: A client-side layout component that acts as a state machine. It consumes the `useAuth` context and renders the appropriate UI for the user's current state.
 
 **Key UI States Handled:**
 
 The `DashboardProtectedLayout` must handle the following states to provide a resilient user experience:
 
--   **`isLoading`**: A unified loading state that covers both the initial Clerk session loading and the subsequent backend profile fetch. A full-page spinner (`LoadingSpinner`) should be displayed.
--   **`isDatabaseUnavailable`**: Triggered if the backend API call fails. This indicates a potential problem with the backend service or database connection (e.g., a serverless database is "asleep"). A dedicated error page (`DatabaseUnavailablePage`) is shown.
--   **`isPendingPermissions`**: Occurs when a user is successfully authenticated with Clerk and the backend API call succeeds, but the backend returns no user profile. This signifies that the user's account is awaiting approval or setup. A specific page (`PendingPermissionsPage`) is displayed to inform the user.
+-   **`isLoading`**: A unified loading state that covers the initial session check and the subsequent backend profile fetch. A full-page spinner (`LoadingSpinner`) should be displayed.
+-   **`isDatabaseUnavailable`**: Triggered if the backend API call fails. This indicates a potential problem with the backend service or database connection. A dedicated error page (`DatabaseUnavailablePage`) is shown.
+-   **`isPendingPermissions`**: Occurs when a user is successfully authenticated, but the backend returns no user profile. This signifies that the user's account is awaiting approval or setup. A specific page (`PendingPermissionsPage`) is displayed to inform the user.
 -   **Authenticated & Authorized**: If a `userProfile` is present, the main application `children` are rendered.
 
-This pattern ensures that the UI gracefully handles common edge cases in a distributed, serverless architecture. All new authenticated routes should be wrapped in this protective layout.
+This pattern ensures that the UI gracefully handles common edge cases in a distributed architecture. All new authenticated routes should be wrapped in this protective layout.
 
 ### Authentication Workflow
 
-The platform uses a frontend-led authentication model, with Clerk handling user management and the frontend being responsible for passing credentials to the backend.
+The platform uses a traditional username/password authentication model.
 
-1.  **Authentication:** All user sign-up, sign-in, and session management are handled by Clerk's pre-built components within the `(auth)` route group of the Next.js application.
-2.  **Token Retrieval:** For any authenticated API request to the backend, the frontend must retrieve the session JWT from Clerk. This is done using the `getToken()` method from the `@clerk/nextjs` hook `useAuth()`.
-3.  **API Request Authorization:** The retrieved JWT must be included in the `Authorization` header of the API request, using the `Bearer` scheme. A shared API client should be configured to handle this automatically.
-4.  **Backend Communication:** The stateless NestJS backend will then receive this token, validate it using Clerk's backend SDK, and authorize the request based on the user's permissions contained within the token.
+1.  **Authentication:** The user provides their credentials on a login page. The frontend sends these to a dedicated backend endpoint (e.g., `/api/auth/login`).
+2.  **Token Retrieval:** If the credentials are valid, the backend returns a JWT. The frontend must store this token securely (e.g., in an HttpOnly cookie managed by the server or in local storage for a client-side approach).
+3.  **API Request Authorization:** For any subsequent authenticated API request to the backend, the frontend must include the JWT in the `Authorization` header, using the `Bearer` scheme. A shared API client should be configured to handle this automatically.
+4.  **Backend Communication:** The stateless NestJS backend will then receive this token, validate it, and authorize the request based on the user's permissions contained within the token.
 
 ### Shared Contract Integration
 
@@ -447,37 +257,22 @@ FEATURE_NAME=<feature-name>; mkdir -p apps/frontend/src/features/$FEATURE_NAME/{
 
 **Step 2: Create the Page Route**
 
-Create the page file that will render your feature. This file connects a URL to your feature and must handle the i18n context correctly.
+Create the page file that will render your feature. This file connects a URL to your feature.
 
 ```bash
 # Replace <feature-name> with the actual name of your feature
-touch apps/frontend/src/app/[locale]/<feature-name>/page.tsx
+touch apps/frontend/src/app/<feature-name>/page.tsx
 ```
 
 Paste the following boilerplate into the newly created page file, replacing `<FeatureDashboard>` and `<feature-name>` as needed.
 
 ```tsx
-// apps/frontend/src/app/[locale]/<feature-name>/page.tsx
+// apps/frontend/src/app/<feature-name>/page.tsx
 import { <FeatureDashboard> } from "@/features/<feature-name>";
-import { generateLocaleStaticParams } from "@/i18n/routing";
-import { use } from "react";
-import { setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { FeatureDashboardSkeleton } from "@/features/<feature-name>/components/FeatureDashboardSkeleton";
 
-export function generateStaticParams() {
-  return generateLocaleStaticParams();
-}
-
-interface FeaturePageProps {
-  params: Promise<{ locale: string }>;
-}
-
-export default function FeaturePage({ params }: FeaturePageProps) {
-  // The page is responsible for setting the locale
-  const { locale } = use(params);
-  setRequestLocale(locale);
-
+export default function FeaturePage() {
   return (
     <Suspense fallback={<FeatureDashboardSkeleton />}>
       <FeatureDashboard />
@@ -515,7 +310,7 @@ To provide the best possible user experience and perceived performance, we will 
 
 This is the first and most important loading UI the user sees.
 
--   **Convention**: For any route segment (e.g., `app/[locale]/clients/`), create a corresponding `loading.tsx` file.
+-   **Convention**: For any route segment (e.g., `app/clients/`), create a corresponding `loading.tsx` file.
 -   **Behavior**: Next.js will automatically render this file's component *instantly* while the server prepares the actual `page.tsx`. It provides an immediate, static shell of the page.
 -   **Rule of Thumb**: Wherever you create a `page.tsx`, you should create a `loading.tsx` alongside it.
 
@@ -864,13 +659,13 @@ const PlantInspectionForm = () => {
       {/* Large touch targets for mobile */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TouchFriendlyInput
-          label="Temperature (°C)"
+          label="Temperatura (°C)"
           type="number"
           inputMode="numeric"
           className="text-lg p-4" // Larger for mobile
         />
         <TouchFriendlySelect
-          label="Growth Stage"
+          label="Etapa de Crecimiento"
           options={growthStageOptions}
           className="min-h-[48px]" // Accessibility requirement
         />
@@ -880,7 +675,7 @@ const PlantInspectionForm = () => {
       {isOffline && (
         <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
           <p className="text-yellow-800 text-sm">
-            Working offline. Changes will sync when connection returns.
+            Trabajando sin conexión. Los cambios se sincronizarán cuando vuelva la conexión.
           </p>
         </div>
       )}
@@ -974,7 +769,7 @@ const PlantCreationForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["plants", tenantId]);
-      toast.success("Plant created successfully");
+      toast.success("Planta creada con éxito");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -992,7 +787,7 @@ const PlantCreationForm = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Plant Name</FormLabel>
+              <FormLabel>Nombre de la Planta</FormLabel>
               <FormControl>
                 <Input {...field} maxLength={100} />
               </FormControl>
@@ -1011,7 +806,7 @@ const PlantCreationForm = () => {
           {createPlant.isPending && (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           )}
-          Create Plant
+          Crear Planta
         </Button>
       </form>
     </Form>
@@ -1033,9 +828,9 @@ const ProductionAnalytics = ({ tenantId }: { tenantId: string }) => {
   });
 
   const chartConfig = {
-    yield: { label: "Yield Rate", color: "hsl(var(--chart-1))" },
-    quality: { label: "Quality Score", color: "hsl(var(--chart-2))" },
-    efficiency: { label: "Efficiency", color: "hsl(var(--chart-3))" },
+    yield: { label: "Tasa de Rendimiento", color: "hsl(var(--chart-1))" },
+    quality: { label: "Puntaje de Calidad", color: "hsl(var(--chart-2))" },
+    efficiency: { label: "Eficiencia", color: "hsl(var(--chart-3))" },
   };
 
   return (
@@ -1043,8 +838,8 @@ const ProductionAnalytics = ({ tenantId }: { tenantId: string }) => {
       {/* Yield trends over time */}
       <Card>
         <CardHeader>
-          <CardTitle>Yield Performance</CardTitle>
-          <CardDescription>Monthly yield rates by plant type</CardDescription>
+          <CardTitle>Rendimiento de Producción</CardTitle>
+          <CardDescription>Tasas de rendimiento mensuales por tipo de planta</CardDescription>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px]">
@@ -1067,8 +862,8 @@ const ProductionAnalytics = ({ tenantId }: { tenantId: string }) => {
       {/* Quality distribution */}
       <Card>
         <CardHeader>
-          <CardTitle>Quality Distribution</CardTitle>
-          <CardDescription>Current harvest quality grades</CardDescription>
+          <CardTitle>Distribución de Calidad</CardTitle>
+          <CardDescription>Calificaciones de calidad de la cosecha actual</CardDescription>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px]">
@@ -1106,14 +901,14 @@ All frontend unit and component tests are written using **Vitest** as the test r
 
 *   **Server Components (`page.tsx`, `layout.tsx`):**
     *   Next.js App Router `page.tsx` and `layout.tsx` files are often Server Components.
-    *   **Rule:** Do **NOT** directly unit test Server Components in a client-side test environment (like JSDOM). Server Components may use server-only features (e.g., `use(props)`) that will cause errors in client-side tests.
+    *   **Rule:** Do **NOT** directly unit test Server Components in a client-side test environment (like JSDOM).
     *   **Strategy:** Focus unit/component tests on the **Client Components** that these Server Components render. For example, if `page.tsx` renders `<RootDashboard />`, write the test for `<RootDashboard />`.
 
 #### 2. Vitest Configuration (`apps/frontend/vitest.config.mts`)
 
 This file configures Vitest for the frontend application.
 
-*   **File Extension:** Use `.mts` (Module TypeScript) for the configuration file (`vitest.config.mts`) to ensure proper ESM (ECMAScript Module) resolution, especially when importing ESM-only plugins like `@vitejs/plugin-react`.
+*   **File Extension:** Use `.mts` (Module TypeScript) for the configuration file (`vitest.config.mts`) to ensure proper ESM (ECMAScript Module) resolution.
 *   **Plugins:**
     ```typescript
     import react from "@vitejs/plugin-react";
@@ -1121,15 +916,6 @@ This file configures Vitest for the frontend application.
     plugins: [react()],
     ```
     The `@vitejs/plugin-react` is essential for correctly transforming JSX syntax in your tests.
-*   **`server.deps.inline` for `next-intl`:**
-    ```typescript
-    server: {
-      deps: {
-        inline: ["next-intl"],
-      },
-    },
-    ```
-    This configuration is crucial for resolving module import errors (e.g., `Cannot find module 'next/navigation'`) when `next-intl` is used in tests. It tells Vitest to process `next-intl` through Vite's transform pipeline.
 *   **Test-Specific PostCSS Configuration (`css.postcss`):**
     ```typescript
     css: {
@@ -1138,23 +924,18 @@ This file configures Vitest for the frontend application.
       },
     },
     ```
-    This explicitly tells Vitest to use the `postcss.config.test.mjs` file for PostCSS processing during tests. This is vital to prevent conflicts with the main `postcss.config.mjs` (which is optimized for Next.js's build process) and ensures your development environment remains functional.
+    This explicitly tells Vitest to use the `postcss.config.test.mjs` file for PostCSS processing during tests.
 
 #### 3. Global Test Setup (`apps/frontend/vitest.setup.ts`)
 
 This file centralizes common test configurations and global mocks.
 
-*   **`next-intl` Global Mock:**
-    ```typescript
-    import { vi } from "vitest";
-    import "@testing-library/jest-dom";
+```typescript
+import { vi } from "vitest";
+import "@testing-library/jest-dom";
 
-    vi.mock("next-intl", () => ({
-      useTranslations: vi.fn((namespace) => (key) => `${namespace}.${key}`),
-      NextIntlClientProvider: ({ children }) => children, // Mock provider to just render children
-    }));
-    ```
-    This global mock for `next-intl`'s `useTranslations` hook is essential. It prevents `IntlError: MISSING_MESSAGE` errors in tests by providing a predictable string (`namespace.key`) instead of requiring a full `messages` object for every component. It also mocks `NextIntlClientProvider` to simply render its children, simplifying test setup.
+// Mock any global providers or hooks here if needed
+```
 
 #### 4. Test-Specific PostCSS Configuration (`apps/frontend/postcss.config.test.mjs`)
 
@@ -1172,15 +953,15 @@ This file provides the PostCSS configuration specifically for the Vitest test en
 
     export default config;
     ```
-    This ensures that Tailwind CSS is correctly processed during tests in a format compatible with Vitest, without interfering with the main Next.js build process.
+    This ensures that Tailwind CSS is correctly processed during tests in a format compatible with Vitest.
 
 #### 5. Component Testing Best Practices
 
 *   **Colocation:** Place test files in a `__tests__/` subdirectory within the feature's component directory (e.g., `src/features/dashboard/components/__tests__/RootDashboard.test.tsx`).
-*   **`data-testid` for Skeletons:** When testing components that render skeletons (or other elements without unique text), use `data-testid` attributes to reliably select them in your tests.
+*   **`data-testid` for Skeletons:** When testing components that render skeletons, use `data-testid` attributes to reliably select them in your tests.
     *   Example: `<Card data-testid="kpi-card-skeleton">`
     *   Test assertion: `await screen.findAllByTestId("kpi-card-skeleton");`
-*   **Provider Wrapping:** Ensure your tests wrap the component under test with any necessary React Context Providers (e.g., `QueryClientProvider` for TanStack Query) that the component or its children depend on.
+*   **Provider Wrapping:** Ensure your tests wrap the component under test with any necessary React Context Providers (e.g., `QueryClientProvider` for TanStack Query).
 
 ```typescript
 // Example: RootDashboard.test.tsx
@@ -1195,7 +976,6 @@ describe("RootDashboard Component", () => {
   it("should render KPI skeletons on initial load", async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        {/* NextIntlClientProvider is no longer needed due to global mock */}
         <RootDashboard />
       </QueryClientProvider>
     );
@@ -1329,7 +1109,6 @@ Every component must include:
  * - Critical alert notifications
  * - Mobile-optimized touch interactions
  * - Offline data caching
- * - Multi-language support
  *
  * @accessibility
  * - ARIA labels for all interactive elements
@@ -1376,7 +1155,6 @@ When requesting component implementations, provide:
 - Agricultural domain rules (temperature thresholds, growth stages)
 - Validation requirements (data integrity, business rules)
 - Error handling scenarios (network failures, data conflicts)
-- Internationalization needs (NL, DE, EN, IT)
 
 **Architectural Guidance:**
 

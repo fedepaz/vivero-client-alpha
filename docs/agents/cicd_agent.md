@@ -46,14 +46,14 @@ The CI/CD agent should leverage this structured history to automate release and 
 #### 1. `pr-checks.yml` (Pull Request Quality Gate)
 
 - **Purpose**: Ensures code quality and correctness before merging.
-- **Trigger**: Runs on every `pull_request` to `main`, `frontendDev`, and `backendDev` branches.
+- **Trigger**: Runs on every `pull_request` to `main` and `dev` branches.
 - **Responsibilities**:
   - Runs linting, type-checking, and unit tests for the changed application(s) using `turbo run lint --filter=//apps/backend`, `turbo run test --filter=//apps/backend`, etc., ensuring all modules within the backend are covered. The test suites executed in this workflow are defined and maintained by the `agricultural-qa-test-automation-engineer`.
 
 #### 2. `deploy.yml` (Deployment Workflow)
 
 - **Purpose**: Manages deployments to all environments.
-- **Trigger**: Runs on every `push` to `main` (production), `frontendDev` (staging), and `backendDev` (staging).
+- **Trigger**: Runs on every `push` to `main` (production) and `dev` (staging).
 - **Responsibilities**:
   - Builds the application artifact using `turbo run build --filter=//apps/backend` for the backend, and `--filter=//apps/frontend` for the frontend.
   - Deploys to the target environment (Vercel for frontend, Render for backend).

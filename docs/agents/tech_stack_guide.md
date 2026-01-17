@@ -1,4 +1,4 @@
-# TECH-STACK.md - Enterprise Plant Management System
+# TECH-STACK.md - vivero-client-alpha
 
 ## 🎯 Mission Statement
 Build a bulletproof, enterprise-grade plant management system that converts 30-day trials into €50k+ annual contracts while you sleep peacefully knowing nothing will break at 3 AM.
@@ -16,9 +16,8 @@ Framework: Next.js 14+ (App Router)
 ├── State Management: TanStack Query (React Query)
 ├── Tables/Grids: TanStack Table + AG Grid Enterprise (optional)
 ├── Forms: React Hook Form + Zod validation
-├── Internationalization: next-intl
 ├── Charts: Recharts + Tremor
-├── Authentication: Clerk (handles sign-in, sign-up, and session management)
+├── Authentication: Custom username/password with database
 └── Styling: Tailwind CSS + MUI theming
 
 **Architectural Note**: The combination of Next.js 14 (with React Suspense) and TanStack Query is intentionally chosen to facilitate modern data fetching patterns. This stack enables the implementation of sophisticated and user-friendly loading states, such as skeleton screens, which are a core requirement for providing a high-quality, responsive user experience.
@@ -29,7 +28,7 @@ Framework: Next.js 14+ (App Router)
 Framework: NestJS (TypeScript-first)
 ├── Database ORM: Prisma
 ├── Database: MariaDB 10.9+
-├── Authentication: Validates Clerk-issued JWTs from the frontend
+├── Authentication: Manages users, roles, and session tokens
 ├── Caching: Valkey (Redis 7+ compatible fork)
 ├── Queue System: BullMQ (Valkey/Redis-based)
 ├── File Storage: AWS S3 compatible
@@ -103,8 +102,6 @@ Coverage: Vitest coverage (80%+ required)
     "recharts": "^2.9.0",
     "@tremor/react": "^3.14.0",
     
-    "next-intl": "^3.4.0",
-    "@clerk/nextjs": "^4.29.0",
     "date-fns": "^3.0.0",
     "lodash": "^4.17.21"
   },
@@ -224,13 +221,17 @@ Rationale:
 ```typescript
 Authentication Workflow:
 
-The platform uses a frontend-led authentication model with Clerk.
+The platform uses a traditional username/password authentication model managed by the backend.
 
-1.  **Frontend (Next.js):** Handles all user-facing authentication (sign-in, sign-up, profile management) using the `@clerk/nextjs` library. After a user is authenticated, the frontend is responsible for retrieving the session JWT from Clerk.
+1.  **Frontend (Next.js):** Provides the UI for login (username, password fields). When a user submits the login form, the frontend sends a request to the backend's `/auth/login` endpoint.
 
-2.  **API Requests:** For every request to the backend, the frontend attaches the Clerk-issued JWT in the `Authorization: Bearer <token>` header.
+2.  **API Requests:** After a successful login, the backend returns a JWT (JSON Web Token). The frontend must store this token securely (e.g., in an HttpOnly cookie or local storage) and include it in the `Authorization: Bearer <token>` header for all subsequent API requests.
 
-3.  **Backend (NestJS):** The backend is stateless regarding authentication. It protects its endpoints by validating the JWT from the `Authorization` header on every incoming request using Clerk's backend SDK. It never stores session state. This allows for robust, scalable, and secure authorization.
+3.  **Backend (NestJS):** The backend is responsible for:
+    - Verifying user credentials against the database.
+    - Generating and signing JWTs upon successful login.
+    - Validating the JWT on every incoming request to protected endpoints.
+    - Managing user sessions and permissions based on the token's payload.
 ```
 
 ### Caching Strategy
@@ -266,7 +267,7 @@ Valkey: 7.2+
 ```bash
 # Clone and setup
 git clone <repository>
-cd plant-management-system
+cd vivero-client-alpha
 
 # Install dependencies
 pnpm install
@@ -352,8 +353,6 @@ VALKEY_URL="valkey://localhost:6379"
 
 # Authentication
 JWT_SECRET="your-super-secure-jwt-secret-256-bits"
-CLERK_SECRET_KEY="clerk_sk_..."
-CLERK_PUBLISHABLE_KEY="clerk_pk_..."
 
 # External Services
 SENDGRID_API_KEY="SG...."
@@ -443,68 +442,6 @@ Info Alerts (Email):
 - Weekly performance summary
 - Monthly business metrics
 - Dependency update notifications
-```
-
----
-
-## 🌍 Internationalization Setup
-
-### Supported Languages & Markets
-```typescript
-Primary Markets:
-- Netherlands (nl-NL) - Tulip farms
-- Germany (de-DE) - Greenhouse operations
-- Italy (it-IT) - Vegetable farms
-- Canada (en-CA) - Large-scale agriculture
-
-Secondary Markets:
-- United States (en-US)
-- Belgium (nl-BE)
-- France (fr-FR)
-- Switzerland (de-CH)
-```
-
-### i18n Configuration
-```typescript
-// next.config.js
-const nextConfig = {
-  i18n: {
-    locales: ['en', 'nl', 'de', 'it', 'fr'],
-    defaultLocale: 'en',
-    domains: [
-      {
-        domain: 'plant-mgmt.com',
-        defaultLocale: 'en'
-      },
-      {
-        domain: 'plant-mgmt.nl',
-        defaultLocale: 'nl'
-      },
-      {
-        domain: 'plant-mgmt.de',
-        defaultLocale: 'de'
-      }
-    ]
-  }
-}
-```
-
-### Translation File Structure
-```
-/locales/
-├── en/
-│   ├── common.json
-│   ├── dashboard.json
-│   ├── plants.json
-│   ├── trial.json
-│   └── landing.json
-├── nl/
-│   ├── common.json
-│   ├── dashboard.json
-│   └── ...
-└── de/
-    ├── common.json
-    └── ...
 ```
 
 ---
@@ -696,7 +633,6 @@ Metrics to Track:
 - [ ] SSL certificates configured
 
 ### Business Readiness
-- [ ] Landing pages in all languages
 - [ ] Trial signup flow tested
 - [ ] Payment processing integrated
 - [ ] Legal terms updated

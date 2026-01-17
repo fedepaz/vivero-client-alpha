@@ -1,8 +1,0 @@
-feat(frontend): implement responsive and internationalized maintenance mode
-
-Implements a site-wide, environment-variable-driven maintenance mode. This provides a professional and consistent user experience during planned downtime or before the official launch.
-
-- The root layout (`[locale]/layout.tsx`) now conditionally renders a maintenance page based on the `NEXT_PUBLIC_MAINTENANCE_MODE` environment variable.
-- The maintenance page is rendered within the theme and i18n providers, ensuring it respects the user's language and theme settings.
-- The `ComingSoonPage` component has been refactored to be fully responsive and uses `next-intl` for translations.
-- The `i18n/request.ts` configuration has been updated to load the new component-specific translation files.

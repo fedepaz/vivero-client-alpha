@@ -15,10 +15,8 @@ This document outlines a generalized workflow to enhance a feature's data table 
 - **Action**: Create a new component `{feature_name}-form.tsx` directly inside `apps/frontend/src/features/{feature_name}/components/`.
 - **Purpose**: This form will handle the input fields for creating and updating an entity within the feature.
 - **Details**:
-    - Create a new directory `apps/frontend/src/features/{feature_name}/components/{FeatureName}Form/` which will *only* contain the `messages` subdirectory for the form's translations.
+    - Create a new directory `apps/frontend/src/features/{feature_name}/components/{FeatureName}Form/`.
     - It should use `react-hook-form` and `zodResolver` for form management and validation.
-    - Define a Zod schema for `{FeatureName}FormData` and `Update{FeatureName}Dto` in `apps/frontend/src/features/{feature_name}/types.ts`.
-    - Ensure all labels, placeholders, and button texts within the form use `useTranslations` for internationalization.
 
 ### Step 2: Implement Mutation Hooks
 
@@ -40,19 +38,9 @@ This document outlines a generalized workflow to enhance a feature's data table 
 
 - **Action**: Review and modify `apps/frontend/src/features/{feature_name}/components/columns.tsx`.
 - **Details**:
-    - Ensure that all column headers use `HeaderComponent` with the correct namespace (e.g., `useTranslations("{FeatureName}DataTable")`).
-    - Ensure any status badges or other dynamic text within cells also use `useTranslations` with the appropriate keys.
-    - If currency formatting is present, ensure it uses `useLocale` for dynamic locale-based formatting.
 
-### Step 5: Update Translation Files
 
-- **Action**: Create or update translation files for the new form component and any new keys introduced in the data table or columns.
-- **Details**:
-    - Create a `messages` directory inside `apps/frontend/src/features/{feature_name}/components/{FeatureName}Form/`.
-    - Create `en.json`, `es.json`, and `it.json` files within this `messages` directory for the `{FeatureName}Form` component.
-    - Add translation keys for all labels, placeholders, and button texts used in `{FeatureName}Form`.
-    - Add any new translation keys identified in Step 3 and Step 4 to the existing `{FeatureName}DataTable` and `{FeatureName}Kpi` translation files (e.g., `en.json`, `es.json`, `it.json` in `apps/frontend/src/features/{feature_name}/components/{FeatureName}DataTable/messages/`).
-    - Update `apps/frontend/src/i18n/request.ts` to import the new `{FeatureName}Form` translation files.
+
 
 ### Step 6: Verify Implementation
 
@@ -62,5 +50,4 @@ This document outlines a generalized workflow to enhance a feature's data table 
     - Test the "Add New" button to ensure the create modal opens and the form works correctly.
     - Test the "Edit" action for an existing entity to ensure the edit modal opens with pre-filled data and updates correctly.
     - Test the "Delete" action to confirm proper functionality.
-    - Check the browser console for any `MISSING_MESSAGE` errors or other runtime errors.
-    - Verify that all UI elements are correctly translated across all supported locales.
+    - Check the browser console for any runtime errors.

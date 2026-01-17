@@ -77,7 +77,7 @@ This workflow outlines the steps to effectively draft a comprehensive Pull Reque
 #### Workflow Steps
 
 1.  **Identify the Target Branch**
-    - Determine the `base` branch for your Pull Request (e.g., `frontendDev`, `backendDev`, or `main`). This is crucial for accurately identifying unique commits.
+    - Determine the `base` branch for your Pull Request (e.g., dev or main). This is crucial for accurately identifying unique commits.
 
 2.  **Review Commits on the Feature Branch**
     - Use `git log <base_branch>..HEAD --oneline` to list all commits unique to your current feature branch. This provides a concise overview of the work accomplished.
@@ -227,9 +227,9 @@ Agents must **always read and apply** the following project guides before respon
 ## 🌊 Git Workflow
 
 - **Branching Strategy**: All new features should be developed in a feature branch (e.g., `feat/new-feature`).
-- **Pull Requests**: Pull requests **must** be made to the `frontendDev` or `backendDev` branches. Pull requests **must never** be made directly to the `main` branch.
+- **Pull Requests**: Pull requests **must** be made to the dev branch. Pull requests **must never** be made directly to the `main` branch.
 - **No Direct Pushes to `main`**: Direct pushes to the `main` branch are **strictly prohibited**.
-- **Merging to `main`**: Merges to the `main` branch **must only** be done through the GitHub UI after a pull request to `frontendDev` or `backendDev` has been reviewed and approved.
+- **Merging to `main`**: Merges to the `main` branch **must only** be done through the GitHub UI after a pull request to dev has been reviewed and approved.
 
 ---
 
