@@ -1,7 +1,0 @@
-chore(deps): update all dependencies
-
-This commit updates all dependencies across the monorepo to their latest compatible versions.
-This resolves a high-severity vulnerability in the 'qs' package.
-
-Note: Frontend still shows peer dependency warnings related to React 19 compatibility
-with some UI and auth libraries, which will be addressed in future work if necessary.

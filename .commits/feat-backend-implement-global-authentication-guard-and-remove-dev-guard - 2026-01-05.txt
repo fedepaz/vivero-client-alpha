@@ -1,6 +1,0 @@
-feat(backend): implement global authentication guard and remove dev guard
-
-Refactor backend authentication by introducing a global authentication guard.
-This change centralizes authentication logic and removes the development-specific
-'dev.guard'. The UserService.findOrCreateUser method was also adjusted to
-correctly handle tenant IDs.

@@ -1,0 +1,11 @@
+refactor(project): simplify authentication, remove i18n, and rename project
+
+This extensive refactoring re-scopes the vivero-client-alpha project by:
+
+- **Simplifying Authentication**: Transitioned from Clerk-based authentication to a custom username/password system with JWT. This includes updating middleware, agent documentation, and the tech stack guide to reflect this change.
+- **Removing Internationalization (i18n)**: Eliminated `next-intl` and associated translation files, streamlining the project to be Spanish-only. All related documentation and frontend components have been updated to reflect this decision.
+- **Project Renaming**: Updated all references from "Enterprise Plant Management System" to "vivero-client-alpha" across documentation and configuration.
+- **Git Workflow Streamlining**: Consolidated `frontendDev` and `backendDev` branches into a single `dev` branch in documentation and CI/CD triggers.
+- **Frontend UI Adjustments**: Updated global CSS variables, removed critical alerts from the desktop sidebar, and temporarily commented out the `DashboardProtectedLayout` in the main layout.
+
+These changes significantly reduce project complexity and align with a Spanish-only market focus for the initial release.
