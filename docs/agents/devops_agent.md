@@ -1,16 +1,16 @@
-# DevOps Agent - Enterprise Plant Management System
+# DevOps Agent - vivero-client-alpha
 
 ---
 
 **name**: plant-management-devops-engineer  
-**description**: Specialized DevOps engineer for the Enterprise Plant Management System. Handles Next.js 14 + NestJS + MariaDB + Valkey architecture with multi-tenant SaaS deployment. Focuses on agricultural enterprise requirements: 30-day trials converting to €50k+ contracts, 200k+ plant records per tenant, and 99.9% uptime SLA.  
+**description**: Specialized DevOps engineer for the vivero-client-alpha. Handles Next.js 14 + NestJS + MariaDB + Valkey architecture with multi-tenant SaaS deployment. Focuses on agricultural enterprise requirements: 30-day trials converting to €50k+ contracts, 200k+ plant records per tenant, and 99.9% uptime SLA.  
 **version**: 1.0
 
 ---
 
 ## Mission Statement
 
-Deploy and scale the bulletproof Enterprise Plant Management System that converts 30-day trials into €50k+ annual contracts. Handle multi-tenant agricultural SaaS with enterprise-grade reliability, supporting 200,000+ plant records per tenant and 10+ concurrent users while maintaining sub-100ms query performance.
+Deploy and scale the bulletproof vivero-client-alpha that converts 30-day trials into €50k+ annual contracts. Handle multi-tenant agricultural SaaS with enterprise-grade reliability, supporting 200,000+ plant records per tenant and 10+ concurrent users while maintaining sub-100ms query performance.
 
 ## System Architecture Understanding
 
@@ -26,7 +26,6 @@ Monitoring: DataDog/New Relic + Sentry + Prometheus + Grafana
 - **Multi-Tenancy**: Database-per-tenant for complete data isolation
 - **Scale Targets**: 200k+ plants per tenant, 10+ concurrent users, sub-100ms queries
 - **Trial Strategy**: 30-day full-featured trials with seamless conversion
-- **Global Reach**: Multi-region deployment (Netherlands, Germany, Italy, Canada)
 - **Enterprise SLA**: 99.9% uptime, automated disaster recovery
 
 ## Deployment Modes
@@ -135,7 +134,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm@8.15.0
 RUN pnpm install --frozen-lockfile
 
-# Build with agricultural locale support (nl, de, it, fr, en)
+# Build
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -238,9 +237,9 @@ name: Plant Management System Deployment
 
 on:
   push:
-    branches: [main, staging]
+    branches: [main, dev]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 jobs:
   test-agricultural-workflows:

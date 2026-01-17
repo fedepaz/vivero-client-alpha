@@ -27,7 +27,7 @@ Day 1 (8h): Environment & Architecture
 Day 2 (8h): Database & Auth Foundation
 ├── Design core database schema (2h)
 ├── Setup Prisma + initial migrations (2h)
-├── Configure Clerk authentication (2h)
+├── Configure username/password authentication (2h)
 ├── Basic user model + JWT setup (2h)
 ```
 
@@ -52,7 +52,7 @@ Day 1 (8h): Next.js Setup
 ├── Next.js 14 configuration + routing (2h)
 ├── MUI + Tailwind integration (2h)
 ├── Layout components (2h)
-├── Authentication integration with Clerk (2h)
+├── Authentication integration (2h)
 
 Day 2 (8h): Core UI Components
 ├── Dashboard layout (3h)
@@ -90,11 +90,10 @@ Day 1 (8h): Marketing Site
 ├── Contact forms (1h)
 ├── Basic SEO setup (1h)
 
-Day 2 (8h): Multi-language Setup
-├── next-intl configuration (2h)
-├── English + Dutch translations (3h)
-├── Language switcher component (2h)
-├── Route localization (1h)
+Day 2 (8h): UI Polish
+├── Refine landing page design (3h)
+├── Improve component styles (3h)
+├── Add micro-interactions & animations (2h)
 ```
 
 #### Week 6 (16h): Trial Signup System
@@ -232,17 +231,15 @@ Day 2 (8h): Sales Support
 ├── Case study templates (2h)
 ```
 
-#### Week 15 (16h): German Market
+#### Week 15 (16h): Pre-launch Marketing
 ```bash
-Day 1 (8h): Localization
-├── German translations (4h)
-├── German landing page (2h)
-├── German email templates (2h)
+Day 1 (8h): Content Creation
+├── Write 2 blog posts about the problem being solved (4h)
+├── Create social media content for launch week (4h)
 
-Day 2 (8h): Market Research
-├── German agricultural research (4h)
-├── Competitor analysis (2h)
-├── Pricing strategy (2h)
+Day 2 (8h): Community Engagement
+├── Engage in relevant online communities (4h)
+├── Reach out to potential early adopters for feedback (4h)
 ```
 
 #### Week 16 (16h): Launch Preparation
@@ -396,7 +393,6 @@ pnpm type-check   # Quick TypeScript check
 - Code generation (components, APIs)
 - Test writing
 - Documentation
-- Translation content
 - Email templates
 - Marketing copy
 
@@ -425,7 +421,7 @@ Risk: "Over-engineering early features"
 Mitigation: Stick to MVP, resist feature creep
 
 Risk: "Authentication complexity"
-Mitigation: Use Clerk, don't build custom auth
+Mitigation: Start with a simple and secure JWT-based auth, avoid over-engineering.
 
 Risk: "Database performance issues"  
 Mitigation: Index properly, use Prisma query optimization
@@ -486,9 +482,9 @@ Week 17+:   Convert beta users to paying customers
 ### Network Building
 ```bash
 # Join communities:
-- Dutch agricultural tech groups
-- German greenhouse associations  
-- European farming forums
+- Agricultural tech groups
+- Greenhouse associations  
+- Farming forums
 - AgTech LinkedIn groups
 ```
 
@@ -501,7 +497,6 @@ Week 17+:   Convert beta users to paying customers
 - 20+ trial signups
 - 5 qualified prospects
 - 2 enterprise demos scheduled
-- German market research complete
 ```
 
 ### Month 5: Sales Acceleration  
@@ -509,7 +504,6 @@ Week 17+:   Convert beta users to paying customers
 - 40+ trial signups
 - 10 qualified prospects
 - 1 Letter of Intent signed
-- Italian market entry
 ```
 
 ### Month 6: First Enterprise Deal

@@ -1,4 +1,4 @@
-# Agricultural Backend Agent - Enterprise Plant Management System
+# Agricultural Backend Agent - vivero-client-alpha
 
 ---
 
@@ -10,7 +10,7 @@
 
 ## Mission Statement
 
-Build bulletproof backend systems for the Agricultural SaaS Platform that convert 30-day trials into €50k+ annual contracts. Implement enterprise-grade agricultural workflows supporting 200,000+ plant records per tenant, multi-tenancy with complete data isolation, and sub-100ms query performance for field workers and management teams.
+Build bulletproof backend systems for the vivero-client-alpha that convert 30-day trials into €50k+ annual contracts. Implement enterprise-grade agricultural workflows supporting 200,000+ plant records per tenant, multi-tenancy with complete data isolation, and sub-100ms query performance for field workers and management teams.
 
 ## Context & Architectural Foundation
 
@@ -83,7 +83,7 @@ As per `tdd_cicd_guide.md`, write tests before or during implementation.
 Framework: NestJS (TypeScript-first)
 Database ORM: Prisma
 Database: MariaDB 10.9+
-Authentication: Clerk (managed) + Keycloak (self-hosted)  
+Authentication: Username/Password with JWT
 Caching: Valkey (Redis 7+ compatible fork)
 Queue System: BullMQ (Valkey/Redis-based)
 File Storage: AWS S3 compatible
@@ -122,7 +122,7 @@ All incoming data to the API (e.g., request bodies, query parameters) **must** b
 ```typescript
 // src/modules/users/users.controller.ts
 import { Body, Controller, Patch, Req } from '@nestjs/common';
-import { UpdateUserProfileDto, UpdateUserProfileSchema } from '@vivero/shared';
+import { UpdateUserProfileDto, UpdateUserProfileSchema } from '@plant-mgmt/shared';
 import { ZodValidationPipe } from '../../shared/pipes/zod-validation-pipe';
 
 @Controller('users')
@@ -370,13 +370,13 @@ export class PlantController {
   async createPlant(
     @Param('tenantId') tenantId: string,
     @Body() dto: CreatePlantDto,
-    @User() user: AuthenticatedUser
+    @Req() req: any
   ): Promise<PlantResponse> {
     // Validate agricultural business rules
     await this.plantService.validatePlantCreation(tenantId, dto);
     
     // Create plant with full audit trail
-    const plant = await this.plantService.createPlant(tenantId, dto, user.id);
+    const plant = await this.plantService.createPlant(tenantId, dto, req.user.id);
     
     // Trigger agricultural workflows (planting schedule, resource allocation)
     await this.workflowService.triggerPlantCreationWorkflows(plant);

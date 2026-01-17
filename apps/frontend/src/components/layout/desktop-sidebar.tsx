@@ -9,7 +9,6 @@ import {
   Users,
   BarChart3,
   Calendar,
-  AlertTriangle,
   ChevronLeft,
   ChevronRight,
   FileText,
@@ -48,9 +47,9 @@ export function DesktopSidebar() {
   const pathname = usePathname();
   const t = useTranslations("navigation"); // Use 'navigation' namespace for menu items
   const tCommon = useTranslations("common"); // Use 'common' namespace for general terms
-  const tAlerts = useTranslations("alerts"); // Use 'alerts' namespace for alert messages
+
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
-    new Set(["operations"])
+    new Set(["operations"]),
   );
 
   const toggleGroup = (groupId: string) => {
@@ -126,7 +125,7 @@ export function DesktopSidebar() {
     <aside
       className={cn(
         "hidden md:flex flex-col bg-card border-r transition-all duration-300",
-        isCollapsed ? "w-16" : "w-64"
+        isCollapsed ? "w-16" : "w-64",
       )}
     >
       {/* Header */}
@@ -134,7 +133,7 @@ export function DesktopSidebar() {
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8  rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">AG</span>
               </div>
               <div>
@@ -160,21 +159,6 @@ export function DesktopSidebar() {
         </div>
       </div>
 
-      {/* Critical Alerts */}
-      {!isCollapsed && (
-        <div className="p-3 bg-red-50 border-b border-red-200">
-          <div className="flex items-center space-x-2 text-red-700">
-            <AlertTriangle className="h-4 w-4" />
-            <span className="text-sm font-medium">
-              {tAlerts("criticalAlerts", { count: 3 })}
-            </span>
-          </div>
-          <p className="text-xs text-red-600 mt-1">
-            {tAlerts("temperatureIssues", { location: "Greenhouse B" })}
-          </p>
-        </div>
-      )}
-
       {/* Navigation */}
       <nav className="flex-1 space-y-1 overflow-y-auto p-2">
         {navigationGroups.map((group) => {
@@ -189,7 +173,7 @@ export function DesktopSidebar() {
                 onClick={() => !isCollapsed && toggleGroup(group.id)}
                 className={cn(
                   "w-full justify-start gap-2 font-medium",
-                  isCollapsed && "justify-center"
+                  isCollapsed && "justify-center",
                 )}
               >
                 <GroupIcon className="h-5 w-5 shrink-0" />
@@ -201,7 +185,7 @@ export function DesktopSidebar() {
                     <ChevronDown
                       className={cn(
                         "h-4 w-4 transition-transform",
-                        isExpanded && "rotate-180"
+                        isExpanded && "rotate-180",
                       )}
                     />
                   </>
@@ -223,7 +207,7 @@ export function DesktopSidebar() {
                             isActive
                               ? "bg-green-100 text-green-700 border border-green-200"
                               : "hover:bg-muted text-muted-foreground hover:text-foreground",
-                            isCollapsed && "justify-center"
+                            isCollapsed && "justify-center",
                           )}
                         >
                           <div className="relative">
