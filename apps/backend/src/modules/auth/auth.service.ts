@@ -63,7 +63,7 @@ export class AuthService {
       lastName: dto.lastName,
       passwordHash,
       tenantId: dto.tenantId,
-      roleId: dto.roleId || (await this.getDefaultRoleId(dto.tenantId)),
+      roleId: dto.roleId || this.getDefaultRoleId(),
     });
 
     this.logger.log(
@@ -206,7 +206,7 @@ export class AuthService {
    * Helper: Get default role for a tenant
    * TODO: Implement proper default role lookup
    */
-  private async getDefaultRoleId(tenantId: string): Promise<string> {
+  private getDefaultRoleId(): string {
     throw new ConflictException('roleId is required for registration');
   }
 }

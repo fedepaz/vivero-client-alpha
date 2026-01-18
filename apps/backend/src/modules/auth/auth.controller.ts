@@ -72,7 +72,7 @@ export class AuthController {
    */
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@CurrentUser() user: AuthUser) {
+  logout(@CurrentUser() user: AuthUser) {
     this.logger.log(`👋 Logout: ${user.email}`);
     return { message: 'Logged out successfully' };
   }
