@@ -1,4 +1,4 @@
-// src/app/[locale]/(dashboard)/clients/page.tsx
+// src/app/(dashboard)/clients/page.tsx
 
 import { ClientsDashboard, ClientsDashboardSkeleton } from "@/features/clients";
 import { Suspense } from "react";

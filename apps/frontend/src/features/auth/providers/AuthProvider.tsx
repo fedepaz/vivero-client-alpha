@@ -15,7 +15,7 @@ export function AuthUserProfileProvider({
 }: {
   children: React.ReactNode;
 }) {
-  //const authUserProfile = useAuthUserProfile();
+  const authUserProfile = useAuthUserProfile();
 
   return (
     <AuthUserProfileContext.Provider value={authUserProfile}>

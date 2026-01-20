@@ -12,6 +12,7 @@ import { GlobalAuthGuard } from './modules/auth/guards/global-auth.guard';
 import { UsersController } from './modules/users/users.controller';
 import { UsersService } from './modules/users/users.service';
 import { UsersRepository } from './modules/users/repositories/users.repository';
+import { AuthController } from './modules/auth/auth.controller';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { UsersRepository } from './modules/users/repositories/users.repository';
     PrismaModule,
     AuthModule,
   ],
-  controllers: [HealthController, UsersController],
+  controllers: [HealthController, UsersController, AuthController],
   providers: [
     {
       provide: APP_FILTER,
