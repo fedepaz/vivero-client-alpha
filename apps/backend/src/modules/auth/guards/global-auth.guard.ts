@@ -1,27 +1,30 @@
 // src/auth/global-auth.guard.ts
 
 import {
-  CanActivate,
   ExecutionContext,
+  forwardRef,
+  Inject,
   Injectable,
   Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-
-import { Request } from 'express';
-import { IS_PUBLIC_KEY } from '../../../shared/decorators/public.decorator';
-import { AuthStrategy } from '../interfaces/auth-strategy.abstract';
+import { AuthGuard } from '@nestjs/passport';
+import { IS_PUBLIC_KEY } from 'src/shared/decorators/public.decorator';
+import { AuthService } from '../auth.service';
 
 @Injectable()
-export class GlobalAuthGuard implements CanActivate {
+export class GlobalAuthGuard extends AuthGuard('jwt') {
   private readonly logger = new Logger(GlobalAuthGuard.name);
 
   constructor(
     private reflector: Reflector,
-    private authStrategy: AuthStrategy,
-  ) {}
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
+  ) {
+    super();
+  }
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
 
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -33,41 +36,6 @@ export class GlobalAuthGuard implements CanActivate {
       this.logger.debug(`PUBLIC ENDPOINT ${request.url}`);
       return true; // Allow public endpoints to pass
     }
-
-    // Authenticate with the strategy
-    this.logger.debug(
-      `🔑 AUTH ATTEMPT | Strategy: ${this.authStrategy.getName()} | ${request.method} ${request.url}`,
-    );
-    try {
-      const isAuthenticated = await this.authStrategy.authenticate(request);
-
-      if (isAuthenticated) {
-        this.logger.log(
-          `✅ AUTH SUCCESS | Strategy: ${this.authStrategy.getName()} | IP: ${this.getClientIp(request)}`,
-        );
-      } else {
-        this.logger.warn(
-          `❌ AUTH FAILED | Strategy: ${this.authStrategy.getName()} | IP: ${this.getClientIp(request)}`,
-        );
-      }
-
-      return isAuthenticated;
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown authentication error';
-
-      this.logger.error(
-        `🔥 AUTH ERROR | Strategy: ${this.authStrategy.getName()} | ${errorMessage}`,
-      );
-      throw error; // Let SecurityExceptionFilter handle this
-    }
-  }
-
-  private getClientIp(request: Request): string {
-    return (
-      request.headers['x-forwarded-for']?.toString().split(',')[0] ||
-      request.socket?.remoteAddress ||
-      '127.0.0.1'
-    );
+    return super.canActivate(context);
   }
 }

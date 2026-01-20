@@ -1,81 +1,82 @@
 // src/modules/auth/auth.service.ts
-
 import {
   Injectable,
   UnauthorizedException,
-  ConflictException,
-  NotFoundException,
   Logger,
+  NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
-
+import { JwtService } from '@nestjs/jwt';
 import { UserAuthRepository } from './repositories/userAuth.repository';
-import { RegisterAuthDto, LoginAuthDto } from '@vivero/shared';
-
-interface JwtPayload {
-  sub: string;
-  tenantId: string;
-  roleId: string;
-}
+import {
+  LoginAuthDto,
+  AuthResponseDto,
+  TokensDto,
+  RegisterAuthDto,
+} from '@vivero/shared';
+import { ConfigService } from '@nestjs/config';
+import {
+  JwtPayload,
+  JwtRefreshPayload,
+} from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   private readonly BCRYPT_ROUNDS = 12;
-  private readonly jwtSecret: string;
-  private readonly accessTokenExpiry = '15m';
-  private readonly refreshTokenExpiry = '7d';
 
   constructor(
-    private readonly userRepository: UserAuthRepository,
-    private readonly configService: ConfigService,
-  ) {
-    this.jwtSecret =
-      this.configService.get<string>('JWT_SECRET') ||
-      'your-secret-key-change-me-in-production';
+    private readonly userAuthRepo: UserAuthRepository,
+    private readonly jwtService: JwtService,
+    private readonly config: ConfigService,
+  ) {}
+
+  async validateUser(userId: string) {
+    return this.userAuthRepo.findById(userId);
   }
 
-  /**
-   * Register a new user
-   */
-  async register(dto: RegisterAuthDto) {
-    // 1. Check if user already exists
-    const existingUser = await this.userRepository.findByEmail(dto.email);
+  async register(dto: RegisterAuthDto): Promise<AuthResponseDto> {
+    // check if user exists
+    const existingUser = await this.userAuthRepo.findByEmail(dto.email);
     if (existingUser) {
-      throw new ConflictException('Email already registered');
+      throw new ConflictException('User already exists');
     }
 
-    // 2. Validate tenant exists and is active
-    const tenant = await this.userRepository.findTenantById(dto.tenantId);
+    //validate tenantId
+    const tenant = await this.userAuthRepo.findTenantById(dto.tenantId);
     if (!tenant) {
-      throw new NotFoundException('Tenant not found or inactive');
+      throw new NotFoundException('Tenant not found');
     }
 
-    // 4. Hash password
+    //validate roleId
+    const role = await this.userAuthRepo.findRoleById(dto.roleId);
+    if (!role) {
+      throw new NotFoundException('Role not found');
+    }
+
+    // hash password
     const passwordHash = await bcrypt.hash(dto.password, this.BCRYPT_ROUNDS);
 
-    // 5. Create user
-    const user = await this.userRepository.createUser({
+    // create user
+    const user = await this.userAuthRepo.createUser({
       email: dto.email,
       firstName: dto.firstName,
       lastName: dto.lastName,
       passwordHash,
       tenantId: dto.tenantId,
-      roleId: dto.roleId || this.getDefaultRoleId(),
+      roleId: dto.roleId,
     });
 
-    this.logger.log(
-      `✅ User registered: ${user.email} | Tenant: ${user.tenantId}`,
-    );
-
-    // 6. Generate tokens
-    const tokens = this.generateTokens({
+    const userPayload = {
       sub: user.id,
+      email: user.email,
       tenantId: user.tenantId,
       roleId: user.roleId,
-    });
+    };
+
+    // generate tokens
+    const tokens = await this.generateTokens(userPayload);
 
     return {
       user: {
@@ -90,22 +91,14 @@ export class AuthService {
     };
   }
 
-  /**
-   * Login user
-   */
-  async login(dto: LoginAuthDto) {
-    const user = await this.userRepository.findByEmail(dto.email);
-
+  async login(dto: LoginAuthDto): Promise<AuthResponseDto> {
+    // validate email
+    const user = await this.userAuthRepo.findByEmail(dto.email);
     if (!user) {
-      // Use generic message to prevent user enumeration attacks
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    if (!user.isActive) {
-      throw new UnauthorizedException('Account is deactivated');
-    }
-
-    // Verify password
+    // validate password
     const isPasswordValid = await bcrypt.compare(
       dto.password,
       user.passwordHash,
@@ -114,19 +107,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Verify tenant is active
-    const tenant = await this.userRepository.findTenantById(user.tenantId);
-    if (!tenant) {
-      throw new UnauthorizedException('Tenant is inactive');
+    // check if user is active
+    if (!user.isActive) {
+      throw new UnauthorizedException('User is inactive');
     }
 
-    this.logger.log(
-      `✅ User logged in: ${user.email} | Tenant: ${user.tenantId}`,
-    );
-
-    // Generate tokens
-    const tokens = this.generateTokens({
+    // generate tokens
+    const tokens = await this.generateTokens({
       sub: user.id,
+      email: user.email,
       tenantId: user.tenantId,
       roleId: user.roleId,
     });
@@ -144,69 +133,58 @@ export class AuthService {
     };
   }
 
-  /**
-   * Get user profile by ID
-   */
-  async getProfile(userId: string) {
-    const user = await this.userRepository.findById(userId);
+  async refreshTokens(refreshToken: string): Promise<TokensDto> {
+    try {
+      const payload = this.jwtService.verify<JwtRefreshPayload>(refreshToken, {
+        secret: this.config.getOrThrow<string>('config.jwt.refreshSecret'),
+      });
 
-    if (!user) {
-      throw new NotFoundException('User not found');
+      // check if user exists
+      const user = await this.userAuthRepo.findById(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+
+      // generate tokens
+      return this.generateTokens({
+        sub: user.id,
+        email: user.email,
+        tenantId: user.tenantId,
+        roleId: user.roleId,
+      });
+    } catch (error) {
+      this.logger.error('Error refreshing tokens:', error);
+      throw new UnauthorizedException('Invalid credentials');
     }
+  }
 
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      tenantId: user.tenantId,
-      roleId: user.roleId,
-      isActive: user.isActive,
-      createdAt: user.createdAt,
+  // Helper to generate tokens using the injected JwtService
+  private async generateTokens(payload: JwtPayload): Promise<TokensDto> {
+    // Cast to Record<string, any> to satisfy JwtService typing
+    const accessTokenPayload: Record<string, any> = {
+      sub: payload.sub,
+      email: payload.email,
+      tenantId: payload.tenantId,
+      roleId: payload.roleId,
     };
-  }
 
-  /**
-   * Refresh access token
-   */
-  async refreshTokens(userId: string) {
-    const user = await this.userRepository.findById(userId);
-
-    if (!user || !user.isActive) {
-      throw new UnauthorizedException('Invalid refresh token');
-    }
-
-    return this.generateTokens({
-      sub: user.id,
-      tenantId: user.tenantId,
-      roleId: user.roleId,
-    });
-  }
-
-  /**
-   * Generate JWT tokens
-   */
-  private generateTokens(payload: JwtPayload) {
-    const accessToken = jwt.sign(payload, this.jwtSecret, {
-      expiresIn: this.accessTokenExpiry,
-    });
-
-    const refreshToken = jwt.sign(payload, this.jwtSecret, {
-      expiresIn: this.refreshTokenExpiry,
-    });
-
-    return {
-      accessToken,
-      refreshToken,
-      expiresIn: 15 * 60, // 15 minutes in seconds
+    const refreshTokenPayload: Record<string, any> = {
+      sub: payload.sub,
+      tenantId: payload.tenantId,
     };
-  }
 
-  /**
-   * Helper: Get default role for a tenant
-   * TODO: Implement proper default role lookup
-   */
-  private getDefaultRoleId(): string {
-    throw new ConflictException('roleId is required for registration');
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(accessTokenPayload, {
+        secret: this.config.getOrThrow<string>('config.jwt.secret'),
+        expiresIn: this.config.get<string>('config.jwt.expiresIn') || '15m',
+      }),
+      this.jwtService.signAsync(refreshTokenPayload, {
+        secret: this.config.getOrThrow<string>('config.jwt.refreshSecret'),
+        expiresIn:
+          this.config.get<string>('config.jwt.refreshExpiresIn') || '7d',
+      }),
+    ]);
+
+    return { accessToken, refreshToken };
   }
 }

@@ -9,10 +9,8 @@ interface AuthRequest extends Request {
 }
 
 export const CurrentUser = createParamDecorator(
-  (data: keyof AuthUser | undefined, ctx: ExecutionContext) => {
+  (data: keyof AuthUser | undefined, ctx: ExecutionContext): AuthUser => {
     const request = ctx.switchToHttp().getRequest<AuthRequest>();
-    const user = request.user;
-
-    return data ? user?.[data] : user;
+    return request.user;
   },
 );

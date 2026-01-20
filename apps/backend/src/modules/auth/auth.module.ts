@@ -1,45 +1,38 @@
 // src/auth/auth.module.ts
 
-import { Module, Provider } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { GlobalAuthGuard } from './guards/global-auth.guard';
 import { AuthService } from './auth.service';
 import { UserAuthRepository } from './repositories/userAuth.repository';
-import { AuthStrategy } from './interfaces/auth-strategy.abstract';
-import { DevAuthStrategy } from './strategies/dev-auth.strategy';
-import { ConfigService } from '@nestjs/config';
-import { JwtAuthStrategy } from './strategies/jwt-auth.strategy';
-
-// Factory provider to select the correct strategy based on the environment
-const authStrategyProvider: Provider<AuthStrategy> = {
-  provide: AuthStrategy,
-  useFactory: (
-    devStrategy: DevAuthStrategy,
-    jwtStrategy: JwtAuthStrategy,
-    config: ConfigService,
-  ) => {
-    const env = config.get<string>('config.environment');
-    console.log('🔧 AUTH STRATEGY FACTORY | config.environment =', env);
-
-    if (env === 'development') {
-      console.log('🔧 AUTH STRATEGY FACTORY | Using DevAuthStrategy');
-      return devStrategy;
-    }
-    console.log('🔧 AUTH STRATEGY FACTORY | Using JwtAuthStrategy');
-    return jwtStrategy;
-  },
-  inject: [DevAuthStrategy, JwtAuthStrategy, ConfigService],
-};
+import { ConfigService, ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './strategies/jwt-auth.strategy';
 
 @Module({
-  providers: [
-    GlobalAuthGuard,
-    AuthService,
-    UserAuthRepository,
-    authStrategyProvider,
-    DevAuthStrategy,
-    JwtAuthStrategy,
-  ],
+  imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const secret = configService.get<string>('config.jwt.secret', ' ');
+        const expiresIn = configService.get<number>(
+          'config.jwt.expiresIn',
+          3600,
+        );
 
-  exports: [GlobalAuthGuard, AuthService, AuthStrategy],
+        return {
+          secret,
+          signOptions: {
+            expiresIn,
+          },
+        };
+      },
+    }),
+  ],
+  providers: [GlobalAuthGuard, AuthService, UserAuthRepository, JwtStrategy],
+
+  exports: [GlobalAuthGuard, AuthService, PassportModule],
 })
 export class AuthModule {}
