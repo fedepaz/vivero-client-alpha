@@ -1,14 +1,11 @@
-refactor: improve db seeding and frontend loading
+feat(auth): implement full JWT refresh flow and auth hooks
 
-This commit includes two main changes:
+This commit introduces a complete, robust authentication flow on the frontend.
+It includes automatic token refreshes and a suite of custom hooks
+for easy consumption by UI components.
 
-1. Backend (Database):
-The manual prisma seed script (seed.ts) has been removed. This script was
-responsible for creating a hardcoded "Development Tenant" and default user
-roles. This approach is being deprecated in favor of a more dynamic and
-automated tenant provisioning and seeding process.
-
-2. Frontend (Layout):
-The final fallback component in the DashboardProtectedLayout has been
-changed from the ComingSoonPage to a LoadingSpinner. This provides a better
-user experience for any unexpected loading states.
+Key implementations include:
+- A full JWT refresh mechanism in `client-fetch.ts` to handle 401s and retry requests.
+- A request queue to gracefully manage concurrent API calls during a refresh.
+- New hooks (`useLogin`, `useLogout`, `useRegister`) for clean, reusable auth actions.
+- Standardized localStorage keys for tokens and user profiles across the app.

@@ -2,6 +2,7 @@
 
 "use client";
 
+import { AuthUserProfileProvider } from "@/features/auth/providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
 
@@ -23,17 +24,7 @@ export function ReactClientProvider({ children }: Props) {
   );
   return (
     <QueryClientProvider client={queryClient}>
-      {/* AuthUserProfileProvider is used to provide the user profile to the children components 
-      commented out for now, but can be enabled later
-      
-      <AuthUserProfileProvider>
-      */}
-
-      {children}
-      {/*
-              
-        </AuthUserProfileProvider>
-              */}
+      <AuthUserProfileProvider>{children}</AuthUserProfileProvider>
     </QueryClientProvider>
   );
 }

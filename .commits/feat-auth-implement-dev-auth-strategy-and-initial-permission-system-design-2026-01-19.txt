@@ -1,0 +1,18 @@
+feat(auth): implement dev auth strategy and initial permission system design
+
+This commit introduces a new development authentication strategy that
+uses a local database user instead of hardcoded values. It also
+removes all Clerk-related code and configuration.
+
+Key changes:
+- Implemented a `DevAuthStrategy` that fetches user data from the
+  database.
+- Added a `seed.ts` script to populate the database with a default
+  tenant, roles, and an admin user.
+- Removed Clerk configuration from `.env.example` and
+  `configuration.ts`.
+- Added new documentation outlining a hybrid RBAC + ABAC permission
+  system design.
+- Updated `.env.example` with new environment variables for local
+  development.
+- Added untracked documentation files for enterprise RBAC design.

@@ -48,9 +48,7 @@ export class SecurityExceptionFilter implements ExceptionFilter {
       path: request.url,
       // NEVER expose stack traces in production
       message:
-        process.env.NODE_ENV === 'production'
-          ? 'Access denied'
-          : exception.message,
+        process.env.NODE_ENV === 'production' ? 'Access denied' : exception,
     };
 
     response.status(status).json(responsePayload);

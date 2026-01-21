@@ -10,7 +10,6 @@ export default defineConfig({
     seed: 'ts-node prisma/seed.ts',
   },
   datasource: {
-    url:
-      env('DATABASE_URL') ?? 'mysql://user:password@localhost:3306/vivero_app',
+    url: env('DATABASE_URL') ?? ' ',
   },
 });

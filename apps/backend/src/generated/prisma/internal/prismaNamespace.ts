@@ -967,7 +967,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   firstName: 'firstName',
   lastName: 'lastName',
-  clerkId: 'clerkId',
+  passwordHash: 'passwordHash',
   isActive: 'isActive',
   tenantId: 'tenantId',
   roleId: 'roleId',
@@ -1079,7 +1079,7 @@ export const UserOrderByRelevanceFieldEnum = {
   email: 'email',
   firstName: 'firstName',
   lastName: 'lastName',
-  clerkId: 'clerkId',
+  passwordHash: 'passwordHash',
   tenantId: 'tenantId',
   roleId: 'roleId'
 } as const

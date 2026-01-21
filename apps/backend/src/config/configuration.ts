@@ -28,12 +28,10 @@ export type AppConfig = {
   jwt: {
     secret: string;
     expiresIn: string;
+    refreshSecret: string;
+    refreshExpiresIn: string;
   };
-  clerk: {
-    secretKey: string;
-    publishableKey: string;
-    jwtKey: string;
-  };
+
   awsS3: {
     accessKeyId: string;
     secretAccessKey: string;
@@ -55,12 +53,12 @@ const configFactory = (): AppConfig => ({
     origins: process.env.CORS_ORIGINS || '',
   },
   database: {
-    name: process.env.DATABASE_NAME || 'vivero_app',
+    name: process.env.DATABASE_NAME || 'vivero_client_alpha',
     host: process.env.DATABASE_HOST || 'localhost',
     port: parseInt(process.env.DATABASE_PORT || '3306', 10),
     username: process.env.DATABASE_USERNAME || 'user',
     password: process.env.DATABASE_PASSWORD || 'password',
-    database: process.env.DATABASE_NAME || 'vivero_app',
+    database: process.env.DATABASE_NAME || 'vivero_client_alpha',
     databaseUrl: process.env.DATABASE_URL || '',
     ssl: process.env.DATABASE_SSL === 'true',
   },
@@ -73,12 +71,12 @@ const configFactory = (): AppConfig => ({
     secret:
       process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-prod',
     expiresIn: process.env.JWT_EXPIRES_IN || '15m',
+    refreshSecret:
+      process.env.JWT_REFRESH_SECRET ||
+      'your-super-secret-refresh-jwt-key-change-in-prod',
+    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
-  clerk: {
-    secretKey: process.env.CLERK_SECRET_KEY || '',
-    publishableKey: process.env.CLERK_PUBLISHABLE_KEY || '',
-    jwtKey: process.env.CLERK_JWT_KEY || '',
-  },
+
   awsS3: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
@@ -117,10 +115,8 @@ export const validationSchema = Joi.object({
 
   JWT_SECRET: Joi.string().min(32).required(),
   JWT_EXPIRES_IN: Joi.string().default('15m'),
-
-  CLERK_SECRET_KEY: Joi.string().required(),
-  CLERK_PUBLISHABLE_KEY: Joi.string().required(),
-  CLERK_JWT_KEY: Joi.string().optional().allow(''),
+  JWT_REFRESH_SECRET: Joi.string().min(32).required(),
+  JWT_REFRESH_EXPIRES_IN: Joi.string().default('7d'),
 
   AWS_ACCESS_KEY_ID: Joi.string().optional().allow(''),
   AWS_SECRET_ACCESS_KEY: Joi.string().optional().allow(''),

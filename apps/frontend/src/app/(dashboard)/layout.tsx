@@ -1,4 +1,4 @@
-//src/app/[locale]/layout.tsx
+//src/app/(dashboard)/layout.tsx
 
 import type React from "react";
 import { Suspense } from "react";
@@ -8,6 +8,7 @@ import { DesktopSidebar } from "@/components/layout/desktop-sidebar";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { ReactClientProvider } from "@/providers/query-client-provider";
 import ComingSoonPage from "@/components/common/coming-soon";
+import { DashboardProtectedLayout } from "@/components/common/dashboard-protected-layout";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -26,22 +27,17 @@ export default async function DashboardLayout({
   return (
     <ReactClientProvider>
       <Suspense fallback={<LoadingSpinner />}>
-        {/* Protected routes (Dashboard Layout) 
-            commented out for now, but can be enabled later
-              <DashboardProtectedLayout>
-                */}
-        <div className="flex h-screen overflow-hidden">
-          <DesktopSidebar />
-          <div className="flex flex-1 flex-col overflow-hidden">
-            <DashboardHeader />
-            <main className="flex-1 overflow-auto pb-16 md:pb-0">
-              {children}
-            </main>
+        <DashboardProtectedLayout>
+          <div className="flex h-screen overflow-hidden">
+            <DesktopSidebar />
+            <div className="flex flex-1 flex-col overflow-hidden">
+              <DashboardHeader />
+              <main className="flex-1 overflow-auto pb-16 md:pb-0">
+                {children}
+              </main>
+            </div>
           </div>
-        </div>
-        {/* </DashboardProtectedLayout> 
-              </DashboardProtectedLayout>
-                */}
+        </DashboardProtectedLayout>
       </Suspense>
     </ReactClientProvider>
   );

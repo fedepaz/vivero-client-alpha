@@ -1,10 +1,24 @@
-// Should check cookie before defaulting to 'en'
+// src/app/page.tsx
+"use client";
 
-import { redirect } from "next/navigation";
+import { LoadingSpinner } from "@/components/common/loading-spinner";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default async function RootPage() {
-  // Redirect to the dashboard or login page, as the root page itself should not cause an infinite loop.
-  // For now, redirect to a placeholder, or the new dashboard structure.
-  // Assuming the new dashboard is under /dashboard for now.
-  redirect("/dashboard");
+export default function RootPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
+    if (token) {
+      router.push("/");
+    } else {
+      router.push("/login");
+    }
+  }, [router]);
+
+  return <LoadingSpinner />;
 }

@@ -2,9 +2,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { backendFetch } from "@/lib/api/backend";
 
 import { UserProfileDto } from "@vivero/shared";
+import { useAuth } from "./useAuth";
+import { clientFetch } from "@/lib/api/client-fetch";
 
 // This is the key for the query cache
 export const userProfileQueryKeys = {
@@ -13,28 +14,26 @@ export const userProfileQueryKeys = {
 };
 
 export const useAuthUserProfile = () => {
-  const { isLoaded, isSignedIn } = useUser();
+  const { isSignedIn, loading: authLoading } = useAuth();
 
   const {
     data: userProfile,
-    isLoading,
+    isLoading: queryLoading,
     isError,
     isSuccess,
     ...rest
   } = useQuery<UserProfileDto>({
     queryKey: userProfileQueryKeys.me(),
-    queryFn: () => backendFetch<UserProfileDto>("users/me", { method: "GET" }),
-    enabled: isLoaded && isSignedIn,
+    queryFn: () =>
+      clientFetch<UserProfileDto>("auth/profile", { method: "GET" }),
+    enabled: isSignedIn,
     retry: 1, // Retry once to account for transient network issues
   });
 
   // Determine if the database is unavailable
+  const isLoading = authLoading || queryLoading;
   const isDatabaseUnavailable = isError;
-
-  // Determine if permissions are pending: user is signed in, query was successful, but no userProfile is returned.
-  // This assumes the backend returns null/undefined userProfile for pending permissions when signed in.
-  const isPendingPermissions =
-    isLoaded && isSignedIn && isSuccess && !userProfile;
+  const isPendingPermissions = isSignedIn && isSuccess && !userProfile;
 
   if (userProfile) {
     console.log("userProfile", userProfile);

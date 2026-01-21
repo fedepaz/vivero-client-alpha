@@ -1,0 +1,11 @@
+feat(auth): implement full JWT refresh flow and auth hooks
+
+This commit introduces a complete, robust authentication flow on the frontend.
+It includes automatic token refreshes and a suite of custom hooks
+for easy consumption by UI components.
+
+Key implementations include:
+- A full JWT refresh mechanism in `client-fetch.ts` to handle 401s and retry requests.
+- A request queue to gracefully manage concurrent API calls during a refresh.
+- New hooks (`useLogin`, `useLogout`, `useRegister`) for clean, reusable auth actions.
+- Standardized localStorage keys for tokens and user profiles across the app.

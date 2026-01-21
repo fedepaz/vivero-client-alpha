@@ -10,10 +10,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger(PrismaService.name);
 
   constructor(private configService: ConfigService) {
-    const url =
-      configService.get<string>('config.database.databaseUrl') ||
-      'mysql://root:root@localhost:3306/vivero_app';
+    const url = configService.get<string>('config.database.databaseUrl');
 
+    if (!url) {
+      throw new Error('DATABASE_URL not found in .env file');
+    }
     const adapter = new PrismaMariaDb(url);
 
     super({ adapter });

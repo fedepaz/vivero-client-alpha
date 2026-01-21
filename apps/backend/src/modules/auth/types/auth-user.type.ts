@@ -2,7 +2,6 @@
 
 export interface AuthUser {
   id: string;
-  clerkId: string;
   email: string;
   tenantId: string;
   roleId: string;

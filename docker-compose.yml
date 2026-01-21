@@ -1,30 +1,29 @@
 services:
-  mariadb-primary:
+  mariadb-vivero-alpha:
     image: mariadb:10.9
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: vivero_app
+      MYSQL_DATABASE: vivero_client_alpha
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
     volumes:
-      - mariadb_data:/var/lib/mysql
-    # CRITICAL FOR DEVELOPMENT PERFORMANCE:
+      - mariadb_vivero_alpha_data:/var/lib/mysql
     command: >
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
       --innodb_buffer_pool_size=1G
       --max_connections=200
 
-  valkey:
+  valkey-vivero-alpha:
     image: valkey/valkey:7.2
     command: valkey-server --save 60 1 --loglevel warning
     ports:
       - "6379:6379"
     volumes:
-      - valkey_data:/data
+      - valkey_vivero_alpha_data:/data
 
 volumes:
-  mariadb_data:
-  valkey_data:
+  mariadb_vivero_alpha_data:
+  valkey_vivero_alpha_data:
