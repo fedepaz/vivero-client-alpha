@@ -1,0 +1,13 @@
+feat(auth): implement automatic JWT refresh token logic on frontend
+
+This commit implements a robust, automatic JWT refresh token mechanism
+in the `clientFetch` utility. This ensures a seamless user experience
+by preventing abrupt logouts when an access token expires.
+
+Key implementations include:
+- An interceptor that catches 401 Unauthorized errors.
+- A `refreshAccessToken` function to get a new token from the `/auth/refresh` endpoint.
+- A request queue to gracefully handle concurrent API calls during a refresh.
+- Automatic retry of failed requests upon successful token refresh.
+- A central `logout` function to clear session data if the refresh fails.
+- Helper functions for `login` and `logoutUser` to streamline auth actions.

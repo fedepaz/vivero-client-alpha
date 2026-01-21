@@ -1,26 +1,27 @@
 // app/modules/users/users.controller.ts
 
-import { Body, Controller, Get, Patch, Req } from '@nestjs/common';
+import { Body, Controller, Get, Patch } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserProfileDto, UpdateUserProfileSchema } from '@vivero/shared';
 import { ZodValidationPipe } from '../../shared/pipes/zod-validation-pipe';
-import { Request } from 'express';
+import { CurrentUser } from '../auth/decorators/current-user.decorators';
+import { AuthUser } from '../auth/types/auth-user.type';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 
   @Get('me')
-  getMe(@Req() req: Request) {
-    return this.service.getProfile(req.user.id);
+  getMe(@CurrentUser() user: AuthUser) {
+    return this.service.getProfile(user.id);
   }
 
   @Patch('me')
   updateProfile(
-    @Req() req: Request,
+    @CurrentUser() user: AuthUser,
     @Body(new ZodValidationPipe(UpdateUserProfileSchema))
     body: UpdateUserProfileDto,
   ) {
-    return this.service.updateProfile(req.user.id, body);
+    return this.service.updateProfile(user.id, body);
   }
 }

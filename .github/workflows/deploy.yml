@@ -58,8 +58,7 @@ jobs:
       - name: Run database migrations
         run: pnpm --filter backend db:migrate
         env:
-          DATABASE_URL: mysql://user:password@localhost:3306/vivero_app
-
+          DATABASE_URL: mysql://user:password@localhost:3306/vivero_client_alpha
 
       - name: Check Frontend Test Coverage
         if: matrix.app == 'frontend'

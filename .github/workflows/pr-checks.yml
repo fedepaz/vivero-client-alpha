@@ -27,7 +27,7 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm --filter backend exec prisma generate
         env:
-          DATABASE_URL: mysql://user:password@localhost:3306/vivero_app
+          DATABASE_URL: mysql://user:password@localhost:3306/vivero_client_alpha
       - name: Run linting
         run: pnpm run lint --force
       - name: Run tests

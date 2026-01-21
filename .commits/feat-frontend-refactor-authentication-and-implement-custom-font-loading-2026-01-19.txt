@@ -1,0 +1,30 @@
+feat(frontend): refactor authentication and implement custom font loading
+
+This commit refactors the frontend authentication, moving away from Clerk
+to a custom token-based flow. It also fixes font loading by integrating
+`next/font` and configuring Tailwind CSS.
+
+Key frontend changes:
+- **Authentication System**:
+  - Removed all Clerk dependencies.
+  - Implemented custom login/registration (`apps/frontend/src/app/(auth)/`).
+  - New auth hooks (`useAuth.ts`, `use-authUser.tsx`) and providers
+    (`AuthProvider.tsx`).
+  - Replaced `apps/frontend/src/lib/api/backend.ts` with
+    `apps/frontend/src/lib/api/client-fetch.ts`.
+  - Root page (`apps/frontend/src/app/page.tsx`) redirects based on auth.
+  - Added `DashboardProtectedLayout` for route protection.
+- **Font Loading**:
+  - Integrated `next/font/google` for `Inter`, `Source Serif 4`, and
+    `JetBrains Mono` fonts.
+  - Applied font CSS variables to `<html>` in `apps/frontend/src/app/layout.tsx`.
+  - Created `apps/frontend/tailwind.config.ts` to extend Tailwind's
+    `fontFamily` with new CSS font variables.
+- **UI/UX**:
+  - Updated `loading-spinner.tsx` to use primary theme color, aligning
+    with `agricultural-ux-ui-agent.md`.
+  - Removed `@clerk/themes/shadcn.css` import from `globals.css` files.
+  - Deleted `apps/frontend/src/app/(dashboard)/page.tsx`.
+
+Key backend changes:
+- Integrated `AuthController` into `app.module.ts`.

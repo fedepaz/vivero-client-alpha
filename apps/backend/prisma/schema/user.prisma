@@ -5,7 +5,7 @@ model User {
   email      String          @unique
   firstName  String?
   lastName   String?
-  clerkId    String          @unique
+  passwordHash String
   isActive   Boolean         @default(true)
   tenantId   String
   tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)

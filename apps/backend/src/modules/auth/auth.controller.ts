@@ -1,0 +1,84 @@
+// src/modules/auth/auth.controller.ts
+
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
+import {
+  RegisterAuthDto,
+  LoginAuthDto,
+  RegisterAuthSchema,
+  AuthResponseDto,
+  LoginAuthSchema,
+  RefreshTokenSchema,
+  RefreshTokenDto,
+  TokensDto,
+} from '@vivero/shared';
+import { AuthUser } from './types/auth-user.type';
+import { Public } from 'src/shared/decorators/public.decorator';
+import { CurrentUser } from './decorators/current-user.decorators';
+import { ZodValidationPipe } from 'src/shared/pipes/zod-validation-pipe';
+
+@Controller('auth')
+export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+
+  constructor(private readonly authService: AuthService) {}
+
+  /**
+   * POST /auth/register
+   * Public endpoint - register a new user
+   */
+  @Public()
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  async register(
+    @Body(new ZodValidationPipe(RegisterAuthSchema)) dto: RegisterAuthDto,
+  ): Promise<AuthResponseDto> {
+    this.logger.log(`📝 Registration attempt: ${dto.email}`);
+    return this.authService.register(dto);
+  }
+
+  /**
+   * POST /auth/login
+   * Public endpoint - login with email and password
+   */
+  @Public()
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  async login(
+    @Body(new ZodValidationPipe(LoginAuthSchema)) dto: LoginAuthDto,
+  ): Promise<AuthResponseDto> {
+    this.logger.log(`🔑 Login attempt: ${dto.email}`);
+    return this.authService.login(dto);
+  }
+
+  /**
+   * POST /auth/refresh
+   * Protected endpoint - refresh access token
+   */
+
+  @Public()
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(
+    @Body(new ZodValidationPipe(RefreshTokenSchema)) dto: RefreshTokenDto,
+  ): Promise<TokensDto> {
+    return this.authService.refreshTokens(dto.refreshToken);
+  }
+  /**
+   * POST /auth/logout
+   * Protected endpoint - logout (client-side token deletion)
+   */
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logout(@CurrentUser() user: AuthUser) {
+    this.logger.log(`👋 Logout: ${user.email}`);
+    return { message: 'Logged out successfully' };
+  }
+}
