@@ -95,7 +95,7 @@ export class AuthService {
     // validate email
     const user = await this.userAuthRepo.findByEmail(dto.email);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials - email');
     }
 
     // validate password
@@ -104,7 +104,7 @@ export class AuthService {
       user.passwordHash,
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials - password');
     }
 
     // check if user is active
@@ -173,15 +173,42 @@ export class AuthService {
       tenantId: payload.tenantId,
     };
 
+    const accessTokenSecret =
+      this.config.getOrThrow<string>('config.jwt.secret');
+    const accessTokenExpiresIn =
+      this.config.get<number>('config.jwt.expiresIn') || '15m';
+    const refreshTokenSecret = this.config.getOrThrow<string>(
+      'config.jwt.refreshSecret',
+    );
+    const refreshTokenExpiresIn =
+      this.config.get<number>('config.jwt.refreshExpiresIn') || '7d';
+
+    const nodeEnv = this.config.getOrThrow<string>('config.environment');
+
+    if (nodeEnv === 'development') {
+      this.logger.debug('--- Generating Tokens ---');
+      this.logger.debug(
+        `Access Token Payload: ${JSON.stringify(accessTokenPayload)}`,
+      );
+      this.logger.debug(`Access Token Secret: ${accessTokenSecret}`);
+      this.logger.debug(`Access Token Expires In: ${accessTokenExpiresIn}`);
+      this.logger.debug('-------------------------');
+      this.logger.debug(
+        `Refresh Token Payload: ${JSON.stringify(refreshTokenPayload)}`,
+      );
+      this.logger.debug(`Refresh Token Secret: ${refreshTokenSecret}`);
+      this.logger.debug(`Refresh Token Expires In: ${refreshTokenExpiresIn}`);
+      this.logger.debug('--- End Generating Tokens ---');
+    }
+
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(accessTokenPayload, {
-        secret: this.config.getOrThrow<string>('config.jwt.secret'),
-        expiresIn: this.config.get<string>('config.jwt.expiresIn') || '15m',
+        secret: accessTokenSecret,
+        expiresIn: accessTokenExpiresIn,
       }),
       this.jwtService.signAsync(refreshTokenPayload, {
-        secret: this.config.getOrThrow<string>('config.jwt.refreshSecret'),
-        expiresIn:
-          this.config.get<string>('config.jwt.refreshExpiresIn') || '7d',
+        secret: refreshTokenSecret,
+        expiresIn: refreshTokenExpiresIn,
       }),
     ]);
 
