@@ -4,27 +4,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "./useAuth";
 import { clientFetch } from "@/lib/api/client-fetch";
-import { UserProfileDto } from "@vivero/shared";
-
-interface RegisterRequest {
-  email: string;
-  password: string;
-  name?: string;
-  // Add other registration fields as needed
-}
-
-interface RegisterResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: UserProfileDto;
-}
+import { AuthResponseDto, RegisterAuthDto } from "@vivero/shared";
 
 export const useRegister = () => {
   const { signIn } = useAuth();
 
-  const mutation = useMutation<RegisterResponse, Error, RegisterRequest>({
+  const mutation = useMutation<AuthResponseDto, Error, RegisterAuthDto>({
     mutationFn: async (userData) => {
-      const response = await clientFetch<RegisterResponse>("auth/register", {
+      const response = await clientFetch<AuthResponseDto>("auth/register", {
         method: "POST",
         body: JSON.stringify(userData),
       });
@@ -35,7 +22,7 @@ export const useRegister = () => {
       localStorage.setItem("refreshToken", data.refreshToken);
 
       // Automatically sign in after registration
-      signIn(data.accessToken, data.user);
+      signIn(data.accessToken, data);
     },
     onError: (error) => {
       console.error("Registration failed:", error);

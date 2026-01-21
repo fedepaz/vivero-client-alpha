@@ -1,29 +1,17 @@
 // src/features/auth/hooks/useLogin.ts
-
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "./useAuth";
 import { clientFetch } from "@/lib/api/client-fetch";
-import { UserProfileDto } from "@vivero/shared";
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: UserProfileDto;
-}
+import { LoginAuthDto, AuthResponseDto } from "@vivero/shared";
 
 export const useLogin = () => {
   const { signIn } = useAuth();
 
-  const mutation = useMutation<LoginResponse, Error, LoginRequest>({
+  const mutation = useMutation<AuthResponseDto, Error, LoginAuthDto>({
     mutationFn: async (credentials) => {
-      const response = await clientFetch<LoginResponse>("auth/login", {
+      const response = await clientFetch<AuthResponseDto>("auth/login", {
         method: "POST",
         body: JSON.stringify(credentials),
       });
@@ -34,7 +22,7 @@ export const useLogin = () => {
       localStorage.setItem("refreshToken", data.refreshToken);
 
       // Update auth state via useAuth
-      signIn(data.accessToken, data.user);
+      signIn(data.accessToken, data);
     },
     onError: (error) => {
       console.error("Login failed:", error);

@@ -1,12 +1,12 @@
 // src/features/auth/hooks/useAuth.ts
 "use client";
 
-import { UserProfileDto } from "@vivero/shared";
+import { AuthResponseDto } from "@vivero/shared";
 import { useEffect, useState } from "react";
 
 interface AuthState {
   accessToken: string | null;
-  user: UserProfileDto | null;
+  user: AuthResponseDto | null;
   isSignedIn: boolean;
 }
 
@@ -40,7 +40,7 @@ export function useAuth() {
     }
   }, []);
 
-  const signIn = async (accessToken: string, user: UserProfileDto) => {
+  const signIn = async (accessToken: string, user: AuthResponseDto) => {
     localStorage.setItem(TOKEN_KEY, accessToken);
     localStorage.setItem(USER_KEY, JSON.stringify(user));
     setAuthState({
