@@ -10,8 +10,8 @@ interface AuthState {
   isSignedIn: boolean;
 }
 
-const TOKEN_KEY = "vivero-auth-token";
-const USER_KEY = "vivero-auth-user";
+const TOKEN_KEY = "accessToken";
+const USER_KEY = "userProfile";
 
 export function useAuth() {
   const [authState, setAuthState] = useState<AuthState>({

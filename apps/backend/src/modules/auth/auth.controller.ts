@@ -3,17 +3,26 @@
 import {
   Controller,
   Post,
-  Get,
   Body,
   HttpCode,
   HttpStatus,
   Logger,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterAuthDto, LoginAuthDto } from '@vivero/shared';
+import {
+  RegisterAuthDto,
+  LoginAuthDto,
+  RegisterAuthSchema,
+  AuthResponseDto,
+  LoginAuthSchema,
+  RefreshTokenSchema,
+  RefreshTokenDto,
+  TokensDto,
+} from '@vivero/shared';
 import { AuthUser } from './types/auth-user.type';
 import { Public } from 'src/shared/decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorators';
+import { ZodValidationPipe } from 'src/shared/pipes/zod-validation-pipe';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +37,9 @@ export class AuthController {
   @Public()
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() dto: RegisterAuthDto) {
+  async register(
+    @Body(new ZodValidationPipe(RegisterAuthSchema)) dto: RegisterAuthDto,
+  ): Promise<AuthResponseDto> {
     this.logger.log(`📝 Registration attempt: ${dto.email}`);
     return this.authService.register(dto);
   }
@@ -40,32 +51,26 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginAuthDto) {
+  async login(
+    @Body(new ZodValidationPipe(LoginAuthSchema)) dto: LoginAuthDto,
+  ): Promise<AuthResponseDto> {
     this.logger.log(`🔑 Login attempt: ${dto.email}`);
     return this.authService.login(dto);
-  }
-
-  /**
-   * GET /auth/profile
-   * Protected endpoint - get current user profile
-   */
-  @Get('profile')
-  async getProfile(@CurrentUser() user: AuthUser) {
-    this.logger.debug(`👤 Profile request: ${user.email}`);
-    return this.authService.getProfile(user.id);
   }
 
   /**
    * POST /auth/refresh
    * Protected endpoint - refresh access token
    */
+
+  @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(@CurrentUser() user: AuthUser) {
-    this.logger.debug(`🔄 Token refresh: ${user.email}`);
-    return this.authService.refreshTokens(user.id);
+  async refresh(
+    @Body(new ZodValidationPipe(RefreshTokenSchema)) dto: RefreshTokenDto,
+  ): Promise<TokensDto> {
+    return this.authService.refreshTokens(dto.refreshToken);
   }
-
   /**
    * POST /auth/logout
    * Protected endpoint - logout (client-side token deletion)

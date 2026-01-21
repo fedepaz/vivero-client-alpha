@@ -28,6 +28,8 @@ export type AppConfig = {
   jwt: {
     secret: string;
     expiresIn: string;
+    refreshSecret: string;
+    refreshExpiresIn: string;
   };
 
   awsS3: {
@@ -69,6 +71,10 @@ const configFactory = (): AppConfig => ({
     secret:
       process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-prod',
     expiresIn: process.env.JWT_EXPIRES_IN || '15m',
+    refreshSecret:
+      process.env.JWT_REFRESH_SECRET ||
+      'your-super-secret-refresh-jwt-key-change-in-prod',
+    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
 
   awsS3: {
@@ -109,6 +115,8 @@ export const validationSchema = Joi.object({
 
   JWT_SECRET: Joi.string().min(32).required(),
   JWT_EXPIRES_IN: Joi.string().default('15m'),
+  JWT_REFRESH_SECRET: Joi.string().min(32).required(),
+  JWT_REFRESH_EXPIRES_IN: Joi.string().default('7d'),
 
   AWS_ACCESS_KEY_ID: Joi.string().optional().allow(''),
   AWS_SECRET_ACCESS_KEY: Joi.string().optional().allow(''),

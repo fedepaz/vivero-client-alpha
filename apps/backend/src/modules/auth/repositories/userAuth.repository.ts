@@ -1,4 +1,4 @@
-// src/auth/user/user.repository.ts
+// src/auth/user/userAuth.repository.ts
 
 import { Injectable } from '@nestjs/common';
 import { Role, Tenant, User } from '../../../generated/prisma/client';

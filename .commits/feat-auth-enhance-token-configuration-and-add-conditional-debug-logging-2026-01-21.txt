@@ -1,0 +1,14 @@
+feat(auth): enhance token configuration and add conditional debug logging
+
+This commit improves the auth module for more granular control
+and a better debugging experience.
+
+- Separates JWT expiration into `JWT_EXPIRES_IN` and
+  `JWT_REFRESH_EXPIRES_IN`, allowing independent control over token lifespans.
+
+- Adds detailed, development-only debug logging to the `generateTokens` function.
+  This logging is wrapped in a `NODE_ENV === 'development'` check to prevent
+  exposing secrets in production.
+
+- Improves user feedback by providing more specific error messages for invalid
+  emails versus invalid passwords on login.

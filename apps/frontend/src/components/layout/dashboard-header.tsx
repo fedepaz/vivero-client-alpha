@@ -13,11 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { MobileNavigation } from "./mobile-navigation";
 
 import { ThemeToggle } from "@/components/common/theme-toggle";
-
-import { SignedIn, UserButton, SignedOut } from "@clerk/nextjs";
-import { Skeleton } from "../ui/skeleton";
-import { shadcn } from "@clerk/themes";
-
 export function DashboardHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -66,27 +61,6 @@ export function DashboardHeader() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>Rol de usuario</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <SignedIn>
-                  <div className="flex items-center justify-center">
-                    <UserButton
-                      showName={true}
-                      appearance={{
-                        baseTheme: shadcn,
-                        elements: {
-                          userButtonPopoverCard: {
-                            pointerEvents: "initial",
-                          },
-                        },
-                      }}
-                    />
-                  </div>
-                </SignedIn>
-                <SignedOut>
-                  {/* Shows a mock button and display user not signed in */}
-                  <div className="flex items-center justify-center">
-                    <Skeleton className="h-5 w-5" />
-                  </div>
-                </SignedOut>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
