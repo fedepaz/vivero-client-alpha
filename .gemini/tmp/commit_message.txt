@@ -1,0 +1,10 @@
+feat(auth): switch to username-based authentication
+
+This commit modifies the authentication system to use usernames instead of emails for login and registration.
+
+Key changes:
+- Added a `register` endpoint to the `AuthController`.
+- Auth-related repositories and services now query for users by `username`.
+- The `AuthUser` type and shared DTOs (`LoginAuthDto`, `RegisterAuthDto`, `AuthResponseDto`) have been updated to include the `username` field.
+- The database seed script (`seed.ts`) has been updated to generate multiple users with usernames.
+- Secured the `users` endpoint with `JwtAuthGuard`.

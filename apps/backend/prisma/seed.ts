@@ -13,48 +13,45 @@ if (!databaseUrl) {
 const adapter = new PrismaMariaDb(databaseUrl);
 const prisma = new PrismaClient({ adapter });
 
-async function main() {
-  console.log('Sedding with root user');
+async function seeder(randomLastName: string) {
+  console.log('Sedding with users');
 
-  // Create default tenant
-  const tenant = await prisma.tenant.create({
-    data: {
+  // Find default tenant
+  const tenant = await prisma.tenant.findFirst({
+    where: {
       name: 'Default Organization',
     },
   });
-  console.log('✅ Default tenant created');
+
+  if (!tenant) {
+    throw new Error('Default tenant not found');
+  }
+  console.log('✅ Default tenant');
   console.log(`Tenant Information: ${JSON.stringify(tenant)}`);
 
-  // Create admin and user roles
-  const adminRole = await prisma.role.create({
-    data: {
-      name: 'admin',
-    },
-  });
-  const userRole = await prisma.role.create({
-    data: {
-      name: 'user',
-    },
-  });
-  console.log('✅ Admin and user roles created');
-  console.log(`Role Information: ${JSON.stringify(adminRole)}`);
-  console.log(`Role Information: ${JSON.stringify(userRole)}`);
-
   // Create admin user
-  const passwordHash = await bcrypt.hash('admin123', 12);
+  const passwordHash = await bcrypt.hash(`123${randomLastName}`, 12);
 
-  const rootUser = await prisma.user.create({
+  const randomUser = await prisma.user.create({
     data: {
-      email: 'admin@admin.com',
-      firstName: 'Root',
-      lastName: 'Admin',
+      username: `usuario${randomLastName}`,
+      email: `usuario${randomLastName}@viveroalpha.dev`,
       passwordHash,
+      firstName: 'Usuario',
+      lastName: randomLastName,
       tenantId: tenant.id,
-      roleId: adminRole.id,
     },
   });
   console.log('✅ Root user created');
-  console.log(`User Information: ${JSON.stringify(rootUser)}`);
+  console.log(`User Information: ${JSON.stringify(randomUser)}`);
+}
+
+async function main() {
+  let lastName = 'aplha';
+  for (let i = 0; i < 10; i++) {
+    lastName = lastName + i;
+    await seeder(lastName);
+  }
 }
 
 main()

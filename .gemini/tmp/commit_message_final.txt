@@ -1,0 +1,20 @@
+feat(auth): transition to username-based auth and refactor users module
+
+This commit shifts the authentication system from email to username-based.
+It aligns with the project's defined authentication strategy.
+
+Auth Module Changes:
+- Adds a public `/auth/register` endpoint.
+- Updates the `/auth/login` endpoint to use `username`.
+- Auth repositories and services now use `username` for user lookups.
+- Shared DTOs and types in `@vivero/shared` are updated with `username`.
+
+Users Module Refactoring:
+- Adds new endpoints to the `UsersController` for finding users by
+  username (`/users/username/:username`) and tenant (`/users/tenant/:tenantId`).
+- The `UsersRepository` is updated with `findByUsername` and `findByTenantId`.
+- New endpoints are protected by the global `GlobalAuthGuard`.
+
+Database Seeding (`seed.ts`):
+- The seed script is refactored to populate the DB with multiple test users.
+- Removes the previous logic for creating `admin` and `user` roles.

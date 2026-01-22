@@ -17,4 +17,22 @@ export class UsersService {
   async updateProfile(userId: string, data: UpdateUserProfileDto) {
     return this.repo.updateProfile(userId, data);
   }
+
+  async getAllUsers() {
+    const users = await this.repo.findAll();
+    if (!users) throw new NotFoundException('Users not found');
+    return users;
+  }
+
+  async getUserByUsername(username: string) {
+    const user = await this.repo.findByUsername(username);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  async getUserByTenantId(tenantId: string) {
+    const users = await this.repo.findByTenantId(tenantId);
+    if (!users) throw new NotFoundException('Users not found');
+    return users;
+  }
 }

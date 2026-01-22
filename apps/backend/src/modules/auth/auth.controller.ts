@@ -54,7 +54,7 @@ export class AuthController {
   async login(
     @Body(new ZodValidationPipe(LoginAuthSchema)) dto: LoginAuthDto,
   ): Promise<AuthResponseDto> {
-    this.logger.log(`🔑 Login attempt: ${dto.email}`);
+    this.logger.log(`🔑 Login attempt: ${dto.username}`);
     return this.authService.login(dto);
   }
 
@@ -78,7 +78,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@CurrentUser() user: AuthUser) {
-    this.logger.log(`👋 Logout: ${user.email}`);
+    this.logger.log(`👋 Logout: ${user.username}`);
     return { message: 'Logged out successfully' };
   }
 }

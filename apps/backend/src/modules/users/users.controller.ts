@@ -24,4 +24,25 @@ export class UsersController {
   ) {
     return this.service.updateProfile(user.id, body);
   }
+
+  @Get('all')
+  getAllUsers() {
+    return this.service.getAllUsers();
+  }
+
+  @Get('username/:username')
+  getUserByUsername(
+    @CurrentUser() user: AuthUser,
+    @Get('username') username: string,
+  ) {
+    return this.service.getUserByUsername(username);
+  }
+
+  @Get('tenant/:tenantId')
+  getUserByTenantId(
+    @CurrentUser() user: AuthUser,
+    @Get('tenant') tenantId: string,
+  ) {
+    return this.service.getUserByTenantId(tenantId);
+  }
 }
