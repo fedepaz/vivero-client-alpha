@@ -18,6 +18,7 @@ export const useLogin = () => {
       return response;
     },
     onSuccess: (data) => {
+      console.log("onSuccess", data);
       // Store refresh token
       localStorage.setItem("refreshToken", data.refreshToken);
 

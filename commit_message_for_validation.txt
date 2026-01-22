@@ -1,11 +1,25 @@
-feat(auth): implement full JWT refresh flow and auth hooks
+feat(auth): implement full jwt refresh flow and auth hooks
 
-This commit introduces a complete, robust authentication flow on the frontend.
-It includes automatic token refreshes and a suite of custom hooks
-for easy consumption by UI components.
+This commit introduces a comprehensive overhaul of the frontend
+authentication system, implementing a robust JWT refresh token
+mechanism and significantly refactoring auth-related hooks and components.
 
-Key implementations include:
-- A full JWT refresh mechanism in `client-fetch.ts` to handle 401s and retry requests.
-- A request queue to gracefully manage concurrent API calls during a refresh.
-- New hooks (`useLogin`, `useLogout`, `useRegister`) for clean, reusable auth actions.
-- Standardized localStorage keys for tokens and user profiles across the app.
+Key changes include:
+
+- **Automatic Token Refresh**: The `client-fetch` utility now
+  automatically detects 401 Unauthorized errors, queues failed
+  requests, and uses the refresh token to obtain a new access
+  token before retrying the original request.
+- **Improved Error Handling**: A custom `ApiError` class has been
+  introduced to provide more detailed error information, including
+  HTTP status codes. The `useAuthUserProfile` hook now automatically
+  logs the user out on 401/403 errors, preventing invalid states.
+- **Refactored Auth Hooks & Components**: The login and register forms
+  have been refactored into self-contained components that use
+  `useMutation`'s `async` methods, correcting the original redirect bug.
+- **Centralized Providers**: Application-wide providers (like
+  QueryClient and Theme) have been consolidated into a single
+  `AppProviders` component for cleaner architecture.
+- **Enhanced Protected Routes**: The `DashboardProtectedLayout` now
+  handles redirects for unauthenticated users, providing a more
+  reliable route protection mechanism.

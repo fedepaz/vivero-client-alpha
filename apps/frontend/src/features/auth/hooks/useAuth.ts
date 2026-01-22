@@ -59,6 +59,7 @@ export function useAuth() {
       isSignedIn: false,
     });
   };
+  console.log("AuthState", authState);
 
   return {
     ...authState,

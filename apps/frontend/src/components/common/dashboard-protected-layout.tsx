@@ -5,6 +5,9 @@ import { useAuthUserProfileContext } from "@/features/auth/providers/AuthProvide
 import { LoadingSpinner } from "./loading-spinner";
 import { DatabaseUnavailablePage } from "./database-unavailable";
 import { PendingPermissionsPage } from "./pending-permissions";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 interface DashboardProtectedLayoutProps {
   children: React.ReactNode;
@@ -13,18 +16,25 @@ interface DashboardProtectedLayoutProps {
 export function DashboardProtectedLayout({
   children,
 }: DashboardProtectedLayoutProps) {
+  const { isSignedIn, loading: authLoading } = useAuth();
+
+  const router = useRouter();
+
   const {
     userProfile,
-    isLoading,
+    isLoading: profileLoading,
     isDatabaseUnavailable,
     isPendingPermissions,
   } = useAuthUserProfileContext();
-  // 1. Unified Loading State (includes Clerk's loading and backend data fetching)
-  // If isLoading is true, it means either Clerk is still loading, or the backend fetch is in progress.
-  if (isLoading) {
+  useEffect(() => {
+    if (!authLoading && !isSignedIn) {
+      router.replace("/login");
+    }
+  }, [authLoading, isSignedIn, router]);
+
+  if (profileLoading) {
     return <LoadingSpinner />;
   }
-
   // 2. Handle cases where the query returned an error indicating database unavailability
   if (isDatabaseUnavailable) {
     return <DatabaseUnavailablePage />;

@@ -1,11 +1,11 @@
 // apps/frontend/src/features/auth/hooks/use-authUser.tsx
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserProfileDto } from "@vivero/shared";
 import { useAuth } from "./useAuth";
-import { clientFetch } from "@/lib/api/client-fetch";
+import { ApiError, clientFetch } from "@/lib/api/client-fetch";
+import { useEffect } from "react";
 
 // This is the key for the query cache
 export const userProfileQueryKeys = {
@@ -14,37 +14,46 @@ export const userProfileQueryKeys = {
 };
 
 export const useAuthUserProfile = () => {
-  const { isSignedIn, loading: authLoading } = useAuth();
+  const { isSignedIn, loading: authLoading, signOut } = useAuth();
+  const queryClient = useQueryClient();
 
-  const {
-    data: userProfile,
-    isLoading: queryLoading,
-    isError,
-    isSuccess,
-    ...rest
-  } = useQuery<UserProfileDto>({
+  const query = useQuery<UserProfileDto>({
     queryKey: userProfileQueryKeys.me(),
-    queryFn: () =>
-      clientFetch<UserProfileDto>("auth/profile", { method: "GET" }),
+    queryFn: () => clientFetch<UserProfileDto>("users/me", { method: "GET" }),
     enabled: isSignedIn,
     retry: 1, // Retry once to account for transient network issues
   });
 
-  // Determine if the database is unavailable
-  const isLoading = authLoading || queryLoading;
-  const isDatabaseUnavailable = isError;
-  const isPendingPermissions = isSignedIn && isSuccess && !userProfile;
+  useEffect(() => {
+    if (query.isError) {
+      const error = query.error;
+      if (
+        error instanceof ApiError &&
+        (error.status === 401 || error.status === 403)
+      ) {
+        console.warn("Token expired, signing out");
+        signOut();
+        queryClient.resetQueries({ queryKey: userProfileQueryKeys.me() });
+      }
+    }
+  }, [query.isError, query.error, signOut, queryClient]);
 
-  if (userProfile) {
-    console.log("userProfile", userProfile);
-  }
+  // Determine if the database is unavailable
+  const isLoading = authLoading || query.isLoading;
+  const isDatabaseUnavailable =
+    query.isError &&
+    !(
+      query.error instanceof ApiError &&
+      (query.error.status === 401 || query.error.status === 403)
+    );
+  const isPendingPermissions = isSignedIn && query.isSuccess && !query.data;
+  console.log("Tokens and Profile", isSignedIn, isLoading, query.data);
 
   return {
-    userProfile,
+    userProfile: query.data,
     isLoading,
-    isError,
+    isError: query.isError,
     isDatabaseUnavailable,
     isPendingPermissions,
-    ...rest,
   };
 };

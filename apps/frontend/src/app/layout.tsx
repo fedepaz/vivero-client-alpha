@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import "./globals.css";
+import { AppProviders } from "@/providers/app-providers";
 
 export const metadata: Metadata = {
   title: "Vivero",
@@ -9,7 +10,6 @@ export const metadata: Metadata = {
   generator: "v0.app",
 };
 
-// Read cookie safely on the server. If cookie is missing or invalid, fall back to `en`.
 export default async function RootLayout({
   children,
 }: {
@@ -17,7 +17,9 @@ export default async function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }

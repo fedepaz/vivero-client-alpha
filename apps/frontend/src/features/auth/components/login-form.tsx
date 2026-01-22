@@ -1,7 +1,6 @@
 // src/features/auth/components/login-form.tsx
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
 import { Sprout, Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
@@ -9,39 +8,29 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { useLogin } from "../hooks/useLogin";
+import { useRouter } from "next/navigation";
 
-interface LoginFormProps extends React.ComponentProps<"div"> {
-  onSubmit?: (email: string, password: string) => Promise<void>;
-  registerUrl?: string;
-  forgotPasswordUrl?: string;
-}
+export function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-export function LoginForm({
-  className,
-  onSubmit,
-  registerUrl = "/register",
-  forgotPasswordUrl = "/forgot-password",
-  ...props
-}: LoginFormProps) {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const { loginAsync, isLoading } = useLogin();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setIsLoading(true);
 
     try {
-      if (onSubmit) {
-        await onSubmit(email, password);
-      }
+      await loginAsync({ email, password });
+      // Optionally redirect on success — or let useAuth handle it via context
+      router.push("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Ocurrió un error");
-    } finally {
-      setIsLoading(false);
+      setError(err instanceof Error ? err.message : "Error al iniciar sesión");
     }
   };
 
@@ -49,9 +38,7 @@ export function LoginForm({
     <div
       className={cn(
         "min-h-screen flex items-center justify-center bg-background p-4 sm:p-6 md:p-8",
-        className,
       )}
-      {...props}
     >
       <div className="max-w-md w-full space-y-6 md:space-y-8">
         {/* Logo */}
@@ -120,13 +107,6 @@ export function LoginForm({
                   <Label htmlFor="password" className="text-foreground">
                     Contraseña
                   </Label>
-                  <Link
-                    href={forgotPasswordUrl}
-                    className="text-sm text-primary underline-offset-4 hover:underline"
-                    tabIndex={isLoading ? -1 : 0}
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </Link>
                 </div>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -184,7 +164,7 @@ export function LoginForm({
         <p className="text-center text-sm text-muted-foreground">
           ¿No tienes una cuenta?{" "}
           <Link
-            href={registerUrl}
+            href={"/register"}
             className="font-medium text-primary underline-offset-4 hover:underline"
             tabIndex={isLoading ? -1 : 0}
           >

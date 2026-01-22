@@ -1,4 +1,4 @@
-// src/app/[locale]/not-found.tsx
+// src/app/(dashboard)/not-found.tsx
 
 import { NotFoundPage } from "@/components/common/not-found";
 

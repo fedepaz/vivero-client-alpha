@@ -1,106 +1,49 @@
 // src/features/auth/components/register-form.tsx
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
-import {
-  Sprout,
-  Loader2,
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  User,
-  Check,
-  X,
-} from "lucide-react";
+import { Sprout, Loader2, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRegister } from "../hooks/useRegister";
 
-interface RegisterFormProps extends React.ComponentProps<"div"> {
-  onSubmit?: (data: {
-    name: string;
-    email: string;
-    password: string;
-  }) => Promise<void>;
-  loginUrl?: string;
-}
+export function RegisterForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [tenantId, setTenantId] = useState("");
+  const [roleId, setRoleId] = useState("");
+  const router = useRouter();
 
-function PasswordRequirement({ met, label }: { met: boolean; label: string }) {
-  return (
-    <li
-      className={cn(
-        "flex items-center gap-2 text-xs",
-        met ? "text-primary" : "text-muted-foreground",
-      )}
-    >
-      {met ? (
-        <Check className="h-3 w-3" />
-      ) : (
-        <X className="h-3 w-3 text-muted-foreground/50" />
-      )}
-      {label}
-    </li>
-  );
-}
-
-export function RegisterForm({
-  className,
-  onSubmit,
-  loginUrl = "/login",
-  ...props
-}: RegisterFormProps) {
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-
-  // Password validation
-  const passwordRequirements = React.useMemo(() => {
-    return {
-      minLength: password.length >= 8,
-      hasUppercase: /[A-Z]/.test(password),
-      hasLowercase: /[a-z]/.test(password),
-      hasNumber: /[0-9]/.test(password),
-    };
-  }, [password]);
-
-  const isPasswordValid = Object.values(passwordRequirements).every(Boolean);
-  const passwordsMatch = password === confirmPassword && confirmPassword !== "";
+  const { registerAsync, isLoading } = useRegister();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    if (!isPasswordValid) {
-      setError(
-        "Por favor asegúrate que tu contraseña cumpla con todos los requisitos",
-      );
-      return;
-    }
-
-    if (!passwordsMatch) {
-      setError("Las contraseñas no coinciden");
-      return;
-    }
-
-    setIsLoading(true);
-
     try {
-      if (onSubmit) {
-        await onSubmit({ name, email, password });
-      }
+      await registerAsync({
+        email,
+        password,
+        firstName,
+        lastName,
+        tenantId,
+        roleId,
+      });
+      // Optionally redirect on success — or let useAuth handle it via context
+      router.push("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Ocurrió un error");
-    } finally {
-      setIsLoading(false);
+      setError(err instanceof Error ? err.message : "Error al registrar");
+      console.error(err);
     }
   };
 
@@ -108,9 +51,7 @@ export function RegisterForm({
     <div
       className={cn(
         "min-h-screen flex items-center justify-center bg-background p-4 sm:p-6 md:p-8",
-        className,
       )}
-      {...props}
     >
       <div className="max-w-md w-full space-y-6 md:space-y-8">
         {/* Logo */}
@@ -159,13 +100,46 @@ export function RegisterForm({
                     <User className="h-4 w-4 text-primary" />
                   </div>
                   <Input
-                    id="name"
+                    id="firstName"
                     type="text"
-                    placeholder="Juan Pérez"
-                    autoComplete="name"
+                    placeholder="Juan"
+                    autoComplete="firstName"
                     required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    disabled={isLoading}
+                    className="pl-14 h-12 rounded-lg"
+                  />
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Pérez"
+                    autoComplete="lastName"
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    disabled={isLoading}
+                    className="pl-14 h-12 rounded-lg"
+                  />
+                  <Input
+                    id="tenantId"
+                    type="text"
+                    placeholder="00000000-0000-0000-0000-000000000000"
+                    autoComplete="tenantId"
+                    required
+                    value={tenantId}
+                    onChange={(e) => setTenantId(e.target.value)}
+                    disabled={isLoading}
+                    className="pl-14 h-12 rounded-lg"
+                  />
+                  <Input
+                    id="roleId"
+                    type="text"
+                    placeholder="00000000-0000-0000-0000-000000000000"
+                    autoComplete="roleId"
+                    required
+                    value={roleId}
+                    onChange={(e) => setRoleId(e.target.value)}
                     disabled={isLoading}
                     className="pl-14 h-12 rounded-lg"
                   />
@@ -231,27 +205,6 @@ export function RegisterForm({
                     )}
                   </button>
                 </div>
-                {/* Password Requirements */}
-                {password && (
-                  <ul className="mt-2 grid gap-1 p-3 rounded-lg bg-muted/30">
-                    <PasswordRequirement
-                      met={passwordRequirements.minLength}
-                      label="Al menos 8 caracteres"
-                    />
-                    <PasswordRequirement
-                      met={passwordRequirements.hasUppercase}
-                      label="Una letra mayúscula"
-                    />
-                    <PasswordRequirement
-                      met={passwordRequirements.hasLowercase}
-                      label="Una letra minúscula"
-                    />
-                    <PasswordRequirement
-                      met={passwordRequirements.hasNumber}
-                      label="Un número"
-                    />
-                  </ul>
-                )}
               </div>
 
               {/* Confirm Password Field */}
@@ -274,10 +227,7 @@ export function RegisterForm({
                     disabled={isLoading}
                     className={cn(
                       "pl-14 pr-12 h-12 rounded-lg",
-                      confirmPassword &&
-                        (passwordsMatch
-                          ? "border-primary focus-visible:ring-primary/50"
-                          : "border-destructive focus-visible:ring-destructive/50"),
+                      confirmPassword,
                     )}
                   />
                   <button
@@ -298,7 +248,7 @@ export function RegisterForm({
                     )}
                   </button>
                 </div>
-                {confirmPassword && !passwordsMatch && (
+                {confirmPassword && (
                   <p className="text-xs text-destructive">
                     Las contraseñas no coinciden
                   </p>
@@ -309,7 +259,7 @@ export function RegisterForm({
               <Button
                 type="submit"
                 className="w-full h-12 rounded-lg text-base font-medium"
-                disabled={isLoading || !isPasswordValid || !passwordsMatch}
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <>
@@ -328,7 +278,7 @@ export function RegisterForm({
         <p className="text-center text-sm text-muted-foreground">
           ¿Ya tienes una cuenta?{" "}
           <Link
-            href={loginUrl}
+            href={"/login"}
             className="font-medium text-primary underline-offset-4 hover:underline"
             tabIndex={isLoading ? -1 : 0}
           >

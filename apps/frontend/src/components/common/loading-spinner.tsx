@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 const messages = [
@@ -23,20 +22,7 @@ function getRandomMessage() {
 }
 
 export function LoadingSpinner() {
-  const [currentMessage, setCurrentMessage] = useState(getRandomMessage);
-  const [isVisible, setIsVisible] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsVisible(false);
-      setTimeout(() => {
-        setCurrentMessage(getRandomMessage());
-        setIsVisible(true);
-      }, 300);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const currentMessage = getRandomMessage();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
@@ -94,9 +80,7 @@ export function LoadingSpinner() {
           <p
             className={cn(
               "text-sm font-medium text-muted-foreground text-center transition-all duration-300",
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-2",
+              "opacity-100 translate-y-0",
             )}
           >
             {currentMessage}

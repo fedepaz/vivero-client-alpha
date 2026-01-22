@@ -1,4 +1,4 @@
-// src/app/[locale]/(dashboard)/loading.tsx
+// src/app/(dashboard)/loading.tsx
 
 import { RootDashboardSkeleton } from "@/features/dashboard/components/root-dashboard-skeleton";
 

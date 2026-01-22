@@ -1,4 +1,4 @@
-//src/app/[locale]/(dashboard)/users/page.tsx
+//src/app/(dashboard)/users/page.tsx
 
 import { UsersDashboard, UsersDashboardSkeleton } from "@/features/users";
 import { Suspense } from "react";
