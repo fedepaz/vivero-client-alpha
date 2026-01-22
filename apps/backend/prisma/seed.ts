@@ -13,44 +13,27 @@ if (!databaseUrl) {
 const adapter = new PrismaMariaDb(databaseUrl);
 const prisma = new PrismaClient({ adapter });
 
-async function seeder(randomLastName: string) {
-  console.log('Sedding with users');
-
-  // Find default tenant
-  const tenant = await prisma.tenant.findFirst({
-    where: {
-      name: 'Default Organization',
-    },
-  });
-
-  if (!tenant) {
-    throw new Error('Default tenant not found');
-  }
-  console.log('✅ Default tenant');
-  console.log(`Tenant Information: ${JSON.stringify(tenant)}`);
-
-  // Create admin user
-  const passwordHash = await bcrypt.hash(`123${randomLastName}`, 12);
-
-  const randomUser = await prisma.user.create({
-    data: {
-      username: `usuario${randomLastName}`,
-      email: `usuario${randomLastName}@viveroalpha.dev`,
-      passwordHash,
-      firstName: 'Usuario',
-      lastName: randomLastName,
-      tenantId: tenant.id,
-    },
-  });
-  console.log('✅ Root user created');
-  console.log(`User Information: ${JSON.stringify(randomUser)}`);
-}
-
 async function main() {
-  let lastName = 'aplha';
-  for (let i = 0; i < 10; i++) {
-    lastName = lastName + i;
-    await seeder(lastName);
+  const tenant = await prisma.tenant.findFirst({
+    where: { name: 'Default Organization' },
+  });
+  if (!tenant) throw new Error('Default tenant not found');
+
+  for (let i = 1; i <= 10; i++) {
+    const suffix = i.toString().padStart(2, '0'); // e.g., '01', '02'
+    const passwordHash = await bcrypt.hash(`123${suffix}`, 12);
+    const user = await prisma.user.create({
+      data: {
+        username: `usuario${suffix}`,
+        email: `usuario${suffix}@viveroalpha.dev`,
+        passwordHash,
+        firstName: 'Usuario',
+        lastName: `Apellido${suffix}`,
+        tenantId: tenant.id,
+      },
+    });
+    console.log(`✅ Created user usuario${suffix}`);
+    console.info(`Información de usuario usuario${suffix}:`, user);
   }
 }
 

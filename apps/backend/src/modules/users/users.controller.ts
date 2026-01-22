@@ -1,6 +1,6 @@
 // app/modules/users/users.controller.ts
 
-import { Body, Controller, Get, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserProfileDto, UpdateUserProfileSchema } from '@vivero/shared';
 import { ZodValidationPipe } from '../../shared/pipes/zod-validation-pipe';
@@ -33,7 +33,7 @@ export class UsersController {
   @Get('username/:username')
   getUserByUsername(
     @CurrentUser() user: AuthUser,
-    @Get('username') username: string,
+    @Param('username') username: string,
   ) {
     return this.service.getUserByUsername(username);
   }
@@ -41,7 +41,7 @@ export class UsersController {
   @Get('tenant/:tenantId')
   getUserByTenantId(
     @CurrentUser() user: AuthUser,
-    @Get('tenant') tenantId: string,
+    @Param('tenant') tenantId: string,
   ) {
     return this.service.getUserByTenantId(tenantId);
   }
