@@ -38,7 +38,7 @@ export class AuthService {
 
   async register(dto: RegisterAuthDto): Promise<AuthResponseDto> {
     // check if user exists
-    const existingUser = await this.userAuthRepo.findByEmail(dto.email);
+    const existingUser = await this.userAuthRepo.findByUsername(dto.username);
     if (existingUser) {
       throw new ConflictException('User already exists');
     }
@@ -49,30 +49,23 @@ export class AuthService {
       throw new NotFoundException('Tenant not found');
     }
 
-    //validate roleId
-    const role = await this.userAuthRepo.findRoleById(dto.roleId);
-    if (!role) {
-      throw new NotFoundException('Role not found');
-    }
-
     // hash password
     const passwordHash = await bcrypt.hash(dto.password, this.BCRYPT_ROUNDS);
 
     // create user
     const user = await this.userAuthRepo.createUser({
+      username: dto.username,
       email: dto.email,
       firstName: dto.firstName,
       lastName: dto.lastName,
       passwordHash,
       tenantId: dto.tenantId,
-      roleId: dto.roleId,
     });
 
     const userPayload = {
       sub: user.id,
-      email: user.email,
+      username: user.username,
       tenantId: user.tenantId,
-      roleId: user.roleId,
     };
 
     // generate tokens
@@ -81,19 +74,20 @@ export class AuthService {
     return {
       user: {
         id: user.id,
+        username: user.username,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
         tenantId: user.tenantId,
-        roleId: user.roleId,
       },
       ...tokens,
     };
   }
 
   async login(dto: LoginAuthDto): Promise<AuthResponseDto> {
-    // validate email
-    const user = await this.userAuthRepo.findByEmail(dto.email);
+    // validate username
+    const user = await this.userAuthRepo.findByUsername(dto.username);
+
     if (!user) {
       throw new UnauthorizedException('Invalid credentials - email');
     }
@@ -115,19 +109,18 @@ export class AuthService {
     // generate tokens
     const tokens = await this.generateTokens({
       sub: user.id,
-      email: user.email,
+      username: user.username,
       tenantId: user.tenantId,
-      roleId: user.roleId,
     });
 
     return {
       user: {
         id: user.id,
+        username: user.username,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
         tenantId: user.tenantId,
-        roleId: user.roleId,
       },
       ...tokens,
     };
@@ -148,9 +141,8 @@ export class AuthService {
       // generate tokens
       return this.generateTokens({
         sub: user.id,
-        email: user.email,
+        username: user.username,
         tenantId: user.tenantId,
-        roleId: user.roleId,
       });
     } catch (error) {
       this.logger.error('Error refreshing tokens:', error);
@@ -163,9 +155,8 @@ export class AuthService {
     // Cast to Record<string, any> to satisfy JwtService typing
     const accessTokenPayload: Record<string, any> = {
       sub: payload.sub,
-      email: payload.email,
+      username: payload.username,
       tenantId: payload.tenantId,
-      roleId: payload.roleId,
     };
 
     const refreshTokenPayload: Record<string, any> = {

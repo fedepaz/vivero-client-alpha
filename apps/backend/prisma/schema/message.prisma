@@ -4,7 +4,6 @@ model Message {
   id          String @id @unique
   locale_code String
   value       String
-  locale      Locale @relation(fields: [locale_code], references: [code], onDelete: Cascade)
 
   @@unique([id, locale_code]) //  Ensure message IDs are unique per locale
   @@index([locale_code]) //  Fast lookups by language

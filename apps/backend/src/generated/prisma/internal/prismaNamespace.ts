@@ -384,12 +384,9 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   AuditLog: 'AuditLog',
-  Locale: 'Locale',
   Message: 'Message',
-  Role: 'Role',
   Tenant: 'Tenant',
-  User: 'User',
-  UserPreference: 'UserPreference'
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +402,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "auditLog" | "locale" | "message" | "role" | "tenant" | "user" | "userPreference"
+    modelProps: "auditLog" | "message" | "tenant" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -475,72 +472,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Locale: {
-      payload: Prisma.$LocalePayload<ExtArgs>
-      fields: Prisma.LocaleFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.LocaleFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocalePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.LocaleFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocalePayload>
-        }
-        findFirst: {
-          args: Prisma.LocaleFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocalePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.LocaleFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocalePayload>
-        }
-        findMany: {
-          args: Prisma.LocaleFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocalePayload>[]
-        }
-        create: {
-          args: Prisma.LocaleCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocalePayload>
-        }
-        createMany: {
-          args: Prisma.LocaleCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        delete: {
-          args: Prisma.LocaleDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocalePayload>
-        }
-        update: {
-          args: Prisma.LocaleUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocalePayload>
-        }
-        deleteMany: {
-          args: Prisma.LocaleDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.LocaleUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        upsert: {
-          args: Prisma.LocaleUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LocalePayload>
-        }
-        aggregate: {
-          args: Prisma.LocaleAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateLocale>
-        }
-        groupBy: {
-          args: Prisma.LocaleGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.LocaleGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.LocaleCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.LocaleCountAggregateOutputType> | number
-        }
-      }
-    }
     Message: {
       payload: Prisma.$MessagePayload<ExtArgs>
       fields: Prisma.MessageFieldRefs
@@ -604,72 +535,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MessageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MessageCountAggregateOutputType> | number
-        }
-      }
-    }
-    Role: {
-      payload: Prisma.$RolePayload<ExtArgs>
-      fields: Prisma.RoleFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.RoleFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.RoleFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
-        }
-        findFirst: {
-          args: Prisma.RoleFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.RoleFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
-        }
-        findMany: {
-          args: Prisma.RoleFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>[]
-        }
-        create: {
-          args: Prisma.RoleCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
-        }
-        createMany: {
-          args: Prisma.RoleCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        delete: {
-          args: Prisma.RoleDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
-        }
-        update: {
-          args: Prisma.RoleUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
-        }
-        deleteMany: {
-          args: Prisma.RoleDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.RoleUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        upsert: {
-          args: Prisma.RoleUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePayload>
-        }
-        aggregate: {
-          args: Prisma.RoleAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateRole>
-        }
-        groupBy: {
-          args: Prisma.RoleGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RoleGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.RoleCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RoleCountAggregateOutputType> | number
         }
       }
     }
@@ -805,72 +670,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    UserPreference: {
-      payload: Prisma.$UserPreferencePayload<ExtArgs>
-      fields: Prisma.UserPreferenceFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.UserPreferenceFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPreferencePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.UserPreferenceFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPreferencePayload>
-        }
-        findFirst: {
-          args: Prisma.UserPreferenceFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPreferencePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.UserPreferenceFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPreferencePayload>
-        }
-        findMany: {
-          args: Prisma.UserPreferenceFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPreferencePayload>[]
-        }
-        create: {
-          args: Prisma.UserPreferenceCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPreferencePayload>
-        }
-        createMany: {
-          args: Prisma.UserPreferenceCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        delete: {
-          args: Prisma.UserPreferenceDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPreferencePayload>
-        }
-        update: {
-          args: Prisma.UserPreferenceUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPreferencePayload>
-        }
-        deleteMany: {
-          args: Prisma.UserPreferenceDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.UserPreferenceUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        upsert: {
-          args: Prisma.UserPreferenceUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPreferencePayload>
-        }
-        aggregate: {
-          args: Prisma.UserPreferenceAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateUserPreference>
-        }
-        groupBy: {
-          args: Prisma.UserPreferenceGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserPreferenceGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.UserPreferenceCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserPreferenceCountAggregateOutputType> | number
-        }
-      }
-    }
   }
 } & {
   other: {
@@ -926,15 +725,6 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
-export const LocaleScalarFieldEnum = {
-  code: 'code',
-  name: 'name',
-  is_active: 'is_active'
-} as const
-
-export type LocaleScalarFieldEnum = (typeof LocaleScalarFieldEnum)[keyof typeof LocaleScalarFieldEnum]
-
-
 export const MessageScalarFieldEnum = {
   id: 'id',
   locale_code: 'locale_code',
@@ -942,14 +732,6 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
-
-
-export const RoleScalarFieldEnum = {
-  id: 'id',
-  name: 'name'
-} as const
-
-export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
 
 
 export const TenantScalarFieldEnum = {
@@ -964,29 +746,18 @@ export type TenantScalarFieldEnum = (typeof TenantScalarFieldEnum)[keyof typeof 
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  username: 'username',
   email: 'email',
   firstName: 'firstName',
   lastName: 'lastName',
   passwordHash: 'passwordHash',
   isActive: 'isActive',
   tenantId: 'tenantId',
-  roleId: 'roleId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const UserPreferenceScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  preferred_locale_code: 'preferred_locale_code',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type UserPreferenceScalarFieldEnum = (typeof UserPreferenceScalarFieldEnum)[keyof typeof UserPreferenceScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1041,14 +812,6 @@ export const AuditLogOrderByRelevanceFieldEnum = {
 export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
 
 
-export const LocaleOrderByRelevanceFieldEnum = {
-  code: 'code',
-  name: 'name'
-} as const
-
-export type LocaleOrderByRelevanceFieldEnum = (typeof LocaleOrderByRelevanceFieldEnum)[keyof typeof LocaleOrderByRelevanceFieldEnum]
-
-
 export const MessageOrderByRelevanceFieldEnum = {
   id: 'id',
   locale_code: 'locale_code',
@@ -1056,14 +819,6 @@ export const MessageOrderByRelevanceFieldEnum = {
 } as const
 
 export type MessageOrderByRelevanceFieldEnum = (typeof MessageOrderByRelevanceFieldEnum)[keyof typeof MessageOrderByRelevanceFieldEnum]
-
-
-export const RoleOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name'
-} as const
-
-export type RoleOrderByRelevanceFieldEnum = (typeof RoleOrderByRelevanceFieldEnum)[keyof typeof RoleOrderByRelevanceFieldEnum]
 
 
 export const TenantOrderByRelevanceFieldEnum = {
@@ -1076,24 +831,15 @@ export type TenantOrderByRelevanceFieldEnum = (typeof TenantOrderByRelevanceFiel
 
 export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
+  username: 'username',
   email: 'email',
   firstName: 'firstName',
   lastName: 'lastName',
   passwordHash: 'passwordHash',
-  tenantId: 'tenantId',
-  roleId: 'roleId'
+  tenantId: 'tenantId'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
-
-
-export const UserPreferenceOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  preferred_locale_code: 'preferred_locale_code'
-} as const
-
-export type UserPreferenceOrderByRelevanceFieldEnum = (typeof UserPreferenceOrderByRelevanceFieldEnum)[keyof typeof UserPreferenceOrderByRelevanceFieldEnum]
 
 
 
@@ -1253,12 +999,9 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
-  locale?: Prisma.LocaleOmit
   message?: Prisma.MessageOmit
-  role?: Prisma.RoleOmit
   tenant?: Prisma.TenantOmit
   user?: Prisma.UserOmit
-  userPreference?: Prisma.UserPreferenceOmit
 }
 
 /* Types for Logging */

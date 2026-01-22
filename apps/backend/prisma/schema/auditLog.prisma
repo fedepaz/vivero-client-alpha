@@ -10,7 +10,7 @@ model AuditLog {
   entityType EntityType
   entityId   String
   changes    Json
-  timestamp  DateTime        @default(now())
+  timestamp  DateTime        @default(now( ))
   ipAddress  String?
   userAgent  String?
 

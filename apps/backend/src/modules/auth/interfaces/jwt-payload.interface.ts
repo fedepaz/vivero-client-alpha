@@ -2,9 +2,8 @@
 
 export interface JwtPayload {
   sub: string;
-  email: string;
+  username: string;
   tenantId: string;
-  roleId: string;
 }
 
 export interface JwtRefreshPayload {

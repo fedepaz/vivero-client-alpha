@@ -42,20 +42,10 @@ export { Prisma }
  */
 export type AuditLog = Prisma.AuditLogModel
 /**
- * Model Locale
- * 
- */
-export type Locale = Prisma.LocaleModel
-/**
  * Model Message
  * 
  */
 export type Message = Prisma.MessageModel
-/**
- * Model Role
- * 
- */
-export type Role = Prisma.RoleModel
 /**
  * Model Tenant
  * 
@@ -66,8 +56,3 @@ export type Tenant = Prisma.TenantModel
  * 
  */
 export type User = Prisma.UserModel
-/**
- * Model UserPreference
- * 
- */
-export type UserPreference = Prisma.UserPreferenceModel

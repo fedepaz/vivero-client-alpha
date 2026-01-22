@@ -1,21 +1,34 @@
 // shared/src/schemas/auth.schema.ts
 
 import { z } from "zod";
-
 export const RegisterAuthSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6), // Minimum password length
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  tenantId: z.string().uuid(), // Assuming tenantId is a UUID
-  roleId: z.string().uuid(),
+  username: z.string().min(1, { message: "Nombre de usuario es obligatorio" }),
+  password: z
+    .string()
+    .min(4, { message: "Contraseña es obligatoria, mínimo 4 caracteres" })
+    .max(12, { message: "Contraseña es obligatoria, máximo 12 caracteres" }),
+  firstName: z
+    .string()
+    .min(1)
+    .max(50, { message: "Nombre de usuario máximo 50 caracteres" })
+    .optional(),
+  lastName: z
+    .string()
+    .min(1)
+    .max(50, { message: "Apellido máximo 50 caracteres" })
+    .optional(),
+  email: z.string().email({ message: "Email no válido" }).optional(),
+  tenantId: z.string().uuid(),
 });
 
 export type RegisterAuthDto = z.infer<typeof RegisterAuthSchema>;
 
 export const LoginAuthSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1), // Password will be compared after fetching user
+  username: z.string().min(1, { message: "Nombre de usuario es obligatorio" }),
+  password: z
+    .string()
+    .min(4, { message: "Contraseña es obligatoria, mínimo 4 caracteres" })
+    .max(12, { message: "Contraseña es obligatoria, máximo 12 caracteres" }),
 });
 
 export type LoginAuthDto = z.infer<typeof LoginAuthSchema>;
@@ -43,11 +56,11 @@ export type TokensDto = z.infer<typeof Tokens>;
 export const AuthResponseSchema = z.object({
   user: z.object({
     id: z.string().uuid(),
-    email: z.string().email(),
+    username: z.string().min(1),
+    email: z.string().email().nullable(),
     firstName: z.string().nullable(),
     lastName: z.string().nullable(),
     tenantId: z.string().uuid(),
-    roleId: z.string().uuid(),
   }),
   accessToken: z.string(),
   refreshToken: z.string(),

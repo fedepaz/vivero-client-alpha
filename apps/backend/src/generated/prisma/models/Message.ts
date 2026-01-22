@@ -165,14 +165,12 @@ export type MessageWhereInput = {
   id?: Prisma.StringFilter<"Message"> | string
   locale_code?: Prisma.StringFilter<"Message"> | string
   value?: Prisma.StringFilter<"Message"> | string
-  locale?: Prisma.XOR<Prisma.LocaleScalarRelationFilter, Prisma.LocaleWhereInput>
 }
 
 export type MessageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   locale_code?: Prisma.SortOrder
   value?: Prisma.SortOrder
-  locale?: Prisma.LocaleOrderByWithRelationInput
   _relevance?: Prisma.MessageOrderByRelevanceInput
 }
 
@@ -184,7 +182,6 @@ export type MessageWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MessageWhereInput | Prisma.MessageWhereInput[]
   locale_code?: Prisma.StringFilter<"Message"> | string
   value?: Prisma.StringFilter<"Message"> | string
-  locale?: Prisma.XOR<Prisma.LocaleScalarRelationFilter, Prisma.LocaleWhereInput>
 }, "id" | "id" | "id_locale_code">
 
 export type MessageOrderByWithAggregationInput = {
@@ -207,8 +204,8 @@ export type MessageScalarWhereWithAggregatesInput = {
 
 export type MessageCreateInput = {
   id: string
+  locale_code: string
   value: string
-  locale: Prisma.LocaleCreateNestedOneWithoutMessagesInput
 }
 
 export type MessageUncheckedCreateInput = {
@@ -219,8 +216,8 @@ export type MessageUncheckedCreateInput = {
 
 export type MessageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  locale_code?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
-  locale?: Prisma.LocaleUpdateOneRequiredWithoutMessagesNestedInput
 }
 
 export type MessageUncheckedUpdateInput = {
@@ -237,6 +234,7 @@ export type MessageCreateManyInput = {
 
 export type MessageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  locale_code?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -244,16 +242,6 @@ export type MessageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   locale_code?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type MessageListRelationFilter = {
-  every?: Prisma.MessageWhereInput
-  some?: Prisma.MessageWhereInput
-  none?: Prisma.MessageWhereInput
-}
-
-export type MessageOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type MessageOrderByRelevanceInput = {
@@ -285,120 +273,12 @@ export type MessageMinOrderByAggregateInput = {
   value?: Prisma.SortOrder
 }
 
-export type MessageCreateNestedManyWithoutLocaleInput = {
-  create?: Prisma.XOR<Prisma.MessageCreateWithoutLocaleInput, Prisma.MessageUncheckedCreateWithoutLocaleInput> | Prisma.MessageCreateWithoutLocaleInput[] | Prisma.MessageUncheckedCreateWithoutLocaleInput[]
-  connectOrCreate?: Prisma.MessageCreateOrConnectWithoutLocaleInput | Prisma.MessageCreateOrConnectWithoutLocaleInput[]
-  createMany?: Prisma.MessageCreateManyLocaleInputEnvelope
-  connect?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-}
-
-export type MessageUncheckedCreateNestedManyWithoutLocaleInput = {
-  create?: Prisma.XOR<Prisma.MessageCreateWithoutLocaleInput, Prisma.MessageUncheckedCreateWithoutLocaleInput> | Prisma.MessageCreateWithoutLocaleInput[] | Prisma.MessageUncheckedCreateWithoutLocaleInput[]
-  connectOrCreate?: Prisma.MessageCreateOrConnectWithoutLocaleInput | Prisma.MessageCreateOrConnectWithoutLocaleInput[]
-  createMany?: Prisma.MessageCreateManyLocaleInputEnvelope
-  connect?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-}
-
-export type MessageUpdateManyWithoutLocaleNestedInput = {
-  create?: Prisma.XOR<Prisma.MessageCreateWithoutLocaleInput, Prisma.MessageUncheckedCreateWithoutLocaleInput> | Prisma.MessageCreateWithoutLocaleInput[] | Prisma.MessageUncheckedCreateWithoutLocaleInput[]
-  connectOrCreate?: Prisma.MessageCreateOrConnectWithoutLocaleInput | Prisma.MessageCreateOrConnectWithoutLocaleInput[]
-  upsert?: Prisma.MessageUpsertWithWhereUniqueWithoutLocaleInput | Prisma.MessageUpsertWithWhereUniqueWithoutLocaleInput[]
-  createMany?: Prisma.MessageCreateManyLocaleInputEnvelope
-  set?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-  disconnect?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-  delete?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-  connect?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-  update?: Prisma.MessageUpdateWithWhereUniqueWithoutLocaleInput | Prisma.MessageUpdateWithWhereUniqueWithoutLocaleInput[]
-  updateMany?: Prisma.MessageUpdateManyWithWhereWithoutLocaleInput | Prisma.MessageUpdateManyWithWhereWithoutLocaleInput[]
-  deleteMany?: Prisma.MessageScalarWhereInput | Prisma.MessageScalarWhereInput[]
-}
-
-export type MessageUncheckedUpdateManyWithoutLocaleNestedInput = {
-  create?: Prisma.XOR<Prisma.MessageCreateWithoutLocaleInput, Prisma.MessageUncheckedCreateWithoutLocaleInput> | Prisma.MessageCreateWithoutLocaleInput[] | Prisma.MessageUncheckedCreateWithoutLocaleInput[]
-  connectOrCreate?: Prisma.MessageCreateOrConnectWithoutLocaleInput | Prisma.MessageCreateOrConnectWithoutLocaleInput[]
-  upsert?: Prisma.MessageUpsertWithWhereUniqueWithoutLocaleInput | Prisma.MessageUpsertWithWhereUniqueWithoutLocaleInput[]
-  createMany?: Prisma.MessageCreateManyLocaleInputEnvelope
-  set?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-  disconnect?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-  delete?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-  connect?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
-  update?: Prisma.MessageUpdateWithWhereUniqueWithoutLocaleInput | Prisma.MessageUpdateWithWhereUniqueWithoutLocaleInput[]
-  updateMany?: Prisma.MessageUpdateManyWithWhereWithoutLocaleInput | Prisma.MessageUpdateManyWithWhereWithoutLocaleInput[]
-  deleteMany?: Prisma.MessageScalarWhereInput | Prisma.MessageScalarWhereInput[]
-}
-
-export type MessageCreateWithoutLocaleInput = {
-  id: string
-  value: string
-}
-
-export type MessageUncheckedCreateWithoutLocaleInput = {
-  id: string
-  value: string
-}
-
-export type MessageCreateOrConnectWithoutLocaleInput = {
-  where: Prisma.MessageWhereUniqueInput
-  create: Prisma.XOR<Prisma.MessageCreateWithoutLocaleInput, Prisma.MessageUncheckedCreateWithoutLocaleInput>
-}
-
-export type MessageCreateManyLocaleInputEnvelope = {
-  data: Prisma.MessageCreateManyLocaleInput | Prisma.MessageCreateManyLocaleInput[]
-  skipDuplicates?: boolean
-}
-
-export type MessageUpsertWithWhereUniqueWithoutLocaleInput = {
-  where: Prisma.MessageWhereUniqueInput
-  update: Prisma.XOR<Prisma.MessageUpdateWithoutLocaleInput, Prisma.MessageUncheckedUpdateWithoutLocaleInput>
-  create: Prisma.XOR<Prisma.MessageCreateWithoutLocaleInput, Prisma.MessageUncheckedCreateWithoutLocaleInput>
-}
-
-export type MessageUpdateWithWhereUniqueWithoutLocaleInput = {
-  where: Prisma.MessageWhereUniqueInput
-  data: Prisma.XOR<Prisma.MessageUpdateWithoutLocaleInput, Prisma.MessageUncheckedUpdateWithoutLocaleInput>
-}
-
-export type MessageUpdateManyWithWhereWithoutLocaleInput = {
-  where: Prisma.MessageScalarWhereInput
-  data: Prisma.XOR<Prisma.MessageUpdateManyMutationInput, Prisma.MessageUncheckedUpdateManyWithoutLocaleInput>
-}
-
-export type MessageScalarWhereInput = {
-  AND?: Prisma.MessageScalarWhereInput | Prisma.MessageScalarWhereInput[]
-  OR?: Prisma.MessageScalarWhereInput[]
-  NOT?: Prisma.MessageScalarWhereInput | Prisma.MessageScalarWhereInput[]
-  id?: Prisma.StringFilter<"Message"> | string
-  locale_code?: Prisma.StringFilter<"Message"> | string
-  value?: Prisma.StringFilter<"Message"> | string
-}
-
-export type MessageCreateManyLocaleInput = {
-  id: string
-  value: string
-}
-
-export type MessageUpdateWithoutLocaleInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type MessageUncheckedUpdateWithoutLocaleInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type MessageUncheckedUpdateManyWithoutLocaleInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
 
 
 export type MessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   locale_code?: boolean
   value?: boolean
-  locale?: boolean | Prisma.LocaleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["message"]>
 
 
@@ -410,15 +290,10 @@ export type MessageSelectScalar = {
 }
 
 export type MessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "locale_code" | "value", ExtArgs["result"]["message"]>
-export type MessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  locale?: boolean | Prisma.LocaleDefaultArgs<ExtArgs>
-}
 
 export type $MessagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Message"
-  objects: {
-    locale: Prisma.$LocalePayload<ExtArgs>
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     locale_code: string
@@ -763,7 +638,6 @@ readonly fields: MessageFieldRefs;
  */
 export interface Prisma__MessageClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  locale<T extends Prisma.LocaleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocaleDefaultArgs<ExtArgs>>): Prisma.Prisma__LocaleClient<runtime.Types.Result.GetResult<Prisma.$LocalePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -813,10 +687,6 @@ export type MessageFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  /**
    * Filter, which Message to fetch.
    */
   where: Prisma.MessageWhereUniqueInput
@@ -835,10 +705,6 @@ export type MessageFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  /**
    * Filter, which Message to fetch.
    */
   where: Prisma.MessageWhereUniqueInput
@@ -856,10 +722,6 @@ export type MessageFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Message
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
   /**
    * Filter, which Message to fetch.
    */
@@ -909,10 +771,6 @@ export type MessageFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  /**
    * Filter, which Message to fetch.
    */
   where?: Prisma.MessageWhereInput
@@ -961,10 +819,6 @@ export type MessageFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  /**
    * Filter, which Messages to fetch.
    */
   where?: Prisma.MessageWhereInput
@@ -1008,10 +862,6 @@ export type MessageCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  /**
    * The data needed to create a Message.
    */
   data: Prisma.XOR<Prisma.MessageCreateInput, Prisma.MessageUncheckedCreateInput>
@@ -1040,10 +890,6 @@ export type MessageUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Message
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
   /**
    * The data needed to update a Message.
    */
@@ -1085,10 +931,6 @@ export type MessageUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  /**
    * The filter to search for the Message to update in case it exists.
    */
   where: Prisma.MessageWhereUniqueInput
@@ -1114,10 +956,6 @@ export type MessageDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Message
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
   /**
    * Filter which Message to delete.
    */
@@ -1150,8 +988,4 @@ export type MessageDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Message
    */
   omit?: Prisma.MessageOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
 }

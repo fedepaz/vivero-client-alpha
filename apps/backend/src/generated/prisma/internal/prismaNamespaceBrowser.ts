@@ -51,12 +51,9 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   AuditLog: 'AuditLog',
-  Locale: 'Locale',
   Message: 'Message',
-  Role: 'Role',
   Tenant: 'Tenant',
-  User: 'User',
-  UserPreference: 'UserPreference'
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -91,15 +88,6 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
-export const LocaleScalarFieldEnum = {
-  code: 'code',
-  name: 'name',
-  is_active: 'is_active'
-} as const
-
-export type LocaleScalarFieldEnum = (typeof LocaleScalarFieldEnum)[keyof typeof LocaleScalarFieldEnum]
-
-
 export const MessageScalarFieldEnum = {
   id: 'id',
   locale_code: 'locale_code',
@@ -107,14 +95,6 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
-
-
-export const RoleScalarFieldEnum = {
-  id: 'id',
-  name: 'name'
-} as const
-
-export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
 
 
 export const TenantScalarFieldEnum = {
@@ -129,29 +109,18 @@ export type TenantScalarFieldEnum = (typeof TenantScalarFieldEnum)[keyof typeof 
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  username: 'username',
   email: 'email',
   firstName: 'firstName',
   lastName: 'lastName',
   passwordHash: 'passwordHash',
   isActive: 'isActive',
   tenantId: 'tenantId',
-  roleId: 'roleId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const UserPreferenceScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  preferred_locale_code: 'preferred_locale_code',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type UserPreferenceScalarFieldEnum = (typeof UserPreferenceScalarFieldEnum)[keyof typeof UserPreferenceScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -206,14 +175,6 @@ export const AuditLogOrderByRelevanceFieldEnum = {
 export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
 
 
-export const LocaleOrderByRelevanceFieldEnum = {
-  code: 'code',
-  name: 'name'
-} as const
-
-export type LocaleOrderByRelevanceFieldEnum = (typeof LocaleOrderByRelevanceFieldEnum)[keyof typeof LocaleOrderByRelevanceFieldEnum]
-
-
 export const MessageOrderByRelevanceFieldEnum = {
   id: 'id',
   locale_code: 'locale_code',
@@ -221,14 +182,6 @@ export const MessageOrderByRelevanceFieldEnum = {
 } as const
 
 export type MessageOrderByRelevanceFieldEnum = (typeof MessageOrderByRelevanceFieldEnum)[keyof typeof MessageOrderByRelevanceFieldEnum]
-
-
-export const RoleOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name'
-} as const
-
-export type RoleOrderByRelevanceFieldEnum = (typeof RoleOrderByRelevanceFieldEnum)[keyof typeof RoleOrderByRelevanceFieldEnum]
 
 
 export const TenantOrderByRelevanceFieldEnum = {
@@ -241,22 +194,13 @@ export type TenantOrderByRelevanceFieldEnum = (typeof TenantOrderByRelevanceFiel
 
 export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
+  username: 'username',
   email: 'email',
   firstName: 'firstName',
   lastName: 'lastName',
   passwordHash: 'passwordHash',
-  tenantId: 'tenantId',
-  roleId: 'roleId'
+  tenantId: 'tenantId'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
-
-
-export const UserPreferenceOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  preferred_locale_code: 'preferred_locale_code'
-} as const
-
-export type UserPreferenceOrderByRelevanceFieldEnum = (typeof UserPreferenceOrderByRelevanceFieldEnum)[keyof typeof UserPreferenceOrderByRelevanceFieldEnum]
 

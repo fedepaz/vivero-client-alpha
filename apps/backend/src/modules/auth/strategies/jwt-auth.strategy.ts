@@ -33,9 +33,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     // This return object is what @CurrentUser() receives
     return {
       id: user.id,
-      email: user.email,
+      username: user.username,
       tenantId: user.tenantId,
-      roleId: user.roleId,
     };
   }
 }

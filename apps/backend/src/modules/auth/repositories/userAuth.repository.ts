@@ -1,7 +1,7 @@
 // src/auth/user/userAuth.repository.ts
 
 import { Injectable } from '@nestjs/common';
-import { Role, Tenant, User } from '../../../generated/prisma/client';
+import { Tenant, User } from '../../../generated/prisma/client';
 
 import { PrismaService } from '../../../infra/prisma/prisma.service';
 
@@ -13,6 +13,14 @@ export class UserAuthRepository {
     return this.prisma.user.findUnique({
       where: {
         email,
+      },
+    });
+  }
+
+  findByUsername(username: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        username,
       },
     });
   }
@@ -41,21 +49,13 @@ export class UserAuthRepository {
     });
   }
 
-  findRoleById(id: string): Promise<Role | null> {
-    return this.prisma.role.findUnique({
-      where: {
-        id,
-      },
-    });
-  }
-
   createUser(data: {
-    email: string;
-    firstName: string;
-    lastName: string;
+    username: string;
+    email?: string;
+    firstName?: string;
+    lastName?: string;
     passwordHash: string;
     tenantId: string;
-    roleId: string;
   }): Promise<User> {
     return this.prisma.user.create({
       data: {
