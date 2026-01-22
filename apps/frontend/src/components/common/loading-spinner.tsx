@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 const messages = [
   "Compilando con Internet Explorer 6...",
@@ -22,7 +23,16 @@ function getRandomMessage() {
 }
 
 export function LoadingSpinner() {
-  const currentMessage = getRandomMessage();
+  const [currentMessage, setCurrentMessage] = useState("Iniciando sesión...");
+
+  useEffect(() => {
+    setCurrentMessage(getRandomMessage());
+    const interval = setInterval(() => {
+      setCurrentMessage(getRandomMessage());
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
