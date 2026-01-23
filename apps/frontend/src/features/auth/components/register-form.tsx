@@ -1,7 +1,6 @@
 // src/features/auth/components/register-form.tsx
 "use client";
 
-import Link from "next/link";
 import { Sprout, Loader2, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -11,8 +10,10 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useRegister } from "../hooks/useRegister";
+import { useAuthContext } from "../providers/AuthProvider";
 
 export function RegisterForm() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,22 +23,24 @@ export function RegisterForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [tenantId, setTenantId] = useState("");
-  const [roleId, setRoleId] = useState("");
   const router = useRouter();
 
   const { registerAsync, isLoading } = useRegister();
+  const { userProfile } = useAuthContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!userProfile) return;
+    setTenantId(userProfile.tenantId);
     setError(null);
     try {
       await registerAsync({
+        username,
         email,
         password,
         firstName,
         lastName,
         tenantId,
-        roleId,
       });
       // Optionally redirect on success — or let useAuth handle it via context
       router.push("/");
@@ -69,11 +72,9 @@ export function RegisterForm() {
         {/* Main Message */}
         <div className="space-y-2 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
-            Crea tu cuenta
+            Crea una cuenta
           </h2>
-          <p className="text-muted-foreground">
-            Ingresa tu información para comenzar
-          </p>
+          <p className="text-muted-foreground">Información de tu cuenta</p>
         </div>
 
         {/* Form Card */}
@@ -89,80 +90,23 @@ export function RegisterForm() {
                   {error}
                 </div>
               )}
-
-              {/* Name Field */}
+              {/* Username Field */}
               <div className="grid gap-2">
-                <Label htmlFor="name" className="text-foreground">
-                  Nombre completo
+                <Label htmlFor="username" className="text-foreground">
+                  Nombre de usuario
                 </Label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                     <User className="h-4 w-4 text-primary" />
                   </div>
                   <Input
-                    id="firstName"
+                    id="username"
                     type="text"
-                    placeholder="Juan"
-                    autoComplete="firstName"
+                    placeholder="juanperez"
+                    autoComplete="username"
                     required
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    disabled={isLoading}
-                    className="pl-14 h-12 rounded-lg"
-                  />
-                  <Input
-                    id="lastName"
-                    type="text"
-                    placeholder="Pérez"
-                    autoComplete="lastName"
-                    required
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    disabled={isLoading}
-                    className="pl-14 h-12 rounded-lg"
-                  />
-                  <Input
-                    id="tenantId"
-                    type="text"
-                    placeholder="00000000-0000-0000-0000-000000000000"
-                    autoComplete="tenantId"
-                    required
-                    value={tenantId}
-                    onChange={(e) => setTenantId(e.target.value)}
-                    disabled={isLoading}
-                    className="pl-14 h-12 rounded-lg"
-                  />
-                  <Input
-                    id="roleId"
-                    type="text"
-                    placeholder="00000000-0000-0000-0000-000000000000"
-                    autoComplete="roleId"
-                    required
-                    value={roleId}
-                    onChange={(e) => setRoleId(e.target.value)}
-                    disabled={isLoading}
-                    className="pl-14 h-12 rounded-lg"
-                  />
-                </div>
-              </div>
-
-              {/* Email Field */}
-              <div className="grid gap-2">
-                <Label htmlFor="email" className="text-foreground">
-                  Correo electrónico
-                </Label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Mail className="h-4 w-4 text-primary" />
-                  </div>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="nombre@ejemplo.com"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     disabled={isLoading}
                     className="pl-14 h-12 rounded-lg"
                   />
@@ -255,6 +199,63 @@ export function RegisterForm() {
                 )}
               </div>
 
+              {/* Name Field */}
+              <div className="grid gap-2">
+                <Label htmlFor="name" className="text-foreground">
+                  Nombre completo
+                </Label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="Juan"
+                    autoComplete="firstName"
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    disabled={isLoading}
+                    className="pl-14 h-12 rounded-lg"
+                  />
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Pérez"
+                    autoComplete="lastName"
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    disabled={isLoading}
+                    className="pl-14 h-12 rounded-lg"
+                  />
+                </div>
+              </div>
+
+              {/* Email Field */}
+              <div className="grid gap-2">
+                <Label htmlFor="email" className="text-foreground">
+                  Correo electrónico
+                </Label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Mail className="h-4 w-4 text-primary" />
+                  </div>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="nombre@ejemplo.com"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={isLoading}
+                    className="pl-14 h-12 rounded-lg"
+                  />
+                </div>
+              </div>
+
               {/* Submit Button */}
               <Button
                 type="submit"
@@ -273,18 +274,6 @@ export function RegisterForm() {
             </div>
           </form>
         </div>
-
-        {/* Footer */}
-        <p className="text-center text-sm text-muted-foreground">
-          ¿Ya tienes una cuenta?{" "}
-          <Link
-            href={"/login"}
-            className="font-medium text-primary underline-offset-4 hover:underline"
-            tabIndex={isLoading ? -1 : 0}
-          >
-            Iniciar sesión
-          </Link>
-        </p>
       </div>
     </div>
   );

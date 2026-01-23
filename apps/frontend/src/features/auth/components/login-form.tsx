@@ -1,7 +1,5 @@
 // src/features/auth/components/login-form.tsx
 "use client";
-
-import Link from "next/link";
 import { Sprout, Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -10,25 +8,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
-import { useRouter } from "next/navigation";
+import { useAuthContext } from "../providers/AuthProvider";
+//import { useRouter } from "next/navigation";
 
 export function LoginForm() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  //const router = useRouter();
 
   const { loginAsync, isLoading } = useLogin();
+  const { signIn: setAuthState } = useAuthContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
+    // router.push("/");
+    window.location.href = "/";
     try {
-      await loginAsync({ email, password });
-      // Optionally redirect on success — or let useAuth handle it via context
-      router.push("/");
+      const data = await loginAsync({ username, password });
+      setAuthState(data.accessToken, data.user);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al iniciar sesión");
     }
@@ -53,16 +53,6 @@ export function LoginForm() {
           </div>
         </div>
 
-        {/* Main Message */}
-        <div className="space-y-2 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
-            ¡Bienvenido de nuevo!
-          </h2>
-          <p className="text-muted-foreground">
-            Ingresa tus credenciales para acceder a tu cuenta
-          </p>
-        </div>
-
         {/* Form Card */}
         <div className="rounded-2xl border bg-card p-6 sm:p-8 shadow-sm space-y-6">
           <form onSubmit={handleSubmit}>
@@ -77,23 +67,23 @@ export function LoginForm() {
                 </div>
               )}
 
-              {/* Email Field */}
+              {/* Username Field */}
               <div className="grid gap-2">
-                <Label htmlFor="email" className="text-foreground">
-                  Correo electrónico
+                <Label htmlFor="username" className="text-foreground">
+                  Nombre de usuario
                 </Label>
                 <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Mail className="h-4 w-4 text-primary" />
                   </div>
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="nombre@ejemplo.com"
-                    autoComplete="email"
+                    id="username"
+                    type="text"
+                    placeholder="juanperez"
+                    autoComplete="username"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     disabled={isLoading}
                     className="pl-14 h-12 rounded-lg"
                     aria-describedby={error ? "login-error" : undefined}
@@ -109,7 +99,7 @@ export function LoginForm() {
                   </Label>
                 </div>
                 <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Lock className="h-4 w-4 text-primary" />
                   </div>
                   <Input
@@ -159,18 +149,6 @@ export function LoginForm() {
             </div>
           </form>
         </div>
-
-        {/* Footer */}
-        <p className="text-center text-sm text-muted-foreground">
-          ¿No tienes una cuenta?{" "}
-          <Link
-            href={"/register"}
-            className="font-medium text-primary underline-offset-4 hover:underline"
-            tabIndex={isLoading ? -1 : 0}
-          >
-            Crear cuenta
-          </Link>
-        </p>
       </div>
     </div>
   );

@@ -1,0 +1,25 @@
+refactor(frontend): overhaul auth state management and unify providers
+
+Introduces a major refactoring of the frontend authentication
+architecture to resolve state management and redirection issues.
+
+- **Unified Auth Provider:**
+  - Replaces `AuthUserProfileProvider` with a new, unified `AuthProvider`.
+  - This provider combines auth state (`isSignedIn`) and user profile
+    state into a single global context (`useAuthContext`).
+  - All components and hooks now consume this unified context,
+    ensuring consistent state across the app.
+
+- **Centralized Redirection:**
+  - Enhances `useAuth` to use browser events for reliable state syncing.
+  - `dashboard-protected-layout.tsx` now uses the global context to
+    protect routes.
+  - Removes manual `router.push()` calls from login and logout flows.
+
+- **UI & Component Updates:**
+  - Replaces hardcoded colors in layout components with theme variables.
+  - Layouts now display dynamic user info (name, username, initials).
+  - Updates `register-form` to use `username` and removes `roleId`.
+
+- **Backend Seeding:**
+  - Deletes the `prisma/seed.ts` file as part of an evolving strategy.

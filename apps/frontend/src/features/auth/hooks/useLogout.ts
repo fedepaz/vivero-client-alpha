@@ -1,13 +1,12 @@
 // apps/frontend/src/features/auth/hooks/useLogout.ts
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "./useAuth";
+import { useMutation } from "@tanstack/react-query";
 import { clientFetch } from "@/lib/api/client-fetch";
+import { useAuthContext } from "../providers/AuthProvider";
 
 export const useLogout = () => {
-  const { signOut } = useAuth();
-  const queryClient = useQueryClient();
+  const { signOut } = useAuthContext();
 
   const mutation = useMutation<void, Error, void>({
     mutationFn: async () => {
@@ -24,9 +23,6 @@ export const useLogout = () => {
     onSuccess: () => {
       // Clear refresh token
       localStorage.removeItem("refreshToken");
-
-      // Clear all cached queries
-      queryClient.clear();
 
       // Update auth state
       signOut();

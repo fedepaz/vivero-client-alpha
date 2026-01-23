@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useAuthContext } from "@/features/auth/providers/AuthProvider";
 
 interface NavigationItem {
   title: string;
@@ -45,6 +46,8 @@ interface NavigationGroup {
 export function DesktopSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+
+  const { userProfile } = useAuthContext();
 
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     new Set(["operations"]),
@@ -203,7 +206,7 @@ export function DesktopSidebar() {
                           className={cn(
                             "flex items-center space-x-3 p-2 rounded-lg transition-colors",
                             isActive
-                              ? "bg-green-100 text-green-700 border border-green-200"
+                              ? "bg-primary/10 text-primary border border-primary/20"
                               : "hover:bg-muted text-muted-foreground hover:text-foreground",
                             isCollapsed && "justify-center",
                           )}
@@ -254,13 +257,18 @@ export function DesktopSidebar() {
       {!isCollapsed && (
         <div className="p-3 border-t">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-medium">JD</span>
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-medium">
+                {userProfile?.firstName?.charAt(0)}
+                {userProfile?.lastName?.charAt(0)}
+              </span>
             </div>
             <div>
-              <p className="text-sm font-medium">John Doe</p>
+              <p className="text-sm font-medium">
+                {userProfile?.firstName + " " + userProfile?.lastName}
+              </p>
               <p className="text-xs text-muted-foreground">
-                Gerente de Invernadero
+                {userProfile?.username}
               </p>
             </div>
           </div>

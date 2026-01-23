@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useAuthContext } from "@/features/auth/providers/AuthProvider";
 
 interface NavigationItem {
   title: string;
@@ -50,6 +51,7 @@ interface NavigationGroup {
 export function MobileNavigation() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { userProfile } = useAuthContext();
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     new Set(["operations"]),
   );
@@ -143,7 +145,7 @@ export function MobileNavigation() {
           {/* Header */}
           <div className="p-6 border-b">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold">AG</span>
               </div>
               <div>
@@ -156,12 +158,12 @@ export function MobileNavigation() {
           </div>
 
           {/* Critical Alerts Banner */}
-          <div className="p-4 bg-red-50 border-b border-red-200">
-            <div className="flex items-center space-x-2 text-red-700">
+          <div className="p-4 bg-destructive/10 border-b border-destructive/20">
+            <div className="flex items-center space-x-2 text-destructive">
               <AlertTriangle className="h-4 w-4" />
               <span className="text-sm font-medium">Alertas críticas (3)</span>
             </div>
-            <p className="text-xs text-red-600 mt-1">
+            <p className="text-xs text-destructive mt-1">
               Problemas de temperatura en Invernadero B
             </p>
           </div>
@@ -206,7 +208,7 @@ export function MobileNavigation() {
                               className={cn(
                                 "flex items-center space-x-3 p-3 rounded-lg transition-colors agricultural-touch-target",
                                 isActive
-                                  ? "bg-green-100 text-green-700 border border-green-200"
+                                  ? "bg-primary/10 text-primary border border-primary/20"
                                   : "hover:bg-muted text-muted-foreground hover:text-foreground",
                               )}
                             >
@@ -243,13 +245,18 @@ export function MobileNavigation() {
           {/* User Info */}
           <div className="p-4 border-t">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">JD</span>
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-medium">
+                  {userProfile?.firstName?.charAt(0)}
+                  {userProfile?.lastName?.charAt(0)}
+                </span>
               </div>
               <div>
-                <p className="text-sm font-medium">John Doe</p>
+                <p className="text-sm font-medium">
+                  {userProfile?.firstName} {userProfile?.lastName}
+                </p>
                 <p className="text-xs text-muted-foreground">
-                  Gerente de Invernadero
+                  {userProfile?.username}
                 </p>
               </div>
             </div>

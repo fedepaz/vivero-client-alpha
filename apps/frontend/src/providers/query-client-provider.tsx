@@ -2,7 +2,7 @@
 
 "use client";
 
-import { AuthUserProfileProvider } from "@/features/auth/providers/AuthProvider";
+import { AuthProvider } from "@/features/auth/providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
 
@@ -24,7 +24,7 @@ export function ReactClientProvider({ children }: Props) {
   );
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthUserProfileProvider>{children}</AuthUserProfileProvider>
+      <AuthProvider>{children}</AuthProvider>
     </QueryClientProvider>
   );
 }

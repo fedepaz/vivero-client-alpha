@@ -3,33 +3,51 @@
 
 import { createContext, useContext } from "react";
 import { useAuthUserProfile } from "../hooks/use-authUser";
+import { useAuth } from "../hooks/useAuth";
+import { AuthResponseDto, UserProfileDto } from "@vivero/shared";
 
-type UserProfileContextType = ReturnType<typeof useAuthUserProfile>;
+type AuthContextType = {
+  userProfile: UserProfileDto | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  isDatabaseUnavailable: boolean;
+  isPendingPermissions: boolean;
+  isLoginComplete: boolean;
 
-const AuthUserProfileContext = createContext<UserProfileContextType | null>(
-  null,
-);
+  isSignedIn: boolean;
+  loading: boolean;
+  signIn: (accessToken: string, user: AuthResponseDto["user"]) => void;
+  signOut: () => void;
+};
 
-export function AuthUserProfileProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const authUserProfile = useAuthUserProfile();
+const AuthContext = createContext<AuthContextType | null>(null);
 
-  return (
-    <AuthUserProfileContext.Provider value={authUserProfile}>
-      {children}
-    </AuthUserProfileContext.Provider>
-  );
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const auth = useAuth();
+  const profile = useAuthUserProfile();
+
+  const isLoginComplete = auth.isSignedIn && profile.userProfile !== undefined;
+
+  const value = {
+    isSignedIn: auth.isSignedIn,
+    loading: auth.loading,
+    signIn: auth.signIn,
+    signOut: auth.signOut,
+    isLoginComplete,
+    userProfile: profile.userProfile,
+    isLoading: profile.isLoading,
+    isError: profile.isError,
+    isDatabaseUnavailable: profile.isDatabaseUnavailable,
+    isPendingPermissions: profile.isPendingPermissions,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export const useAuthUserProfileContext = () => {
-  const context = useContext(AuthUserProfileContext);
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
   if (!context) {
-    throw new Error(
-      "useAuthUserProfileContext must be used within an AuthUserProfileProvider",
-    );
+    throw new Error("useAuthContext must be used within an AuthProvider");
   }
   return context;
 };

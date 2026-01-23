@@ -2,12 +2,13 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "./useAuth";
+
 import { clientFetch } from "@/lib/api/client-fetch";
 import { LoginAuthDto, AuthResponseDto } from "@vivero/shared";
+import { useAuthContext } from "../providers/AuthProvider";
 
 export const useLogin = () => {
-  const { signIn } = useAuth();
+  const { signIn } = useAuthContext();
 
   const mutation = useMutation<AuthResponseDto, Error, LoginAuthDto>({
     mutationFn: async (credentials) => {
@@ -15,6 +16,7 @@ export const useLogin = () => {
         method: "POST",
         body: JSON.stringify(credentials),
       });
+      console.log("Login Response", response);
       return response;
     },
     onSuccess: (data) => {
@@ -23,7 +25,7 @@ export const useLogin = () => {
       localStorage.setItem("refreshToken", data.refreshToken);
 
       // Update auth state via useAuth
-      signIn(data.accessToken, data);
+      signIn(data.accessToken, data.user);
     },
     onError: (error) => {
       console.error("Login failed:", error);

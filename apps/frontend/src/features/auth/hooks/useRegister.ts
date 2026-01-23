@@ -2,12 +2,12 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "./useAuth";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { AuthResponseDto, RegisterAuthDto } from "@vivero/shared";
+import { useAuthContext } from "../providers/AuthProvider";
 
 export const useRegister = () => {
-  const { signIn } = useAuth();
+  const { signIn } = useAuthContext();
 
   const mutation = useMutation<AuthResponseDto, Error, RegisterAuthDto>({
     mutationFn: async (userData) => {

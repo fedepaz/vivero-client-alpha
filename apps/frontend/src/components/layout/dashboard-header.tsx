@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -13,7 +14,29 @@ import { Badge } from "@/components/ui/badge";
 import { MobileNavigation } from "./mobile-navigation";
 
 import { ThemeToggle } from "@/components/common/theme-toggle";
+import { useLogout } from "@/features/auth/hooks/useLogout";
+import { LoadingSpinner } from "../common/loading-spinner";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/features/auth/providers/AuthProvider";
+
 export function DashboardHeader() {
+  const { isLoading, logoutAsync } = useLogout();
+  const router = useRouter();
+  const { userProfile } = useAuthContext();
+
+  const handleLogout = async () => {
+    try {
+      await logoutAsync();
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
@@ -22,7 +45,7 @@ export function DashboardHeader() {
           <div className="flex items-center space-x-4">
             <MobileNavigation />
             <div className="flex items-center space-x-2 md:hidden">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">AG</span>
               </div>
             </div>
@@ -30,8 +53,6 @@ export function DashboardHeader() {
 
           {/* Actions */}
           <div className="flex items-center space-x-2">
-            {/* Language Switcher */}
-
             {/* Theme Toggle */}
             <ThemeToggle />
 
@@ -42,7 +63,7 @@ export function DashboardHeader() {
               className="relative agricultural-touch-target"
             >
               <Bell className="h-5 w-5" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500 text-white text-xs">
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-destructive text-white text-xs">
                 3
               </Badge>
             </Button>
@@ -59,8 +80,15 @@ export function DashboardHeader() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>Rol de usuario</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {userProfile?.firstName} {userProfile?.lastName}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <button className="w-full" onClick={handleLogout}>
+                    Cerrar sesión
+                  </button>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
