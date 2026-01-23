@@ -16,6 +16,6 @@ model User {
   updatedAt DateTime @updatedAt
 
   @@index([tenantId])
-  @@index([email])
+  @@index([username])
   @@map("users")
 }
