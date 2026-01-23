@@ -207,6 +207,23 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
 }
 
+export type EnumPermissionScopeFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionScope | Prisma.EnumPermissionScopeFieldRefInput<$PrismaModel>
+  in?: $Enums.PermissionScope[]
+  notIn?: $Enums.PermissionScope[]
+  not?: Prisma.NestedEnumPermissionScopeFilter<$PrismaModel> | $Enums.PermissionScope
+}
+
+export type EnumPermissionScopeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionScope | Prisma.EnumPermissionScopeFieldRefInput<$PrismaModel>
+  in?: $Enums.PermissionScope[]
+  notIn?: $Enums.PermissionScope[]
+  not?: Prisma.NestedEnumPermissionScopeWithAggregatesFilter<$PrismaModel> | $Enums.PermissionScope
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPermissionScopeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPermissionScopeFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[]
@@ -389,6 +406,23 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type NestedEnumPermissionScopeFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionScope | Prisma.EnumPermissionScopeFieldRefInput<$PrismaModel>
+  in?: $Enums.PermissionScope[]
+  notIn?: $Enums.PermissionScope[]
+  not?: Prisma.NestedEnumPermissionScopeFilter<$PrismaModel> | $Enums.PermissionScope
+}
+
+export type NestedEnumPermissionScopeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionScope | Prisma.EnumPermissionScopeFieldRefInput<$PrismaModel>
+  in?: $Enums.PermissionScope[]
+  notIn?: $Enums.PermissionScope[]
+  not?: Prisma.NestedEnumPermissionScopeWithAggregatesFilter<$PrismaModel> | $Enums.PermissionScope
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPermissionScopeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPermissionScopeFilter<$PrismaModel>
 }
 
 

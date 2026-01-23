@@ -1,0 +1,11 @@
+feat(backend): implement initial permission system
+
+Introduces a new permission management system for the backend.
+
+- Adds a `UserPermission` model to the Prisma schema for granular,
+  table-level user permissions (CRUD).
+- Implements a `PermissionsGuard` to enforce these permissions
+  across the application.
+- Creates a `permissions` module with services and repositories.
+- Registers the `PermissionsGuard` as a global guard in the app module.
+- Updates the Prisma client and related generated types.

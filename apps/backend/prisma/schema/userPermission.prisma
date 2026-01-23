@@ -1,0 +1,30 @@
+// prisma/schema/userPermission.prisma
+
+model UserPermission {
+  id         String   @id @default(cuid())
+  userId     String
+  tableName  String   // e.g., "plants", "greenhouses", "reports"
+  
+  // CRUD flags
+  canCreate  Boolean  @default(false)
+  canRead    Boolean  @default(false)
+  canUpdate  Boolean  @default(false)
+  canDelete  Boolean  @default(false)
+  
+  // Row-level scope
+  scope      PermissionScope @default(NONE)
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, tableName])
+  @@index([userId])
+  @@index([tableName])
+  @@map("user_permissions")
+}
+
+enum PermissionScope {
+  NONE // No access
+  OWN  // Only records created by this user
+  ALL  // All records in the table
+}

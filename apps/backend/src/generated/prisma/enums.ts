@@ -31,3 +31,12 @@ export const EntityType = {
 } as const
 
 export type EntityType = (typeof EntityType)[keyof typeof EntityType]
+
+
+export const PermissionScope = {
+  NONE: 'NONE',
+  OWN: 'OWN',
+  ALL: 'ALL'
+} as const
+
+export type PermissionScope = (typeof PermissionScope)[keyof typeof PermissionScope]

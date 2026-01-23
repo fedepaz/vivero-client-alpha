@@ -13,6 +13,9 @@ import { UsersController } from './modules/users/users.controller';
 import { UsersService } from './modules/users/users.service';
 import { UsersRepository } from './modules/users/repositories/users.repository';
 import { AuthController } from './modules/auth/auth.controller';
+import { PermissionsGuard } from './modules/permissions/guards/permissions.guard';
+import { PermissionsService } from './modules/permissions/permissions.service';
+import { PermissionsRepository } from './modules/permissions/repositories/permissions.repository';
 
 @Module({
   imports: [
@@ -38,8 +41,14 @@ import { AuthController } from './modules/auth/auth.controller';
       provide: APP_GUARD,
       useClass: GlobalAuthGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionsGuard,
+    },
     UsersService,
     UsersRepository,
+    PermissionsService,
+    PermissionsRepository,
   ],
   exports: [UsersService],
 })
