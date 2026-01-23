@@ -162,7 +162,7 @@ Day 2 (8h): Data Visualization
 #### Week 10 (16h): Multi-User Support
 ```bash
 Day 1 (8h): User Management
-├── Role-based access control (4h)
+├── Permission management system (defining granular permissions for various user functions) (4h)
 ├── Team member invitations (2h)
 ├── Permission system (2h)
 

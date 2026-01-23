@@ -153,7 +153,7 @@ You will be invoked with one of three specific contexts, adapting your testing a
 
 **Authentication & Authorization:**
 - Multi-factor authentication flows
-- Role-based access control (farm manager, worker, viewer)
+- Permission-based access control (based on granular permissions assigned to farm manager, worker, viewer personas)
 - SSO integration for enterprise clients
 - Session management and timeout handling
 

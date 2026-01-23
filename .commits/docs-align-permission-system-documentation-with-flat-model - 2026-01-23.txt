@@ -1,0 +1,16 @@
+docs: Align permission system documentation with flat model
+
+Updated various agent documentation files to reflect the project's adoption
+of a simple, flat permission model, moving away from a traditional
+Role-Based Access Control (RBAC) approach.
+
+Key changes include:
+- Clarified the interpretation of "roles" as predefined permission sets.
+- Replaced explicit "Role-based access control" references with
+  "Permission-based access control" or "Permission management system" across
+  `tech_stack_guide.md`, `agricultural-backend-agent.md`,
+  `product-manager-agent.md`, `qa_agent.md`, and `solo_developer_roadmap.md`.
+- Updated `enterprise-pure-role.md` with a note explaining this interpretation.
+
+This ensures all documentation is consistent with the chosen granular
+permission system.

@@ -28,7 +28,7 @@ Framework: Next.js 14+ (App Router)
 Framework: NestJS (TypeScript-first)
 ├── Database ORM: Prisma
 ├── Database: MariaDB 10.9+
-├── Authentication: Manages users, roles, and session tokens
+├── Authentication: Manages users, permissions, and session tokens
 ├── Caching: Valkey (Redis 7+ compatible fork)
 ├── Queue System: BullMQ (Valkey/Redis-based)
 ├── File Storage: AWS S3 compatible

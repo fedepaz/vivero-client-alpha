@@ -9,6 +9,9 @@
 - Cache-first architecture for performance
 - Explicit permission grants only
 
+**Note on "Roles" in other documentation:**
+While other project documentation (e.g., Tech Stack Guide, Product Manager Agent, etc.) may refer to "Role-Based Access Control (RBAC)" or "roles", for this project's implementation, the permission system is based on this "simple, flat permission model". Any mention of "roles" should be interpreted as predefined collections or templates of these granular, per-user, per-table CRUD permissions, rather than a distinct, hierarchical RBAC layer. This design prioritizes explicit, auditable permissions over abstract role assignments.
+
 ---
 
 ## 2. Database Schema

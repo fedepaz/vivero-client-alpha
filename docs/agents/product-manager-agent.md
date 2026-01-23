@@ -60,7 +60,7 @@ For each feature, provide:
   - Data architecture (handling 200k+ records efficiently)
   - Concurrent access (10+ users per tenant)
   - Performance targets (response times, throughput)
-- **Role-Based Access Matrix**: Detailed CRUD permissions by user type
+- **User Permission Matrix**: Detailed CRUD permissions by user type (based on assigned granular permissions)
 - **Modern Integration Points**: APIs, webhooks, real-time sync, mobile access
 - **User Experience Requirements**:
   - **Loading States**: All data-fetching features must display a skeleton loading screen that mimics the final UI layout. This is a non-negotiable part of the user experience to ensure the application feels fast and responsive. Generic spinners are not an acceptable substitute.
@@ -89,7 +89,7 @@ For each feature, provide:
    - **Data Integrity**: Zero data loss, complete audit trails, automated backups
 
 4. **Security & Compliance** (Built-In, Not Added-On)
-   - **Enterprise Security**: Multi-factor auth, role-based access, data encryption
+   - **Enterprise Security**: Multi-factor auth, permission-based access, data encryption
    - **Global Compliance**: GDPR, agricultural regulations, financial reporting standards
    - **Audit Capabilities**: Complete activity logs, compliance reporting, data lineage
    - **Business Continuity**: Disaster recovery, data export, system redundancy

@@ -295,7 +295,7 @@ export class TrialController {
 ```typescript
 Authentication & Authorization:
   - Multi-factor authentication for all users
-  - Role-based access control (Admin, Manager, Field Worker, Viewer)
+  - Permission-based access control (Admin-level permissions, Manager-level permissions, Field Worker-level permissions, Viewer-level permissions)
   - JWT tokens with short expiration (15 min access + refresh)
   - API key management for system integrations
 
