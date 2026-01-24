@@ -1,6 +1,6 @@
 // src/auth/user/userAuth.repository.ts
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Tenant, User } from '../../../generated/prisma/client';
 import { PrismaService } from '../../../infra/prisma/prisma.service';
 
@@ -48,7 +48,7 @@ export class UserAuthRepository {
     });
   }
 
-  createUser(data: {
+  async createUser(data: {
     username: string;
     email?: string;
     firstName?: string;
@@ -56,12 +56,29 @@ export class UserAuthRepository {
     passwordHash: string;
     tenantId: string;
   }): Promise<User> {
-    return this.prisma.user.create({
-      data: {
-        ...data,
-        isActive: true,
-      },
-    });
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          ...data,
+          isActive: true,
+        },
+      });
+
+      await this.prisma.userPermission.upsert({
+        where: { userId_tableName: { userId: user.id, tableName: 'users' } },
+        create: {
+          userId: user.id,
+          tableName: 'users',
+          canRead: true,
+          scope: 'OWN',
+        },
+        update: { canRead: true, scope: 'OWN' },
+      });
+      return user;
+    } catch (error) {
+      console.error('Error granting user permissions:', error);
+      throw new InternalServerErrorException('Error creating user');
+    }
   }
 
   updateUser(

@@ -1,7 +1,9 @@
-// prisma/seed-permissions.ts
+// prisma/seed-admin.ts
 
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PermissionScope, PrismaClient } from '../src/generated/prisma/client';
+import * as bcrypt from 'bcrypt';
+import 'dotenv/config';
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
@@ -12,16 +14,40 @@ const adapter = new PrismaMariaDb(databaseUrl);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  // Find the admin user by username
-  const admin = await prisma.user.findFirst({
-    where: { username: 'admin' },
-    select: { id: true },
+  // Create or update the tenant - 'Default Organization'
+  let tenantId: string;
+
+  const existingTenant = await prisma.tenant.findFirst({
+    where: { name: 'Default Organization' },
   });
 
-  if (!admin) {
-    throw new Error('Admin user not found');
+  if (existingTenant) {
+    tenantId = existingTenant.id;
+    console.log('✅ Default tenant found');
+  } else {
+    const newTenant = await prisma.tenant.create({
+      data: {
+        name: 'Default Organization',
+      },
+    });
+    tenantId = newTenant.id;
+    console.log('✅ Default tenant created');
   }
-  console.log('✅ Admin user found');
+
+  // Create admin user + full permissions
+  const admin = await prisma.user.upsert({
+    where: { username: 'admin' },
+    create: {
+      username: 'admin',
+      email: 'admin@viveroalpha.dev',
+      passwordHash: await bcrypt.hash('admin123', 12),
+      firstName: 'Admin',
+      lastName: 'User',
+      tenantId,
+      isActive: true,
+    },
+    update: {},
+  });
 
   // Define permissions for the admin user
   const adminPermissions = [

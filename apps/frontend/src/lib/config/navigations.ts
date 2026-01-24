@@ -10,7 +10,10 @@ export interface NavigationItem {
   description?: string;
   badge?: string;
   badgeVariant?: "default" | "secondary" | "destructive" | "outline";
-  // 👇 Permission required to see this item
+  dashboard?: {
+    statsLabel: string; // e.g., "Plantas activas"
+    // Note: Actual stats value will come from KPIs hook
+  };
   requiredPermission?: {
     table: string; // must match Prisma @@map name
     action: "read"; // for visibility, we only care about read
@@ -48,12 +51,14 @@ export const NAVIGATION_CONFIG: NavigationGroup[] = [
         title: "Plantas",
         href: ROUTES.PLANTS,
         icon: Sprout,
+        dashboard: { statsLabel: "Plantas activas" },
         requiredPermission: { table: "plants", action: "read" },
       },
       {
         title: "Facturas",
         href: ROUTES.INVOICES,
         icon: FileText,
+        dashboard: { statsLabel: "Facturas pendientes" },
         requiredPermission: { table: "invoices", action: "read" },
       },
     ],
@@ -67,12 +72,14 @@ export const NAVIGATION_CONFIG: NavigationGroup[] = [
         title: "Usuarios",
         href: ROUTES.USERS,
         icon: Users,
+        dashboard: { statsLabel: "Usuarios activos" },
         requiredPermission: { table: "users", action: "read" },
       },
       {
         title: "Auditoría",
         href: ROUTES.AUDIT_LOGS,
         icon: FileText,
+        dashboard: { statsLabel: "Auditoría" },
         requiredPermission: { table: "audit_logs", action: "read" },
       },
     ],

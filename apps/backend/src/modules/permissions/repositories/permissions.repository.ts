@@ -27,6 +27,7 @@ export class PermissionsRepository implements IPermissionRepository {
 
     return records as UserPermissionRecord[];
   }
+
   async upsert(
     userId: string,
     tableName: string,

@@ -1,4 +1,4 @@
-// prisma/seed.ts
+// prisma/seed-users.ts
 
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaClient } from '../src/generated/prisma/client';
@@ -22,18 +22,33 @@ async function main() {
   for (let i = 1; i <= 10; i++) {
     const suffix = i.toString().padStart(2, '0'); // e.g., '01', '02'
     const passwordHash = await bcrypt.hash(`123${suffix}`, 12);
-    const user = await prisma.user.create({
-      data: {
+
+    const user = await prisma.user.upsert({
+      where: { username: `usuario${suffix}` },
+      create: {
         username: `usuario${suffix}`,
         email: `usuario${suffix}@viveroalpha.dev`,
         passwordHash,
         firstName: 'Usuario',
         lastName: `Apellido${suffix}`,
         tenantId: tenant.id,
+        isActive: true,
       },
+      update: {},
     });
-    console.log(`✅ Created user usuario${suffix}`);
-    console.info(`Información de usuario usuario${suffix}:`, user);
+
+    await prisma.userPermission.upsert({
+      where: { userId_tableName: { userId: user.id, tableName: 'users' } },
+      create: {
+        userId: user.id,
+        tableName: 'users',
+        canRead: true,
+        scope: 'OWN',
+      },
+      update: { canRead: true, scope: 'OWN' },
+    });
+
+    console.log(`✅ Created user:`, user);
   }
 }
 

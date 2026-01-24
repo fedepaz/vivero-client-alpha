@@ -5,6 +5,7 @@ import {
   Logger,
   NotFoundException,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -61,6 +62,8 @@ export class AuthService {
       passwordHash,
       tenantId: dto.tenantId,
     });
+
+    if (!user) throw new InternalServerErrorException('Error creating user');
 
     const userPayload = {
       sub: user.id,

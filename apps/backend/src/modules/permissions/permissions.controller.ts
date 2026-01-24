@@ -15,8 +15,8 @@ export class PermissionsController {
   @RequirePermission({ tableName: 'users', action: 'read', scope: 'OWN' })
   async getMyPermissions(
     @CurrentUser() user: AuthUser,
-  ): Promise<{ permissions: UserPermissions }> {
+  ): Promise<UserPermissions> {
     const perms = await this.permissionsService.getUserPermissions(user.id);
-    return { permissions: perms };
+    return perms;
   }
 }

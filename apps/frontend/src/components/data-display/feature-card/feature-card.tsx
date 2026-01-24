@@ -2,24 +2,21 @@
 
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { type LucideIcon, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface FeatureCardProps {
   title: string;
   description: string;
-  icon: LucideIcon;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  icon: any;
   href: string;
-  stats?: {
-    label: string;
-    value: string | number;
-  };
+
   className?: string;
 }
 
@@ -28,7 +25,6 @@ export function FeatureCard({
   description,
   icon: Icon,
   href,
-  stats,
   className,
 }: FeatureCardProps) {
   return (
@@ -49,16 +45,6 @@ export function FeatureCard({
           <CardTitle className="mt-4">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
-        {stats && (
-          <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold">{stats.value}</span>
-              <span className="text-sm text-muted-foreground">
-                {stats.label}
-              </span>
-            </div>
-          </CardContent>
-        )}
       </Card>
     </Link>
   );

@@ -23,7 +23,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:migrate": "pnpm prisma migrate deploy",
     "db:migrate:dev": "pnpm prisma migrate dev",
-    "db:seed": "pnpm ts-node prisma/seed.ts",
+    "db:seed:users": "pnpm ts-node prisma/seed-users.ts",
+    "db:seed:admin": "pnpm ts-node prisma/seed-admin.ts",
     "db:status": "pnpm prisma migrate status",
     "db:validate": "pnpm prisma validate",
     "db:studio": "pnpm prisma studio"

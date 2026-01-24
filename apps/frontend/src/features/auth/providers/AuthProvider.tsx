@@ -1,15 +1,19 @@
 // src/features/auth/providers/AuthProvider.tsx
 "use client";
 
-import { createContext, useContext } from "react";
-import { useAuthUserProfile } from "../hooks/use-authUser";
+import { createContext, useContext, useEffect } from "react";
+import {
+  useAuthUserProfile,
+  userProfileQueryKeys,
+} from "../hooks/use-authUser";
 import { useAuth } from "../hooks/useAuth";
 import {
   AuthResponseDto,
   UserPermissions,
   UserProfileDto,
 } from "@vivero/shared";
-import { usePermissions } from "../hooks/use-permissions";
+import { permissionsQueryKeys, usePermissions } from "../hooks/use-permissions";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AuthContextType = {
   userProfile: UserProfileDto | undefined;
@@ -30,9 +34,20 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useAuth();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (auth.isSignedIn) {
+      queryClient.invalidateQueries({ queryKey: userProfileQueryKeys.me() });
+      queryClient.invalidateQueries({ queryKey: permissionsQueryKeys.me() });
+    } else {
+      queryClient.removeQueries({ queryKey: userProfileQueryKeys.me() });
+      queryClient.removeQueries({ queryKey: permissionsQueryKeys.me() });
+    }
+  }, [auth.isSignedIn, queryClient]);
+
   const profile = useAuthUserProfile();
   const permissions = usePermissions();
-
   // Detect pending permissions
   const isPendingPermissions =
     auth.isSignedIn &&

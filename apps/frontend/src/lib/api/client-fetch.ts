@@ -67,7 +67,6 @@ function logout() {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
   localStorage.removeItem("userProfile");
-  window.location.href = "/";
 }
 
 export async function clientFetch<T>(
@@ -137,8 +136,6 @@ export async function clientFetch<T>(
           processQueue(new Error("Token refresh failed"), null);
           console.warn(refreshError, "Token refresh failed");
           logout();
-
-          throw new ApiError("Session expired. Please log in again.", 401);
         } finally {
           isRefreshing = false;
         }

@@ -30,8 +30,6 @@ export function useAuth() {
       user: null,
       isSignedIn: false,
     });
-
-    window.dispatchEvent(new Event(AUTH_EVENT));
   }, []);
 
   const loadFromStorage = useCallback(() => {
