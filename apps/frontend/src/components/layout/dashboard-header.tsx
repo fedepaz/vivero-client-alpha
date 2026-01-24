@@ -35,7 +35,7 @@ export function DashboardHeader() {
     try {
       await logoutAsync();
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error("Error al cerrar sesión:", error);
     }
   };
 

@@ -14,20 +14,20 @@ export function DatabaseUnavailablePage() {
         </div>
 
         <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground text-balance sm:text-6xl">
-          Service Temporarily Unavailable
+          Servicio Temporalmente No Disponible
         </h1>
 
         <p className="mt-6 text-lg font-medium text-pretty text-muted-foreground sm:text-xl/8">
-          Were currently performing maintenance on our database systems.
+          Actualmente estamos realizando mantenimiento en nuestros sistemas de base de datos.
         </p>
 
         <div className="mt-8 p-6 rounded-lg bg-muted/50 border border-border">
           <p className="text-base text-foreground font-medium mb-2">
-            System Maintenance
+            Mantenimiento del Sistema
           </p>
           <p className="text-sm text-muted-foreground text-balance">
-            Our team is working to restore full service as quickly as possible.
-            We apologize for any inconvenience this may cause.
+            Nuestro equipo está trabajando para restaurar el servicio completo lo antes posible.
+            Lamentamos cualquier inconveniente que esto pueda causar.
           </p>
         </div>
 
@@ -38,13 +38,13 @@ export function DatabaseUnavailablePage() {
             onClick={() => window.location.reload()}
           >
             <RefreshCw className="w-4 h-4" />
-            Try Again
+            Intentar de Nuevo
           </Button>
           <Button
             variant="secondary"
             onClick={() => (window.location.href = "/")}
           >
-            Go to Homepage
+            Ir a la Página Principal
           </Button>
         </div>
 
@@ -54,7 +54,7 @@ export function DatabaseUnavailablePage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
             </span>
-            <span>Maintenance in progress</span>
+            Mantenimiento en curso
           </div>
         </div>
       </div>

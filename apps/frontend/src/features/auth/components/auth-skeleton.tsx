@@ -27,7 +27,7 @@ export function AuthSkeleton({
     <div
       className={cn("flex flex-col gap-6", className)}
       role="status"
-      aria-label="Loading authentication form"
+      aria-label="Cargando formulario de autenticación"
       {...props}
     >
       <Card className="shadow-lg">

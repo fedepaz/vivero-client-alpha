@@ -34,7 +34,7 @@ export function ClientsDataTable() {
   const deleteClient = useDeleteClient();
 
   const {} = useDataTableActions<Client>({
-    entityName: "Clients",
+    entityName: "Clientes",
     onDelete: (id) => deleteClient.mutateAsync(id),
   });
 
@@ -59,14 +59,14 @@ export function ClientsDataTable() {
     setSlideOverOpen(true);
   };
   const handleDelete = (rows: Client[]) => {
-    console.log("Delete Clients:", rows);
+    console.log("Eliminar Clientes:", rows);
   };
 
   const handleExport = (
     format: "csv" | "excel" | "json" | "pdf",
     selectedRows: Client[],
   ) => {
-    console.log("Export Clients:", selectedRows);
+    console.log("Exportar Clientes:", selectedRows);
   };
 
   const handleSave = async () => {
@@ -93,7 +93,7 @@ export function ClientsDataTable() {
         onExport={handleExport}
         renderInlineEdit={RenderInlineEdit}
         onQuickEdit={(client) =>
-          console.log(`Quick edit client: ${client.name}`)
+          console.log(`Edición rápida de cliente: ${client.name}`)
         }
       />
       <FloatingActionButton onClick={handleAdd} label="Añadir nuevo cliente" />
