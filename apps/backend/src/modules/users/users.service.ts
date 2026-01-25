@@ -14,6 +14,12 @@ export class UsersService {
     return user;
   }
 
+  async gerUserById(userId: string) {
+    const user = await this.repo.findById(userId);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
   async updateProfile(userId: string, data: UpdateUserProfileDto) {
     return this.repo.updateProfile(userId, data);
   }

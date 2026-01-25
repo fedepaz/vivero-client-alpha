@@ -1,3 +1,5 @@
+// src/components/data-display/data-table/data-table.tsx
+
 import * as React from "react";
 import {
   type ColumnDef,
@@ -12,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, Search, Filter, Trash2 } from "lucide-react";
+import { ArrowUpDown, ChevronDown, Filter, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +23,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -42,13 +43,15 @@ import {
 import { ExportDropdown } from "@/components/data-display/data-table/export-dropdown";
 import { DeleteDialog } from "@/components/data-display/data-table/delete-dialog-button";
 import { InlineEditRow } from "./inline-edit-row";
+import { usePermission } from "@/hooks/usePermission";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   title: string;
+  tableName: string;
   description?: string;
-  searchKey?: string;
+
   onEdit?: (row: TData) => void;
   onDelete?: (rows: TData[]) => void;
   onExport?: (
@@ -65,14 +68,10 @@ interface DataTableProps<TData, TValue> {
   onQuickEdit?: (row: TData) => void;
 }
 
-interface HeaderProps {
-  translationKey: string;
-}
-
-function HeaderComponent({ translationKey }: HeaderProps) {
+function HeaderComponent({ titulo }: { titulo: string }) {
   return (
     <div className="items-center justify-between">
-      <div className="text-center">{translationKey}</div>
+      <div className="text-center"> {titulo}</div>
     </div>
   );
 }
@@ -81,6 +80,7 @@ export function DataTable<TData, TValue>({
   data,
   title,
   description,
+  tableName,
 
   onEdit,
   onDelete,
@@ -100,32 +100,42 @@ export function DataTable<TData, TValue>({
   const [expandedRow, setExpandedRow] = React.useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [itemsToDelete, setItemsToDelete] = React.useState<TData[]>([]);
+  const dataTablePermissions = usePermission(tableName);
+  console.log(dataTablePermissions);
 
   const actionColumn: ColumnDef<TData, TValue> = {
     id: "actions",
     enableHiding: false,
     accessorKey: "actions",
     header: ({}) => {
-      return <HeaderComponent translationKey="Acciones" />;
+      const canEdit = dataTablePermissions.canUpdate;
+      const canDelete = dataTablePermissions.canDelete;
+
+      if (!canEdit && !canDelete) return null;
+      return <HeaderComponent titulo="Acciones" />;
     },
     cell: ({ row }) => {
+      const canEdit = dataTablePermissions.canUpdate;
+      const canDelete = dataTablePermissions.canDelete;
+
+      if (!canEdit && !canDelete) return null;
       return (
-        <div className="flex items-center gap-3">
-          {onEdit && (
+        <div className="flex items-center justify-center gap-2 min-h-[40px]">
+          {canEdit && (
             <Button
               variant="outline"
               size="sm"
-              className="min-h-[40px]"
-              onClick={() => onEdit(row.original)}
+              className="min-h-[40px] text-primary"
+              onClick={() => onEdit && onEdit(row.original)}
             >
               Editar
             </Button>
           )}
-          {onDelete && (
+          {canDelete && (
             <Button
               onClick={() => handleDeleteSingle(row.original)}
-              className="min-h-[40px] "
-              variant="secondary"
+              className="min-h-[40px] text-destructive"
+              variant="outline"
               size="sm"
             >
               Eliminar
@@ -233,17 +243,6 @@ export function DataTable<TData, TValue>({
         </CardHeader>
         <CardContent>
           <div className="flex items-center py-4 space-x-2">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={`Buscar ${title.toLowerCase()}...`}
-                value={globalFilter ?? ""}
-                onChange={(event) =>
-                  setGlobalFilter(String(event.target.value))
-                }
-                className="pl-8"
-              />
-            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="min-h-[40px]">
@@ -273,7 +272,7 @@ export function DataTable<TData, TValue>({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {onExport && (
+            {dataTablePermissions.canUpdate && (
               <ExportDropdown
                 onExport={handleExport}
                 selectedCount={selectedCount}
@@ -281,7 +280,7 @@ export function DataTable<TData, TValue>({
                 disabled={data.length === 0}
               />
             )}
-            {selectedCount > 0 && onDelete && (
+            {selectedCount > 0 && dataTablePermissions.canDelete && (
               <Button
                 variant="destructive"
                 size="sm"

@@ -7,7 +7,9 @@ import {
   useDeleteUser,
   useUpdateUser,
   useUsers,
-} from "../hooks/hooks";
+  useUsersByUserName,
+  useUsersByTenantId,
+} from "../hooks/useUsers";
 
 import {
   DataTable,
@@ -16,49 +18,55 @@ import {
 } from "@/components/data-display/data-table";
 import { userColumns } from "./columns";
 import { UserForm } from "./user-form";
-import { useState } from "react";
-import { User } from "../types";
+import { useEffect, useState } from "react";
+import { UpdateUserProfileDto, UserProfileDto } from "@vivero/shared";
+import { useAuthContext } from "@/features/auth/providers/AuthProvider";
+import { usePermission } from "@/hooks/usePermission";
 
 export function UsersDataTable() {
+  const canCreate = usePermission("users").canCreate;
   const { data: users = [] } = useUsers();
 
   const [slideOverOpen, setSlideOverOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [formData, setFormData] = useState<Partial<User>>({});
+  const [selectedUser, setSelectedUser] = useState<UserProfileDto>();
+  const [formData, setFormData] = useState<Partial<UpdateUserProfileDto>>({});
 
   const createUser = useCreateUser();
   const updateUser = useUpdateUser();
   const deleteUser = useDeleteUser();
 
-  const {} = useDataTableActions<User>({
+  const {} = useDataTableActions<UserProfileDto>({
     entityName: "Usuarios",
     onDelete: (id) => deleteUser.mutateAsync(id),
   });
 
-  const handleEdit = (row: User) => {
+  const handleEdit = (row: UserProfileDto) => {
     setSelectedUser(row);
-    setFormData(row);
+    setFormData({
+      firstName: row.firstName || "",
+      lastName: row.lastName || "",
+      email: row.email || "",
+      passwordHash: row.passwordHash || "",
+    });
     setSlideOverOpen(true);
   };
 
   const handleAdd = () => {
-    setSelectedUser(null);
     setFormData({
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
-      role: "manager",
-      department: "",
-      status: "active",
+      passwordHash: "",
     });
     setSlideOverOpen(true);
   };
-  const handleDelete = (rows: User[]) => {
+  const handleDelete = (rows: UserProfileDto[]) => {
     console.log("Delete Users:", rows);
   };
 
   const handleExport = (
     format: "csv" | "excel" | "json" | "pdf",
-    selectedRows: User[],
+    selectedRows: UserProfileDto[],
   ) => {
     console.log("Export Users:", selectedRows);
   };
@@ -80,26 +88,32 @@ export function UsersDataTable() {
         data={users}
         title="Usuarios"
         description="Gestión de los usuarios del sistema"
-        searchKey="name"
+        tableName="users"
         totalCount={users.length}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onExport={handleExport}
-        onQuickEdit={(user) => console.log(`Quick edit user: ${user.name}`)}
+        onQuickEdit={(user) => console.log(`Quick edit user: ${user.username}`)}
       />
-      <FloatingActionButton onClick={handleAdd} label="Añadir nuevo usuario" />
+      {}
+      {canCreate && (
+        <FloatingActionButton
+          onClick={handleAdd}
+          label="Añadir nuevo usuario"
+        />
+      )}
 
       <SlideOverForm
         open={slideOverOpen}
         onOpenChange={setSlideOverOpen}
         title={
           selectedUser
-            ? `Editar usuario: ${selectedUser.name}`
+            ? `Editar usuario: ${selectedUser.username}`
             : "Crear nuevo usuario"
         }
         description={
           selectedUser
-            ? `Edita los detalles del usuario ${selectedUser.name}.`
+            ? `Edita los detalles del usuario ${selectedUser.username}.`
             : "Rellena los campos para crear un nuevo usuario."
         }
         onSave={handleSave}
@@ -108,6 +122,7 @@ export function UsersDataTable() {
       >
         <div className="space-y-2">
           <UserForm
+            initialData={selectedUser}
             onSubmit={handleSave}
             onCancel={() => setSlideOverOpen(false)}
             isSubmitting={createUser.isPending}

@@ -21,9 +21,6 @@ export function NotFoundPage() {
         </p>
 
         <div className="mt-10 flex items-center justify-center gap-x-6">
-          <button className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90">
-            Volver
-          </button>
           <Link
             href={"/"}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"

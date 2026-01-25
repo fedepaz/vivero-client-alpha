@@ -81,7 +81,7 @@ export function InvoicesDataTable() {
         data={invoices}
         title="Facturas"
         description="Gestión y seguimiento de facturas"
-        searchKey="invoiceNumber"
+        tableName="invoices"
         totalCount={invoices.length}
         onEdit={handleEdit}
         onDelete={handleDelete}

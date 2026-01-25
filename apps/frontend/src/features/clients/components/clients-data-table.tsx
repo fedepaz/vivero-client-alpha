@@ -86,7 +86,7 @@ export function ClientsDataTable() {
         data={clients}
         title="Clientes"
         description="Gestión de la información de los clientes"
-        searchKey="name"
+        tableName="clients"
         totalCount={clients.length}
         onEdit={handleEdit}
         onDelete={handleDelete}

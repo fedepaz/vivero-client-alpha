@@ -1,3 +1,5 @@
+// src/features/users/components/user-form.tsx
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -11,36 +13,28 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { User, UserFormData, userSchema } from "../types";
-
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  UpdateUserProfileDto,
+  UpdateUserProfileSchema,
+  UserProfileDto,
+} from "@vivero/shared";
 
 interface UserFormProps {
-  initialData?: User;
-  onSubmit: (data: UserFormData) => Promise<void>;
+  initialData?: UserProfileDto;
+  onSubmit: (data: UpdateUserProfileDto) => Promise<void>;
   onCancel: () => void;
   isSubmitting?: boolean;
 }
 
 export function UserForm({ initialData, onSubmit }: UserFormProps) {
-  const form = useForm<UserFormData>({
-    resolver: zodResolver(userSchema),
-    defaultValues: initialData
-      ? initialData
-      : {
-          name: "",
-          email: "",
-          role: "worker",
-          status: "active",
-          lastLogin: new Date().toISOString().split("T")[0],
-          department: "",
-        },
+  const form = useForm<UpdateUserProfileDto>({
+    resolver: zodResolver(UpdateUserProfileSchema),
+    defaultValues: {
+      firstName: initialData?.firstName || "",
+      lastName: initialData?.lastName || "",
+      email: initialData?.email || "",
+      passwordHash: "",
+    },
   });
 
   return (
@@ -48,12 +42,26 @@ export function UserForm({ initialData, onSubmit }: UserFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="name"
+          name="firstName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nombre</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Nombre del usuario" />
+                <Input {...field} placeholder={initialData?.firstName || ""} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Apellido</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder={initialData?.lastName || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -67,7 +75,7 @@ export function UserForm({ initialData, onSubmit }: UserFormProps) {
             <FormItem>
               <FormLabel>Correo electrónico</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Correo electrónico del usuario" />
+                <Input {...field} placeholder={initialData?.email || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -76,71 +84,12 @@ export function UserForm({ initialData, onSubmit }: UserFormProps) {
 
         <FormField
           control={form.control}
-          name="role"
+          name="passwordHash"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Rol</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona un rol" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="admin">Administrador</SelectItem>
-                  <SelectItem value="manager">Gerente</SelectItem>
-                  <SelectItem value="worker">Trabajador</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Estado</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona un estado" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="active">Activo</SelectItem>
-                  <SelectItem value="inactive">Inactivo</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="lastLogin"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Último inicio de sesión</FormLabel>
+              <FormLabel>Contraseña</FormLabel>
               <FormControl>
-                <Input {...field} type="date" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="department"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Departamento</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Ej: Ventas, Producción" />
+                <Input {...field} placeholder="Actualizar contraseña ?" />
               </FormControl>
               <FormMessage />
             </FormItem>

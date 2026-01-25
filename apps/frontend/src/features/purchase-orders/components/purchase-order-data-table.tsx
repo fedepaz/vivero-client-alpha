@@ -83,7 +83,7 @@ export function PurchaseOrdersDataTable() {
         data={purchaseOrders}
         title="Órdenes de Compra"
         description="Gestión y seguimiento de órdenes de compra"
-        searchKey="orderNumber"
+        tableName="purchase_orders"
         totalCount={purchaseOrders.length}
         onEdit={handleEdit}
         onDelete={handleDelete}
@@ -93,7 +93,10 @@ export function PurchaseOrdersDataTable() {
         }
       />
 
-      <FloatingActionButton onClick={handleAdd} label="Añadir nueva orden de compra" />
+      <FloatingActionButton
+        onClick={handleAdd}
+        label="Añadir nueva orden de compra"
+      />
 
       <SlideOverForm
         open={slideOverOpen}
@@ -110,9 +113,7 @@ export function PurchaseOrdersDataTable() {
         }
         onSave={handleSave}
         onCancel={() => setSlideOverOpen(false)}
-        saveLabel={
-          selectedPurchaseOrder ? "Actualizar" : "Crear"
-        }
+        saveLabel={selectedPurchaseOrder ? "Actualizar" : "Crear"}
       >
         <div className="space-y-2">
           <PurchaseOrderForm

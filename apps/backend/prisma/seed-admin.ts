@@ -77,6 +77,31 @@ async function main() {
       crud: { create: true, read: true, update: true, delete: true },
       scope: PermissionScope.ALL,
     },
+    {
+      table: 'clients',
+      crud: { create: true, read: true, update: true, delete: true },
+      scope: PermissionScope.ALL,
+    },
+    {
+      table: 'invoices',
+      crud: { create: true, read: true, update: true, delete: true },
+      scope: PermissionScope.ALL,
+    },
+    {
+      table: 'plants',
+      crud: { create: true, read: true, update: true, delete: true },
+      scope: PermissionScope.ALL,
+    },
+    {
+      table: 'purchase_orders',
+      crud: { create: true, read: true, update: true, delete: true },
+      scope: PermissionScope.ALL,
+    },
+    {
+      table: 'user_permissions',
+      crud: { create: true, read: true, update: true, delete: true },
+      scope: PermissionScope.ALL,
+    },
   ];
 
   // Upsert permissions for the admin user

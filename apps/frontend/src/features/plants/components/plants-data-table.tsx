@@ -81,7 +81,7 @@ export function PlantsDataTable() {
         data={plants}
         title="Plantas"
         description="Gestión de la información de las plantas"
-        searchKey="name"
+        tableName="plants"
         totalCount={plants.length}
         onEdit={handleEdit}
         onDelete={handleDelete}

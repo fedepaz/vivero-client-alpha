@@ -17,6 +17,9 @@ import { PermissionsGuard } from './modules/permissions/guards/permissions.guard
 import { PermissionsService } from './modules/permissions/permissions.service';
 import { PermissionsRepository } from './modules/permissions/repositories/permissions.repository';
 import { PermissionsController } from './modules/permissions/permissions.controller';
+import { AuditLogController } from './modules/auditLog/auditLog.controller';
+import { AuditLogService } from './modules/auditLog/auditLog.service';
+import { AuditLogRepository } from './modules/auditLog/repositories/auditLog.repository';
 
 @Module({
   imports: [
@@ -37,6 +40,7 @@ import { PermissionsController } from './modules/permissions/permissions.control
     UsersController,
     AuthController,
     PermissionsController,
+    AuditLogController,
   ],
   providers: [
     {
@@ -55,6 +59,8 @@ import { PermissionsController } from './modules/permissions/permissions.control
     UsersRepository,
     PermissionsService,
     PermissionsRepository,
+    AuditLogService,
+    AuditLogRepository,
   ],
   exports: [UsersService],
 })

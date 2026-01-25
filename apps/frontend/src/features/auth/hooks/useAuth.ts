@@ -1,6 +1,7 @@
 // src/features/auth/hooks/useAuth.ts
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { AuthResponseDto } from "@vivero/shared";
 import { useCallback, useEffect, useState } from "react";
 
@@ -15,6 +16,7 @@ const USER_KEY = "userProfile";
 const AUTH_EVENT = "auth-state-change";
 
 export function useAuth() {
+  const queryClient = useQueryClient();
   const [authState, setAuthState] = useState<AuthState>({
     accessToken: null,
     user: null,
@@ -25,12 +27,13 @@ export function useAuth() {
   const signOut = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
+    queryClient.clear();
     setAuthState({
       accessToken: null,
       user: null,
       isSignedIn: false,
     });
-  }, []);
+  }, [queryClient]);
 
   const loadFromStorage = useCallback(() => {
     try {

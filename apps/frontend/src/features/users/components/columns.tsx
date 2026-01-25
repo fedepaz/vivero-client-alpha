@@ -4,11 +4,11 @@ import {
   SortableHeader,
   StatusBadge,
 } from "@/components/data-display/data-table";
-import { User } from "../types";
+import { UserProfileDto } from "@vivero/shared";
 
 interface CellProps {
-  row?: Row<User>;
-  table?: Table<User>;
+  row?: Row<UserProfileDto>;
+  table?: Table<UserProfileDto>;
 }
 
 function CellComponent({ row, table }: CellProps) {
@@ -33,38 +33,24 @@ function CellComponent({ row, table }: CellProps) {
   if (!row || !table) return null;
 }
 
-interface HeaderProps {
-  column: ColumnDef<User>;
-  translationKey: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function FullNameCell({ row }: { row: any }) {
+  const user = row.original as UserProfileDto;
+  const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+  return <span>{fullName || "No name"}</span>;
 }
 
-function HeaderComponent({ column, translationKey }: HeaderProps) {
-  return <SortableHeader column={column}>{translationKey}</SortableHeader>;
-}
-
-function CellBadgeRoleComponent({ row }: CellProps) {
+function StatusCell({ row }: CellProps) {
   if (!row) return null;
-  const role = row.getValue("role") as string;
-  const roleText = role === "admin" ? "Administrador" : "Usuario";
+  const user = row.original as UserProfileDto;
   return (
-    <StatusBadge status={role === "admin" ? "critical" : "info"}>
-      {roleText}
+    <StatusBadge status={user.isActive ? "healthy" : "inactive"}>
+      {user.isActive ? "Activo" : "Inactivo"}
     </StatusBadge>
   );
 }
 
-function CellBadgeStatusComponent({ row }: CellProps) {
-  if (!row) return null;
-  const status = row.getValue("status") as string;
-  const statusText = status === "active" ? "Activo" : "Inactivo";
-  return (
-    <StatusBadge status={status === "active" ? "healthy" : "inactive"}>
-      {statusText}
-    </StatusBadge>
-  );
-}
-
-export const userColumns: ColumnDef<User>[] = [
+export const userColumns: ColumnDef<UserProfileDto>[] = [
   {
     id: "select",
     header: ({ table }) => {
@@ -77,45 +63,42 @@ export const userColumns: ColumnDef<User>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "username",
     header: ({ column }) => {
-      return <HeaderComponent column={column} translationKey="Nombre" />;
+      return <SortableHeader column={column}>Usuario</SortableHeader>;
+    },
+  },
+  {
+    id: "fullName",
+    header: ({ column }) => (
+      <SortableHeader column={column}>Nombre completo</SortableHeader>
+    ),
+    cell: ({ row }) => {
+      return <FullNameCell row={row} />;
     },
   },
   {
     accessorKey: "email",
-    header: ({ column }) => {
-      return <HeaderComponent column={column} translationKey="Correo electrónico" />;
-    },
-  },
-  {
-    accessorKey: "role",
-    header: ({ column }) => {
-      return <HeaderComponent column={column} translationKey="Rol" />;
-    },
-    cell: ({ row }) => {
-      return <CellBadgeRoleComponent row={row} />;
-    },
+    header: ({ column }) => (
+      <SortableHeader column={column}>Correo electrónico</SortableHeader>
+    ),
+    cell: ({ row }) => row.getValue("email"),
   },
   {
     accessorKey: "status",
-    header: ({ column }) => {
-      return <HeaderComponent column={column} translationKey="Estado" />;
-    },
+    header: ({ column }) => (
+      <SortableHeader column={column}>Estado</SortableHeader>
+    ),
+    cell: ({ row }) => <StatusCell row={row} />,
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <SortableHeader column={column}>Creado</SortableHeader>
+    ),
     cell: ({ row }) => {
-      return <CellBadgeStatusComponent row={row} />;
-    },
-  },
-  {
-    accessorKey: "department",
-    header: ({ column }) => {
-      return <HeaderComponent column={column} translationKey="Departamento" />;
-    },
-  },
-  {
-    accessorKey: "lastLogin",
-    header: ({ column }) => {
-      return <HeaderComponent column={column} translationKey="Último inicio de sesión" />;
+      const date = new Date(row.getValue("createdAt"));
+      return date.toLocaleDateString();
     },
   },
 ];

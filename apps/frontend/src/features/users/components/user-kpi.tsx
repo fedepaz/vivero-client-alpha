@@ -4,14 +4,14 @@
 import { KPICard } from "@/components/data-display/kpi-card";
 import { Users, UserCheck, UserX, Shield } from "lucide-react";
 
-import { useUsers } from "../hooks/hooks";
+import { useUsers } from "../hooks/useUsers";
 
 function UserKPIs() {
-  const { data: mockUsers = [] } = useUsers();
-  const totalUsers = mockUsers.length;
-  const activeUsers = mockUsers.filter((u) => u.status === "active").length;
-  const inactiveUsers = mockUsers.filter((u) => u.status === "inactive").length;
-  const adminUsers = mockUsers.filter((u) => u.role === "admin").length;
+  const { data } = useUsers();
+  const totalUsers = data?.length || 0;
+  const activeUsers = data?.filter((u) => u.isActive).length || 0;
+  const inactiveUsers = data?.filter((u) => !u.isActive).length || 0;
+  const emailUsers = data?.filter((u) => u.email?.includes("@")).length || 0;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -30,9 +30,9 @@ function UserKPIs() {
         icon={UserX}
       />
       <KPICard
-        title="Administradores"
-        value={adminUsers}
-        description="Acceso total"
+        title="Contactos"
+        value={emailUsers}
+        description="Con correo electrónico"
         icon={Shield}
       />
     </div>

@@ -7,10 +7,14 @@ import { ZodValidationPipe } from '../../shared/pipes/zod-validation-pipe';
 import { CurrentUser } from '../auth/decorators/current-user.decorators';
 import { AuthUser } from '../auth/types/auth-user.type';
 import { RequirePermission } from '../permissions/decorators/require-permission.decorator';
+import { PermissionsService } from '../permissions/permissions.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly service: UsersService) {}
+  constructor(
+    private readonly service: UsersService,
+    private readonly permissionsService: PermissionsService,
+  ) {}
 
   @Get('me')
   @RequirePermission({ tableName: 'users', action: 'read', scope: 'OWN' })
@@ -29,9 +33,18 @@ export class UsersController {
   }
 
   @Get('all')
-  @RequirePermission({ tableName: 'users', action: 'read', scope: 'ALL' })
-  getAllUsers() {
-    return this.service.getAllUsers();
+  @RequirePermission({ tableName: 'users', action: 'read' })
+  async getAllUsers(@CurrentUser() user: AuthUser) {
+    const canReadAll = await this.permissionsService.canPerform(user.id, {
+      tableName: 'users',
+      action: 'read',
+      scope: 'ALL',
+    });
+    if (canReadAll) {
+      return this.service.getAllUsers();
+    } else {
+      return [await this.service.gerUserById(user.id)];
+    }
   }
 
   @Get('username/:username')
