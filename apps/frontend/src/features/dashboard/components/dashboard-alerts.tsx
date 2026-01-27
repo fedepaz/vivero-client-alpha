@@ -19,9 +19,11 @@ function DashboardAlerts() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <AlertTriangle className="size-5" />
-          Alertas
+          Alertas Simuladas
         </CardTitle>
-        <CardDescription>No hay alertas activas en este momento.</CardDescription>
+        <CardDescription>
+          No hay alertas activas en este momento.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">

@@ -1,3 +1,4 @@
+// src/components/layout/desktop-sidebar.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -35,9 +36,6 @@ export function DesktopSidebar() {
   const pathname = usePathname();
 
   const { userProfile, permissions } = useAuthContext();
-  console.log("Permissions:", permissions);
-  console.log("User Profile:", userProfile);
-
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     new Set(["operations"]),
   );
@@ -73,15 +71,15 @@ export function DesktopSidebar() {
     <aside
       className={cn(
         "hidden md:flex flex-col bg-card border-r transition-all duration-300",
-        isCollapsed ? "w-16" : "w-64",
+        isCollapsed ? "w-16" : "w-60 mx-0.5",
       )}
     >
       {/* Header */}
-      <div className="p-4 border-b">
+      <div className="p-3 border-b">
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8  rounded-lg bg-secondary flex items-center justify-center ">
+              <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center ">
                 <span className="text-primary font-bold text-sm">DM</span>
               </div>
               <div>

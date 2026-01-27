@@ -15,7 +15,7 @@ function RecentActivity() {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle>Actividad Reciente</CardTitle>
+        <CardTitle>Actividad Reciente Simulada</CardTitle>
         <CardDescription>No hay actividad reciente.</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 min-h-0 pb-4">

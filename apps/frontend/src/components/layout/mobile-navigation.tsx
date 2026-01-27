@@ -88,27 +88,16 @@ export function MobileNavigation() {
           {/* Header */}
           <div className="p-6 border-b">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold">AG</span>
+              <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center ">
+                <span className="text-primary font-bold text-sm">DM</span>
               </div>
               <div>
-                <h2 className="font-bold text-lg">AgriManage</h2>
-                <p className="text-sm text-muted-foreground">
-                  Gestión de Plantas
+                <h2 className="font-bold">Demo</h2>
+                <p className="text-xs text-muted-foreground">
+                  Sistema de gestión
                 </p>
               </div>
             </div>
-          </div>
-
-          {/* Critical Alerts Banner */}
-          <div className="p-4 bg-destructive/10 border-b border-destructive/20">
-            <div className="flex items-center space-x-2 text-destructive">
-              <AlertTriangle className="h-4 w-4" />
-              <span className="text-sm font-medium">Alertas críticas (3)</span>
-            </div>
-            <p className="text-xs text-destructive mt-1">
-              Problemas de temperatura en Invernadero B
-            </p>
           </div>
 
           {/* Navigation Items */}
@@ -189,7 +178,7 @@ export function MobileNavigation() {
           <div className="p-4 border-t">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
+                <span className="text-primary text-sm font-medium">
                   {userProfile?.firstName?.charAt(0)}
                   {userProfile?.lastName?.charAt(0)}
                 </span>

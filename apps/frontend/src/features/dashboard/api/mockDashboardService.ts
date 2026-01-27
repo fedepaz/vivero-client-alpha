@@ -22,24 +22,23 @@ const generateKpi = (): DashboardKpiInterface => {
 const generateAlert = (count: number): AlertInterface[] => {
   const types: AlertInterface["type"][] = ["critical", "warning", "info"];
   const messages = [
-    "Limited stock",
-    "Order received",
-    "New client",
-    "Invoice received",
-    "System down",
-    "User deleted",
-    "Plant out of stock",
+    "Stock limitado",
+    "Nueva orden recibida",
+    "Nuevo cliente registrado",
+    "Factura recibida",
+    "Sistema en mantenimiento",
+    "Usuario eliminado",
   ];
 
   const locations = [
     // Provinces of Argentina
-    "Buenos Aires",
-    "Catamarca",
-    "Chaco",
-    "Chubut",
-    "Corrientes",
-    "Entre Rios",
-    "Formosa",
+    "Sucursal Buenos Aires",
+    "Sucursal Catamarca",
+    "Sucursal Chaco",
+    "Sucursal Chubut",
+    "Sucursal Corrientes",
+    "Sucursal Entre Rios",
+    "Sucursal Formosa",
   ];
   return Array.from({ length: count }, (_, i) => ({
     id: `alert-${i + 1}`,
@@ -52,17 +51,17 @@ const generateAlert = (count: number): AlertInterface[] => {
 
 const generateRecentActivity = (count: number): RecentActivityInterface[] => {
   const actions = [
-    "Plant #123 is out of stock",
-    "Order #456 has been placed",
-    "New client registered",
-    "New invoice received",
+    "Planta #123 está agotada",
+    "Pedido #456 ha sido realizado",
+    "Nuevo cliente registrado",
+    "Nueva factura recibida",
   ];
 
   const users = [
-    "John Doe",
-    "Jane Smith",
-    "Alice Johnson",
-    "Bob Lee",
+    "Juan Fernando Quintero",
+    "Gabriela Sabatini",
+    "Luciana Aymar",
+    "Rodrigo Mora",
   ];
 
   return Array.from({ length: count }, (_, i) => ({

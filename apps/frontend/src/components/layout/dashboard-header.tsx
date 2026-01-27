@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, User } from "lucide-react";
+import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,10 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
 import { MobileNavigation } from "./mobile-navigation";
 
-import { ThemeToggle } from "@/components/common/theme-toggle";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { LoadingSpinner } from "../common/loading-spinner";
 import { useRouter } from "next/navigation";
@@ -45,24 +43,25 @@ export function DashboardHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-1 ">
         <div className="flex h-16 items-center justify-between">
           {/* Logo and Mobile Navigation */}
           <div className="flex items-center space-x-4">
             <MobileNavigation />
             <div className="flex items-center space-x-2 md:hidden">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">AG</span>
+                <span className="text-secondary font-bold text-sm">DM</span>
               </div>
             </div>
           </div>
 
           {/* Actions */}
           <div className="flex items-center space-x-2">
-            {/* Theme Toggle */}
+            {/* Theme Toggle 
             <ThemeToggle />
+            */}
 
-            {/* Notifications */}
+            {/* Notifications 
             <Button
               variant="ghost"
               size="icon"
@@ -73,6 +72,7 @@ export function DashboardHeader() {
                 3
               </Badge>
             </Button>
+            */}
 
             {/* User Menu */}
             <DropdownMenu>
