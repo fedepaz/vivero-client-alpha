@@ -3,9 +3,9 @@
 model AuditLog {
   id         String          @id @default(cuid())
   tenantId   String
-  tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: NoAction)
   userId     String
-  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User            @relation(fields: [userId], references: [id], onDelete: NoAction)
   action     AuditActionType
   entityType EntityType
   entityId   String

@@ -8,14 +8,23 @@ model User {
   lastName   String?
   passwordHash String
   isActive   Boolean         @default(true)
+
   tenantId   String
-  tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  
   auditLogs  AuditLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  deletedByUserId String? 
+  deletedByUser User? @relation("deleted_users", fields: [deletedByUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deletedPermissions UserPermission[] @relation("deleted_user_permissions")
 
-  @@index([tenantId])
+  deletedUsers User[] @relation("deleted_users")
+  deletedAt DateTime? @db.Timestamp(0)
+
+  @@index([tenantId, deletedAt])
   @@index([username])
   @@map("users")
 }
