@@ -6,12 +6,6 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "tsConfigPath": "tsconfig.build.json",
-    "assets": [
-      {
-        "include": "../../../packages/shared/dist/**/*",
-        "outDir": "./dist"
-      }
-    ],
     "watchAssets": true
   }
 }
