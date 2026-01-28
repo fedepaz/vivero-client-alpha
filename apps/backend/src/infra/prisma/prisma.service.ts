@@ -4,8 +4,6 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaClient } from '../../generated/prisma/client';
-import * as path from 'path';
-import * as fs from 'fs';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -18,14 +16,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     const password = configService.get<string>('config.database.password');
     const database = configService.get<string>('config.database.name');
 
-    const certPath = path.resolve(
-      process.cwd(),
-      'certs',
-      'globalsignrootca.pem',
-    );
+    const certFromEnv = process.env.DATABASE_SSL_CERT;
+
     let serverCert: string;
     try {
-      serverCert = fs.readFileSync(certPath, 'utf8');
+      if (!certFromEnv) throw new Error('Cert not found in env');
+      serverCert = Buffer.from(certFromEnv, 'base64').toString('utf8');
     } catch (error) {
       console.error('Error reading cert file:', error);
       throw new Error('Cert not found in file');
@@ -48,7 +44,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   }
 
   async onModuleInit() {
-    this.logger.log('✅ DATABASE CONNECTION STARTED ON ');
+    this.logger.log(' DATABASE CONNECTION STARTED ON >>>>>> ');
     this.logger.warn(this.configService.get<string>('config.database.host'));
     this.logger.warn(this.configService.get<string>('config.database.port'));
     this.logger.warn(
@@ -58,20 +54,25 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       this.configService.get<string>('config.database.password'),
     );
     this.logger.warn(this.configService.get<string>('config.database.name'));
+    this.logger.warn(process.env.NODE_EXTRA_CA_CERTS);
 
     try {
       await this.$connect();
-
-      this.logger.log('✅ DATABASE CONNECTION SUCCESSFUL');
-      this.logger.log(
-        `   Database: ${this.configService.get<string>('config.database.name')}`,
-      );
     } catch (error) {
-      this.logger.error('❌ DATABASE CONNECTION FAILED');
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      this.logger.error(`   Error: ${error.message}`);
-      this.logger.error(error);
-      process.exit(1); // Crash immediately - no point continuing
+      if (process.env.NODE_ENV !== 'production') {
+        this.logger.error('❌ DATABASE CONNECTION FAILED');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        this.logger.error(`   Error: ${error.message}`);
+        this.logger.error(error);
+        process.exit(1); // Crash immediately - no point continuing
+      } else {
+        this.logger.error('❌ DATABASE CONNECTION FAILED');
+        throw error;
+      }
     }
+    this.logger.log('✅ DATABASE CONNECTION SUCCESSFUL');
+    this.logger.log(
+      `   Database: ${this.configService.get<string>('config.database.name')}`,
+    );
   }
 }
