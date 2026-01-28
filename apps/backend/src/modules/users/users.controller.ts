@@ -80,8 +80,7 @@ export class UsersController {
       action: 'update',
       scope: 'ALL',
     });
-    console.error(canUpdateAll);
-    console.error(body);
+
     if (canUpdateAll) {
       return this.service.updateProfile(username, body);
     } else {
