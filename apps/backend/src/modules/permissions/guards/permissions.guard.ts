@@ -10,7 +10,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { PermissionsService } from '../permissions.service';
 import { AuthRequest } from '../../auth/interfaces/authRequest.interface';
-import { IS_PUBLIC_KEY } from 'src/shared/decorators/public.decorator';
+import { IS_PUBLIC_KEY } from '../../../shared/decorators/public.decorator';
 import { REQUIRE_PERMISSION_KEY } from '../decorators/require-permission.decorator';
 
 export interface RequirePermissionMetadata {

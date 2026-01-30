@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { IS_PUBLIC_KEY } from 'src/shared/decorators/public.decorator';
+import { IS_PUBLIC_KEY } from '../../../shared/decorators/public.decorator';
 import { AuthService } from '../auth.service';
 
 @Injectable()

@@ -20,9 +20,9 @@ import {
   TokensDto,
 } from '@vivero/shared';
 import { AuthUser } from './types/auth-user.type';
-import { Public } from 'src/shared/decorators/public.decorator';
+import { Public } from '../../shared/decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorators';
-import { ZodValidationPipe } from 'src/shared/pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../../shared/pipes/zod-validation-pipe';
 import { RequirePermission } from '../permissions/decorators/require-permission.decorator';
 
 @Controller('auth')
