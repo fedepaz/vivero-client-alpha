@@ -1,0 +1,14 @@
+feat: update next.js and refactor frontend configuration
+
+This commit updates Next.js to version 16 and refactors the ESLint
+and TypeScript configurations in the frontend application to align
+with modern standards.
+
+Key changes include:
+- Upgraded Next.js from v15 to v16.
+- Migrated ESLint configuration to the new flat config format.
+- Updated tsconfig.json for better compatibility.
+- Added pnpm overrides for `hono` and `lodash` to resolve security
+  vulnerabilities.
+- Minor UI tweaks and code refinements for improved responsiveness
+  and cleanup.

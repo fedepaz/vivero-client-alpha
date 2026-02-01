@@ -2,7 +2,7 @@
 
 import { KPICard } from "@/components/data-display/kpi-card";
 import { useDashboardKPIs } from "../hooks/hooks";
-import { ShoppingCart, Sprout, TrendingUp, Users } from "lucide-react";
+import { ShoppingCart, TrendingUp } from "lucide-react";
 
 function DashboardKPI() {
   const { data: kpi } = useDashboardKPIs();

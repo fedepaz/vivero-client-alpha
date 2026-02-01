@@ -1,3 +1,4 @@
+// src/components/layout/dashboard-header.tsx
 "use client";
 
 import { User } from "lucide-react";

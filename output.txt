@@ -1,0 +1,3 @@
+The `pnpm audit` now reports "No known vulnerabilities found." This means the high-severity vulnerability in the `next` package has been resolved. The scheduled workflow should now pass successfully.
+
+There are still some peer dependency warnings related to `react` when running `pnpm install`, but these are not critical and do not cause the audit to fail.

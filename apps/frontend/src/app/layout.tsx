@@ -5,8 +5,8 @@ import "./globals.css";
 import { AppProviders } from "@/providers/app-providers";
 
 export const metadata: Metadata = {
-  title: "Vivero",
-  description: "Vivero - Enterprise Agricultural Management System",
+  title: "System Demo",
+  description: "Enterprise Management System",
   generator: "v0.app",
 };
 

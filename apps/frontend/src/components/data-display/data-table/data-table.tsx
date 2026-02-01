@@ -255,8 +255,8 @@ export function DataTable<TData, TValue>({
               />
             )}
           </div>
-          <div className="rounded-md border">
-            <Table>
+          <div className="overflow-x-auto rounded-md border">
+            <Table className="min-w-full">
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
@@ -307,11 +307,13 @@ export function DataTable<TData, TValue>({
               </TableBody>
             </Table>
           </div>
-          <div className="flex items-center justify-between space-x-2 py-4">
+
+          <div className="flex flex-wrap items-center justify-between gap-4 py-4">
+            {" "}
             <div className="flex-1 text-sm text-muted-foreground">
               {`${table.getFilteredSelectedRowModel().rows.length} de ${table.getFilteredRowModel().rows.length} fila(s) seleccionada(s).`}
             </div>
-            <div className="flex items-center space-x-6 lg:space-x-8">
+            <div className="flex flex-wrap items-center gap-2">
               <div className="flex items-center space-x-2">
                 <p className="text-sm font-medium">Filas por página</p>
                 <select

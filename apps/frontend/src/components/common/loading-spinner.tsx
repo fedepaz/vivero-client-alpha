@@ -23,10 +23,11 @@ function getRandomMessage() {
 }
 
 export function LoadingSpinner() {
-  const [currentMessage, setCurrentMessage] = useState("Iniciando sesión...");
+  const [currentMessage, setCurrentMessage] = useState(() =>
+    getRandomMessage(),
+  );
 
   useEffect(() => {
-    setCurrentMessage(getRandomMessage());
     const interval = setInterval(() => {
       setCurrentMessage(getRandomMessage());
     }, 2000);

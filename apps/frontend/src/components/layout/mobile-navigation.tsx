@@ -1,7 +1,9 @@
+// src/components/layout/mobile-navigation.tsx
+
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Menu, AlertTriangle, ChevronDown } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
